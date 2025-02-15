@@ -1,2 +1,8 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import GenericPage from '$lib/view/pages/GenericPage.svelte';
+	import HomePage from '$lib/view/pages/HomePage.svelte';
+</script>
+
+<GenericPage>
+	<HomePage></HomePage>
+</GenericPage>
