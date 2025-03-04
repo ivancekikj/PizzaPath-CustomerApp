@@ -1,29 +1,7 @@
-<script>
-	import { onMount } from 'svelte';
-
-	onMount(() => {
-		window.$('[data-bs-toggle="tooltip"]').tooltip()
-	});
-</script>
-
-<style>
-	nav {
-		background: #1a1a1a !important;
-	}
-
-	#logo {
-		height: 64px;
-	}
-
-	.nav-item.dropdown:hover .dropdown-menu {
-		display: block;
-	}
-</style>
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
 	<div class="container">
 		<a class="navbar-brand" href="/">
-			<img id="logo" src="/img/logo.svg" alt="Company logo">
+			<img id="logo" src="/img/logo.svg" alt="Company logo" />
 		</a>
 		<button
 			class="navbar-toggler"
@@ -77,3 +55,17 @@
 		</div>
 	</div>
 </nav>
+
+<style>
+	nav {
+		background: #1a1a1a !important;
+	}
+
+	#logo {
+		height: 64px;
+	}
+
+	.nav-item.dropdown:hover .dropdown-menu {
+		display: block;
+	}
+</style>
