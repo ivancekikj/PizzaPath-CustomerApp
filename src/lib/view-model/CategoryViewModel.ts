@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store';
-import type { Category } from '$lib/model/Category';
 import { CategoryRepository } from '$lib/repository/CategoryRepository';
 import { CategoryStore } from '$lib/stores/CategoryStore';
 

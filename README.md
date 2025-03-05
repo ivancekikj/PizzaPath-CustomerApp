@@ -1,38 +1,17 @@
-# sv
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+<h1>Run the app</h1>
+<ol>
+    <li>Clone the repository.</li>
+    <li>Install Node.js >= v10.9.0.</li>
+    <li>Install IntelliJ IDEA with the plugins 'Svelte' and 'Prettier'.</li>
+    <li>Open the project in IntelliJ IDEA.</li>
+    <li>Install the required packages using the following command:
+        <pre>npm install</pre>
+    </li>
+    <li>Create a file called '.env' in the root folder with the following information:
+        <pre>VITE_ADMIN_APP_URL=</pre>
+    </li>
+    <li>Run the following command to start the app:
+        <pre>npm run dev</pre>
+    </li>
+    <li>Ensure that the admin app is running before opening in the browser.</li>
+</ol>
