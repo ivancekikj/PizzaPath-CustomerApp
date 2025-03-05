@@ -3,6 +3,6 @@
 </script>
 
 <GenericPage>
-	<title slot="title">Pizza Delicious - Home</title>
+	<title slot="title">Pizza Delicious - Order</title>
 	<main slot="content"></main>
 </GenericPage>
