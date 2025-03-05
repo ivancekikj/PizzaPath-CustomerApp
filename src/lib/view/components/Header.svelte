@@ -1,3 +1,13 @@
+<script>
+	import { onMount } from 'svelte';
+	import { CategoryViewModel } from '$lib/view-model/CategoryViewModel';
+	import { CategoryStore } from '$lib/stores/CategoryStore';
+
+	onMount(() => {
+		CategoryViewModel.loadCategories();
+	});
+</script>
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
 	<div class="container">
 		<a class="navbar-brand" href="/">
@@ -33,10 +43,12 @@
 						Menu
 					</a>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="#">Whole Menu</a></li>
-						<li><a class="dropdown-item" href="#">Category 1</a></li>
-						<li><a class="dropdown-item" href="#">Category 2</a></li>
-						<li><a class="dropdown-item" href="#">Category 3</a></li>
+						<li><a class="dropdown-item" href="/menu">Whole Menu</a></li>
+						{#each $CategoryStore as category}
+							<li>
+								<a class="dropdown-item" href="/menu?categoryId={category.id}">{category.name}</a>
+							</li>
+						{/each}
 					</ul>
 				</li>
 				<li class="nav-item">
