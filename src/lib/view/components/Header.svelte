@@ -43,10 +43,10 @@
 						Menu
 					</a>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="/menu">Whole Menu</a></li>
+						<li><a class="dropdown-item" href="/menu" rel="external">Whole Menu</a></li>
 						{#each $CategoryStore as category}
 							<li>
-								<a class="dropdown-item" href="/menu?categoryId={category.id}">{category.name}</a>
+								<a class="dropdown-item" href="/menu?categoryId={category.id}" rel="external">{category.name}</a>
 							</li>
 						{/each}
 					</ul>
