@@ -1,10 +1,16 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import { CategoryViewModel } from '$lib/view-model/CategoryViewModel';
-	import { CategoryStore } from '$lib/stores/CategoryStore';
+	import { CategoriesStore } from '$lib/stores/CategoriesStore';
+	import { CategoryService } from '$lib/service/CategoryService';
+	import { MenuFoodUtils } from '$lib/utils/MenuFoodsUtils';
+
+	async function loadCategories(): Promise<void> {
+		const categories = await CategoryService.getAllCategories();
+		CategoriesStore.setValue(categories);
+	}
 
 	onMount(() => {
-		CategoryViewModel.loadCategories();
+		loadCategories();
 	});
 </script>
 
@@ -43,10 +49,21 @@
 						Menu
 					</a>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="/menu" rel="external">Whole Menu</a></li>
-						{#each $CategoryStore as category}
+						<li>
+							<a
+								class="dropdown-item"
+								href="/menu"
+								on:click={async () => await MenuFoodUtils.setMenuFoodsByCategoryId()}>Whole Menu</a
+							>
+						</li>
+						{#each $CategoriesStore as category}
 							<li>
-								<a class="dropdown-item" href="/menu?categoryId={category.id}" rel="external">{category.name}</a>
+								<a
+									class="dropdown-item"
+									href="/menu?categoryId={category.id}"
+									on:click={async () => await MenuFoodUtils.setMenuFoodsByCategoryId(category.id)}
+									>{category.name}</a
+								>
 							</li>
 						{/each}
 					</ul>
@@ -71,6 +88,9 @@
 <style>
 	nav {
 		background: #1a1a1a !important;
+		position: sticky;
+		top: 0;
+		z-index: 1;
 	}
 
 	#logo {
