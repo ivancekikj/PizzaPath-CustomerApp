@@ -49,10 +49,10 @@
 	}
 
 	.row {
-		margin-bottom: 50px;
+		justify-content: space-between;
 	}
 
 	hr {
-		margin-bottom: 100px;
+		margin: 0 0 100px 0 !important;
 	}
 </style>
