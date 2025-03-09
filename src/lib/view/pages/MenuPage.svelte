@@ -4,13 +4,13 @@
 	import { page } from '$app/state';
 	import FoodCard from '$lib/view/components/FoodCard.svelte';
 	import { MenuFoodsStore } from '$lib/stores/MenuFoodsStore';
-	import { MenuFoodUtils } from '$lib/utils/MenuFoodsUtils';
 	import MenuTabs from '$lib/view/components/MenuTabs.svelte';
+	import { StoreOperations } from '$lib/stores/StoreOperations';
 
 	const categoryId: string | null = page.url.searchParams.get('categoryId');
 
 	onMount(async () => {
-		await MenuFoodUtils.setMenuFoodsByCategoryId(categoryId ? Number(categoryId) : undefined);
+		await StoreOperations.setMenuFoodsByCategoryId(categoryId ? Number(categoryId) : undefined);
 	});
 </script>
 

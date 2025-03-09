@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { Category } from '$lib/model/Category';
-import { ApiData } from '$lib/service/ApiData';
+import { ApiData } from '$lib/repository/ApiData';
 
 async function getAllCategories(): Promise<Category[]> {
 	const response = await axios.get(`${ApiData.ADMIN_APP_URL}/api/menu/categories/`);
@@ -9,6 +9,6 @@ async function getAllCategories(): Promise<Category[]> {
 	});
 }
 
-export const CategoryService = {
+export const CategoryRepository = {
 	getAllCategories
 };

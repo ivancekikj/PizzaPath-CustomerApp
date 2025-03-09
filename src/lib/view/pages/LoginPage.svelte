@@ -4,5 +4,7 @@
 
 <GenericPage>
 	<title slot="title">Pizza Delicious - Login</title>
-	<main slot="content"></main>
+	<main slot="content">
+		<form action=""></form>
+	</main>
 </GenericPage>

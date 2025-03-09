@@ -1,15 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { CategoriesStore } from '$lib/stores/CategoriesStore';
-	import { CategoryService } from '$lib/service/CategoryService';
-	import { MenuFoodUtils } from '$lib/utils/MenuFoodsUtils';
+	import { CategoryRepository } from '$lib/repository/CategoryRepository';
+	import { StoreOperations } from '$lib/stores/StoreOperations';
+	import type { Authentication } from '$lib/model/Authentication';
+	import { AuthenticationStore } from '$lib/stores/AuthenticationStore';
 
 	async function loadCategories(): Promise<void> {
-		const categories = await CategoryService.getAllCategories();
+		const categories = await CategoryRepository.getAllCategories();
 		CategoriesStore.setValue(categories);
 	}
 
+	function loadAuthentication(): void {
+		const authentication: Authentication | null = localStorage.getItem(
+			'authentication'
+		) as Authentication | null;
+		if (authentication != null) AuthenticationStore.login(authentication);
+	}
+
 	onMount(() => {
+		loadAuthentication();
 		loadCategories();
 	});
 </script>
@@ -53,7 +63,8 @@
 							<a
 								class="dropdown-item"
 								href="/menu"
-								on:click={async () => await MenuFoodUtils.setMenuFoodsByCategoryId()}>Whole Menu</a
+								on:click={async () => await StoreOperations.setMenuFoodsByCategoryId()}
+								>Whole Menu</a
 							>
 						</li>
 						{#each $CategoriesStore as category}
@@ -61,7 +72,7 @@
 								<a
 									class="dropdown-item"
 									href="/menu?categoryId={category.id}"
-									on:click={async () => await MenuFoodUtils.setMenuFoodsByCategoryId(category.id)}
+									on:click={async () => await StoreOperations.setMenuFoodsByCategoryId(category.id)}
 									>{category.name}</a
 								>
 							</li>

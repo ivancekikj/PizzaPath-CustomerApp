@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiData } from '$lib/service/ApiData';
+import { ApiData } from '$lib/repository/ApiData';
 import type { Food } from '$lib/model/Food';
 
 async function getFoods(categoryId?: number): Promise<Food[]> {
@@ -19,6 +19,6 @@ async function getFoods(categoryId?: number): Promise<Food[]> {
 	});
 }
 
-export const FoodService = {
+export const FoodRepository = {
 	getFoods
 };
