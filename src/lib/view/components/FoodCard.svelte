@@ -13,7 +13,7 @@
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item">Average Rating: /</li>
 	</ul>
-	<button class="card-link btn btn-primary add-to-order">Add to Order</button>
+	<button class="card-link btn btn-primary red-button">Add to Order</button>
 </div>
 
 <style>
@@ -25,11 +25,5 @@
 
 	.card-link {
 		border-radius: 0 0 5px 5px;
-		background: #fe0000 !important;
-		border: none !important;
-	}
-
-	.card-link:hover {
-		background: #8b0000 !important;
 	}
 </style>
