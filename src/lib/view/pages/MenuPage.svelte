@@ -1,5 +1,4 @@
 <script lang="ts">
-	import GenericPage from '$lib/view/pages/GenericPage.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import FoodCard from '$lib/view/components/FoodCard.svelte';
@@ -14,23 +13,22 @@
 	});
 </script>
 
-<GenericPage>
-	<title slot="title">Pizza Delicious - Menu</title>
-	<main slot="content">
-		<div id="showcase">
-			<h1>Menu</h1>
-		</div>
-		<div class="container">
-			<MenuTabs />
-			<div class="row">
-				{#each $MenuFoodsStore as food}
-					<FoodCard {food}></FoodCard>
-				{/each}
-			</div>
-			<hr />
-		</div>
-	</main>
-</GenericPage>
+<svelte:head>
+	<title>Pizza Delicious - Menu</title>
+</svelte:head>
+
+<div id="showcase">
+	<h1>Menu</h1>
+</div>
+<div class="container">
+	<MenuTabs />
+	<div class="row">
+		{#each $MenuFoodsStore as food}
+			<FoodCard {food}></FoodCard>
+		{/each}
+	</div>
+	<hr />
+</div>
 
 <style>
 	#showcase {

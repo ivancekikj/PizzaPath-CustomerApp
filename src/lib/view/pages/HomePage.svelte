@@ -1,8 +1,4 @@
-<script>
-	import GenericPage from '$lib/view/pages/GenericPage.svelte';
-</script>
+<svelte:head>
+	<title>Pizza Delicious - Home</title>
+</svelte:head>
 
-<GenericPage>
-	<title slot="title">Pizza Delicious - Home</title>
-	<main slot="content"></main>
-</GenericPage>
