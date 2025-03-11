@@ -7,7 +7,7 @@
 	import { AuthenticationStore } from '$lib/stores/AuthenticationStore';
 
 	async function loadCategories(): Promise<void> {
-		const categories = await CategoryRepository.getAllCategories();
+		const categories = await CategoryRepository.getAll();
 		CategoriesStore.setValue(categories);
 	}
 
@@ -21,6 +21,7 @@
 	onMount(() => {
 		loadAuthentication();
 		loadCategories();
+		window.$('[data-bs-toggle="tooltip"]').tooltip()
 	});
 </script>
 

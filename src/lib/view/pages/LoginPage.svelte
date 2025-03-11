@@ -7,6 +7,5 @@
 	<title slot="title">Pizza Delicious - Login</title>
 	<main slot="content">
 		<LoginForm />
-		<LoginForm></LoginForm>
 	</main>
 </GenericPage>

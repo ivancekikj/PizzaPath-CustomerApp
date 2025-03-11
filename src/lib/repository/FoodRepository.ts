@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiData } from '$lib/repository/ApiData';
 import type { Food } from '$lib/model/Food';
 
-async function getFoods(categoryId?: number): Promise<Food[]> {
+async function get(categoryId?: number): Promise<Food[]> {
 	const response = await axios.get(
 		categoryId
 			? `${ApiData.ADMIN_APP_URL}/api/menu/foods/?category_id=${categoryId}`
@@ -20,5 +20,5 @@ async function getFoods(categoryId?: number): Promise<Food[]> {
 }
 
 export const FoodRepository = {
-	getFoods
+	get
 };
