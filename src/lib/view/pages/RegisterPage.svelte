@@ -1,5 +1,5 @@
 <script>
-	import RegisterForm from "$lib/view/components/RegisterForm.svelte";
+	import RegisterForm from '$lib/view/components/RegisterForm.svelte';
 </script>
 
 <svelte:head>
@@ -7,4 +7,3 @@
 </svelte:head>
 
 <RegisterForm />
-

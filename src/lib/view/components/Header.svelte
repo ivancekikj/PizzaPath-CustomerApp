@@ -21,7 +21,7 @@
 	onMount(() => {
 		loadAuthentication();
 		loadCategories();
-		window.$('[data-bs-toggle="tooltip"]').tooltip()
+		window.$('[data-bs-toggle="tooltip"]').tooltip();
 	});
 </script>
 

@@ -1,12 +1,34 @@
 export interface Validator {
-    message: string;
-    regex: RegExp;
+	validate: (value: any) => string;
 }
 
-export const Validators: Map<string, Validator> = new Map<string, Validator>(
-    [
-        ["email", {message: "Invalid email!", regex: /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/}],
-        ["username", {message: "Invalid email", regex: /^(?=[a-zA-Z])[a-zA-Z0-9._-]{4,20}$/}],
-        ["phoneNumber", {message: "Phone number must be in format: xxx/xxx-xxx!", regex: /^\d{3}\/\d{3}-\d{3}$/}],
-    ]
-);
+const emailRegex: RegExp = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+const phoneNumberRegex: RegExp = /^\d{3}\/\d{3}-\d{3}$/;
+const usernameRegex: RegExp = /^[a-zA-Z0-9_.]{4,50}$/;
+const usernameErrorMessage: string =
+	'Username must be 4-50 characters and can only have letters, digits underscores and periods!';
+
+function validatePasswordStrength(value: string): string {
+	if (value.length < 8) return 'Password must have at least 8 characters!';
+	if (!/\d/.test(value)) return 'Password must have at least one digit!';
+	if (!/[A-Z]/.test(value)) return 'Password must have at least one uppercase letter!';
+	if (!/[a-z]/.test(value)) return 'Password must have at least one lowercase letter!';
+	return '';
+}
+
+export const Validators: Map<string, Validator> = new Map<string, Validator>([
+	[
+		'required',
+		{ validate: (value) => (value == undefined || value === '' ? 'This field is required!' : '') }
+	],
+	['email', { validate: (value) => (emailRegex.test(value) ? '' : 'Invalid email!') }],
+	['username', { validate: (value) => (usernameRegex.test(value) ? '' : usernameErrorMessage) }],
+	[
+		'phoneNumber',
+		{
+			validate: (value) =>
+				phoneNumberRegex.test(value) ? '' : 'Phone number must be in format: XXX/XXX-XXX!'
+		}
+	],
+	['password', { validate: validatePasswordStrength }]
+]);
