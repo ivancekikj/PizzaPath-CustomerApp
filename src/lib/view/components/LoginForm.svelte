@@ -1,9 +1,8 @@
 <script lang="ts">
 	import TextInput from "$lib/view/components/TextInput.svelte";
-	import type {CustomerLoginDto} from "$lib/model/CustomerLoginDto";
+	import type {CustomerLoginDto, JwtResponse} from "$lib/domain/dto";
 	import {goto} from "$app/navigation";
 	import {JwtRepository} from "$lib/repository/JwtRepository";
-	import type {JwtResponse} from "$lib/model/JwtResponse.js";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({

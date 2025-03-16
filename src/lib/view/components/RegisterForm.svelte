@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CustomerRegistrationDto } from '$lib/model/CustomerRegistrationDto';
+	import type { CustomerRegistrationDto } from '$lib/domain/dto';
 	import { CustomerRepository } from '$lib/repository/CustomerRepository';
 	import { goto } from '$app/navigation';
 	import TextInput from '$lib/view/components/TextInput.svelte';

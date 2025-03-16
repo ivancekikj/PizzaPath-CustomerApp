@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type { Category } from '$lib/model/Category';
+import type { Category } from '$lib/domain/models';
 
 const categories: Writable<Category[]> = writable<Category[]>([]);
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Category } from '$lib/model/Category';
+import type { Category } from '$lib/domain/models';
 import { ApiData } from '$lib/repository/ApiData';
 
 async function getAll(): Promise<Category[]> {

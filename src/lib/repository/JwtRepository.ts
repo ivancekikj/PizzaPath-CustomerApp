@@ -1,7 +1,6 @@
-import type {CustomerLoginDto} from "$lib/model/CustomerLoginDto";
+import type {CustomerLoginDto, JwtResponse} from "$lib/domain/dto";
 import axios, {AxiosError, type AxiosResponse} from "axios";
 import {ApiData} from "$lib/repository/ApiData";
-import type {JwtResponse} from "$lib/model/JwtResponse";
 
 async function login(loginDto: CustomerLoginDto): Promise<JwtResponse> {
     let response: AxiosResponse<any, any>;

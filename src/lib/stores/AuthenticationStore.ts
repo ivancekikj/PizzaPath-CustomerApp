@@ -1,5 +1,5 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { Authentication } from '$lib/model/Authentication';
+import type { Authentication } from '$lib/domain/models';
 
 const authenticationStore: Writable<Authentication | null> = writable<Authentication | null>(null);
 

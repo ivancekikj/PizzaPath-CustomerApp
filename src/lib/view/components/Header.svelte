@@ -3,7 +3,7 @@
 	import { CategoriesStore } from '$lib/stores/CategoriesStore';
 	import { CategoryRepository } from '$lib/repository/CategoryRepository';
 	import { StoreOperations } from '$lib/stores/StoreOperations';
-	import type { Authentication } from '$lib/model/Authentication';
+	import type { Authentication } from '$lib/domain/models';
 	import { AuthenticationStore } from '$lib/stores/AuthenticationStore';
 
 	async function loadCategories(): Promise<void> {

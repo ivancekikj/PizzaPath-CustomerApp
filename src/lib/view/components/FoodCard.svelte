@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Food } from '$lib/model/Food';
+	import type { Food } from '$lib/domain/models';
 
 	export let food: Food;
 </script>

@@ -1,4 +1,4 @@
-import type { CustomerRegistrationDto } from '$lib/model/CustomerRegistrationDto';
+import type { CustomerRegistrationDto } from '$lib/domain/dto';
 import { ApiData } from '$lib/repository/ApiData';
 import axios, { AxiosError } from 'axios';
 
