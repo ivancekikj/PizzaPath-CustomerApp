@@ -44,7 +44,7 @@
 <label for={name} class="form-label">{label}</label>
 <input
 	type={isPassword ? 'password' : 'text'}
-	class="form-control {(isValid ?? true) ? '' : 'is-invalid'}"
+	class="form-control {isValid == null ? '' : isValid ? 'is-valid' : 'is-invalid'}"
 	{name}
 	id={name}
 	bind:value
