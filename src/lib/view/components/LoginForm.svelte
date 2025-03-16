@@ -3,6 +3,8 @@
 	import type {CustomerLoginDto, JwtResponse} from "$lib/domain/dto";
 	import {goto} from "$app/navigation";
 	import {JwtRepository} from "$lib/repository/JwtRepository";
+	import type {Authentication, Customer} from "$lib/domain/models";
+	import {CustomerRepository} from "$lib/repository/CustomerRepository";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
@@ -10,6 +12,26 @@
 		password: null
 	});
 	let errorMessage: string = "";
+
+	async function loginUser(): Promise<void> {
+		let jwtResponse: JwtResponse;
+		try {
+			jwtResponse = await JwtRepository.login(loginData);
+		} catch (error: any) {
+			errorMessage = error.detail;
+			setTimeout(() => errorMessage = "", 3000);
+			return;
+		}
+
+		const customer: Customer = await CustomerRepository.getCurrent(jwtResponse.accessToken);
+		const authentication: Authentication = {
+			customer: customer,
+			accessToken: jwtResponse.accessToken,
+			refreshToken: jwtResponse.refreshToken
+		};
+		localStorage.setItem("authentication", JSON.stringify(authentication));
+		// await goto('/');
+	}
 
 	async function handleSubmit(event: Event): Promise<void> {
 		event.preventDefault();
@@ -21,15 +43,7 @@
 			return;
 		}
 
-		try {
-			const jwtResponse: JwtResponse = await JwtRepository.login(loginData);
-			console.log(jwtResponse);
-		} catch (error: any) {
-			errorMessage = error.detail;
-			setTimeout(() => errorMessage = "", 3000);
-			return;
-		}
-		// await goto('/');
+		await loginUser();
 	}
 </script>
 

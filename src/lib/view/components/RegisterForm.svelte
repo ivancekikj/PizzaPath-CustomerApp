@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CustomerRegistrationDto } from '$lib/domain/dto';
+	import type { Customer } from '$lib/domain/models';
 	import { CustomerRepository } from '$lib/repository/CustomerRepository';
 	import { goto } from '$app/navigation';
 	import TextInput from '$lib/view/components/TextInput.svelte';
@@ -7,7 +7,7 @@
 	import CheckboxInput from '$lib/view/components/CheckboxInput.svelte';
 	import { Converters } from '$lib/view/utils/Converters';
 
-	let registration: CustomerRegistrationDto = {} as CustomerRegistrationDto;
+	let registration: Customer = {} as Customer;
 	let confirmPassword: string;
 	let inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
 		username: null,
@@ -40,7 +40,7 @@
 				});
 				return;
 			}
-			await goto('/');
+			// await goto('/');
 		}
 	}
 </script>

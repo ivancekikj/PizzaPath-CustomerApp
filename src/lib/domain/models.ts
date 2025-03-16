@@ -11,6 +11,13 @@ export interface Category {
 
 export interface Customer {
     username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    phoneNumber: string;
+    password: string;
+    isSubscribedToNewsletter: boolean;
 }
 
 export interface Food {

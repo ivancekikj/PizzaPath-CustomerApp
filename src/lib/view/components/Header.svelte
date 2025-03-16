@@ -12,10 +12,10 @@
 	}
 
 	function loadAuthentication(): void {
-		const authentication: Authentication | null = localStorage.getItem(
-			'authentication'
-		) as Authentication | null;
+		const value: string | null = localStorage.getItem('authentication');
+		const authentication: Authentication | null = value ? (JSON.parse(value) as Authentication) : null;
 		if (authentication != null) AuthenticationStore.login(authentication);
+		console.log(authentication);
 	}
 
 	onMount(() => {

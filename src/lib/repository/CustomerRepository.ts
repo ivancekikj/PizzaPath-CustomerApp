@@ -1,20 +1,20 @@
-import type { CustomerRegistrationDto } from '$lib/domain/dto';
 import { ApiData } from '$lib/repository/ApiData';
 import axios, { AxiosError } from 'axios';
+import type {Customer} from "$lib/domain/models";
 
-async function create(customerDto: CustomerRegistrationDto): Promise<void> {
+async function create(customer: Customer): Promise<void> {
 	try {
 		await axios.post(
 			`${ApiData.ADMIN_APP_URL}/api/accounts/customers/`,
 			{
-				username: customerDto.username,
-				email: customerDto.email,
-				address: customerDto.address,
-				phone_number: customerDto.phoneNumber,
-				first_name: customerDto.firstName,
-				last_name: customerDto.lastName,
-				is_subscribed_to_newsletter: customerDto.isSubscribedToNewsletter,
-				password: customerDto.password
+				username: customer.username,
+				email: customer.email,
+				address: customer.address,
+				phone_number: customer.phoneNumber,
+				first_name: customer.firstName,
+				last_name: customer.lastName,
+				is_subscribed_to_newsletter: customer.isSubscribedToNewsletter,
+				password: customer.password
 			},
 			{
 				headers: { 'Content-Type': 'application/json' }
@@ -26,6 +26,28 @@ async function create(customerDto: CustomerRegistrationDto): Promise<void> {
 	}
 }
 
+async function getCurrent(accessToken: string): Promise<Customer> {
+	const response = await axios.get(
+		`${ApiData.ADMIN_APP_URL}/api/accounts/customers/`,
+		{
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		}
+	);
+	return {
+		username: response.data.username,
+		email: response.data.email,
+		firstName: response.data.first_name,
+		lastName: response.data.last_name,
+		phoneNumber: response.data.phone_number,
+		address: response.data.address,
+		password: response.data.password,
+		isSubscribedToNewsletter: response.data.is_subscribed_to_newsletter,
+	} as Customer;
+}
+
 export const CustomerRepository = {
-	create
+	create,
+	getCurrent
 };
