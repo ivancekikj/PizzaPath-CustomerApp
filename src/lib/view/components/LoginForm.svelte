@@ -25,12 +25,12 @@
 
 		const customer: Customer = await CustomerRepository.getCurrent(jwtResponse.accessToken);
 		const authentication: Authentication = {
-			customer: customer,
+			customerUsername: customer.username,
 			accessToken: jwtResponse.accessToken,
 			refreshToken: jwtResponse.refreshToken
 		};
 		localStorage.setItem("authentication", JSON.stringify(authentication));
-		// await goto('/');
+		window.location.href = "/";
 	}
 
 	async function handleSubmit(event: Event): Promise<void> {

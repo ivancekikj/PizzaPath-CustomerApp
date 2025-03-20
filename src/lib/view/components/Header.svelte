@@ -1,26 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { CategoriesStore } from '$lib/stores/CategoriesStore';
-	import { CategoryRepository } from '$lib/repository/CategoryRepository';
 	import { StoreOperations } from '$lib/stores/StoreOperations';
-	import type { Authentication } from '$lib/domain/models';
 	import { AuthenticationStore } from '$lib/stores/AuthenticationStore';
-
-	async function loadCategories(): Promise<void> {
-		const categories = await CategoryRepository.getAll();
-		CategoriesStore.setValue(categories);
-	}
-
-	function loadAuthentication(): void {
-		const value: string | null = localStorage.getItem('authentication');
-		const authentication: Authentication | null = value ? (JSON.parse(value) as Authentication) : null;
-		if (authentication != null) AuthenticationStore.login(authentication);
-		console.log(authentication);
-	}
+	import {AuthenticationUtils} from "$lib/view/utils/AuthenticationUtils";
 
 	onMount(() => {
-		loadAuthentication();
-		loadCategories();
 		window.$('[data-bs-toggle="tooltip"]').tooltip();
 	});
 </script>
@@ -80,18 +65,24 @@
 						{/each}
 					</ul>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/order">Order</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/account">Account</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/register">Register</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/login">Login</a>
-				</li>
+				{#if $AuthenticationStore != null}
+					<li class="nav-item">
+						<a class="nav-link" href="/order">Order</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/account">Account</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/" on:click={AuthenticationUtils.logoutUser}>Logout ({$AuthenticationStore.customerUsername})</a>
+					</li>
+				{:else}
+					<li class="nav-item">
+						<a class="nav-link" href="/register">Register</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/login">Login</a>
+					</li>
+				{/if}
 			</ul>
 		</div>
 	</div>

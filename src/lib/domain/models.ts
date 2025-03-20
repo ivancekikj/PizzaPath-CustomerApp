@@ -1,5 +1,5 @@
 export interface Authentication {
-    customer: Customer;
+    customerUsername: string;
     accessToken: string;
     refreshToken: string;
 }

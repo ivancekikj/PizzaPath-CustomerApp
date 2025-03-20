@@ -40,7 +40,7 @@
 				});
 				return;
 			}
-			// await goto('/');
+			window.location.href = "/";
 		}
 	}
 </script>
