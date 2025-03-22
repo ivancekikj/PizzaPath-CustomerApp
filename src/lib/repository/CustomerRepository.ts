@@ -26,15 +26,8 @@ async function create(customer: Customer): Promise<void> {
 	}
 }
 
-async function getCurrent(accessToken: string): Promise<Customer> {
-	const response = await axios.get(
-		`${ApiData.ADMIN_APP_URL}/api/accounts/customers/`,
-		{
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		}
-	);
+async function getCurrent(): Promise<Customer> {
+	const response = await axios.get(`${ApiData.ADMIN_APP_URL}/api/accounts/customers/`);
 	return {
 		username: response.data.username,
 		email: response.data.email,

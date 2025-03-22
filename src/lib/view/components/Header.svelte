@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { CategoriesStore } from '$lib/stores/CategoriesStore';
 	import { StoreOperations } from '$lib/stores/StoreOperations';
-	import { AuthenticationStore } from '$lib/stores/AuthenticationStore';
+	import { AuthenticatedCustomerStore } from '$lib/stores/AuthenticatedCustomerStore';
 	import {AuthenticationUtils} from "$lib/view/utils/AuthenticationUtils";
 
 	onMount(() => {
@@ -65,12 +65,12 @@
 						{/each}
 					</ul>
 				</li>
-				{#if $AuthenticationStore != null}
+				{#if $AuthenticatedCustomerStore != null}
 					<li class="nav-item">
 						<a class="nav-link" href="/order">Order</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/account">Account ({$AuthenticationStore.username})</a>
+						<a class="nav-link" href="/account">Account ({$AuthenticatedCustomerStore.username})</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/" on:click={AuthenticationUtils.logoutUser}>Logout</a>

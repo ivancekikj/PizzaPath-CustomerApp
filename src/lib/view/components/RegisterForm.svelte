@@ -5,6 +5,7 @@
 	import { type Validator, Validators } from '$lib/view/utils/Validators';
 	import CheckboxInput from '$lib/view/components/CheckboxInput.svelte';
 	import { Converters } from '$lib/view/utils/Converters';
+	import {goto} from "$app/navigation";
 
 	let registration: Customer = {} as Customer;
 	let confirmPassword: string;
@@ -39,7 +40,7 @@
 				});
 				return;
 			}
-			window.location.href = "/";
+			await goto("/");
 		}
 	}
 </script>

@@ -1,8 +1,10 @@
 <script lang="ts">
 	import TextInput from "$lib/view/components/TextInput.svelte";
 	import type {CustomerLoginDto} from "$lib/domain/dto";
-	import {JwtRepository} from "$lib/repository/JwtRepository";
-	import type {Jwt} from "$lib/domain/models";
+	import {AuthenticationRepository} from "$lib/repository/AuthenticationRepository";
+	import {goto} from "$app/navigation";
+	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+	import {CustomerRepository} from "$lib/repository/CustomerRepository";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
@@ -12,16 +14,15 @@
 	let errorMessage: string = "";
 
 	async function loginUser(): Promise<void> {
-		let jwt: Jwt;
 		try {
-			jwt = await JwtRepository.create(loginData);
+			await AuthenticationRepository.login(loginData);
 		} catch (error: any) {
 			errorMessage = error.detail;
 			setTimeout(() => errorMessage = "", 3000);
 			return;
 		}
-		sessionStorage.setItem("jwt", JSON.stringify(jwt));
-		window.location.href = "/";
+		AuthenticatedCustomerStore.set(await CustomerRepository.getCurrent());
+		await goto("/");
 	}
 
 	async function handleSubmit(event: Event): Promise<void> {

@@ -1,8 +1,9 @@
-import {AuthenticationStore} from "$lib/stores/AuthenticationStore";
+import {AuthenticationRepository} from "$lib/repository/AuthenticationRepository";
+import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 
-function logoutUser(): void {
-    sessionStorage.removeItem("jwt");
-    AuthenticationStore.logout();
+async function logoutUser(): Promise<void> {
+    AuthenticatedCustomerStore.set(null);
+    await AuthenticationRepository.logout();
 }
 
 export const AuthenticationUtils = {

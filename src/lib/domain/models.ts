@@ -1,13 +1,3 @@
-export interface Authentication {
-    jwt: Jwt;
-    username: string;
-}
-
-export interface Jwt {
-    accessToken: string;
-    refreshToken: string;
-}
-
 export interface Category {
     id: number;
     name: string;
