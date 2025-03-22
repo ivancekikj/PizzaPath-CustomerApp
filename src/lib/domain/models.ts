@@ -1,5 +1,9 @@
 export interface Authentication {
-    customerUsername: string;
+    jwt: Jwt;
+    username: string;
+}
+
+export interface Jwt {
     accessToken: string;
     refreshToken: string;
 }

@@ -49,5 +49,5 @@ async function getCurrent(accessToken: string): Promise<Customer> {
 
 export const CustomerRepository = {
 	create,
-	getCurrent
+	getCurrent,
 };

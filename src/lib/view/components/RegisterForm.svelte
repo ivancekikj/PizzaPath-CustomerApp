@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Customer } from '$lib/domain/models';
 	import { CustomerRepository } from '$lib/repository/CustomerRepository';
-	import { goto } from '$app/navigation';
 	import TextInput from '$lib/view/components/TextInput.svelte';
 	import { type Validator, Validators } from '$lib/view/utils/Validators';
 	import CheckboxInput from '$lib/view/components/CheckboxInput.svelte';

@@ -70,10 +70,10 @@
 						<a class="nav-link" href="/order">Order</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/account">Account</a>
+						<a class="nav-link" href="/account">Account ({$AuthenticationStore.username})</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/" on:click={AuthenticationUtils.logoutUser}>Logout ({$AuthenticationStore.customerUsername})</a>
+						<a class="nav-link" href="/" on:click={AuthenticationUtils.logoutUser}>Logout</a>
 					</li>
 				{:else}
 					<li class="nav-item">

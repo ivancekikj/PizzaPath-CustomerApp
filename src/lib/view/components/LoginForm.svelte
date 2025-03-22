@@ -1,10 +1,8 @@
 <script lang="ts">
 	import TextInput from "$lib/view/components/TextInput.svelte";
-	import type {CustomerLoginDto, JwtResponse} from "$lib/domain/dto";
-	import {goto} from "$app/navigation";
+	import type {CustomerLoginDto} from "$lib/domain/dto";
 	import {JwtRepository} from "$lib/repository/JwtRepository";
-	import type {Authentication, Customer} from "$lib/domain/models";
-	import {CustomerRepository} from "$lib/repository/CustomerRepository";
+	import type {Jwt} from "$lib/domain/models";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
@@ -14,22 +12,15 @@
 	let errorMessage: string = "";
 
 	async function loginUser(): Promise<void> {
-		let jwtResponse: JwtResponse;
+		let jwt: Jwt;
 		try {
-			jwtResponse = await JwtRepository.login(loginData);
+			jwt = await JwtRepository.create(loginData);
 		} catch (error: any) {
 			errorMessage = error.detail;
 			setTimeout(() => errorMessage = "", 3000);
 			return;
 		}
-
-		const customer: Customer = await CustomerRepository.getCurrent(jwtResponse.accessToken);
-		const authentication: Authentication = {
-			customerUsername: customer.username,
-			accessToken: jwtResponse.accessToken,
-			refreshToken: jwtResponse.refreshToken
-		};
-		localStorage.setItem("authentication", JSON.stringify(authentication));
+		sessionStorage.setItem("jwt", JSON.stringify(jwt));
 		window.location.href = "/";
 	}
 
