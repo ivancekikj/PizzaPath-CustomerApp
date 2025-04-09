@@ -14,7 +14,12 @@ async function get(categoryId?: number): Promise<Food[]> {
 			name: food.name,
 			description: food.description,
 			imageUrl: food.image_url,
-			averageRating: food.average_rating
+			averageRating: food.average_rating,
+			toppings: food.toppings.map((topping: any) => ({
+				id: topping.id,
+				name: topping.name,
+				price: topping.price
+			}))
 		} as Food;
 	});
 }

@@ -34,7 +34,6 @@
 		await loadAuthentication();
 		if ($AuthenticatedCustomerStore == null && ["/account", "/order"].includes(page.url.pathname)) {
 			await goto("/login");
-			return;
 		}
 		if ($AuthenticatedCustomerStore != null && ["/register", "/login"].includes(page.url.pathname)) {
 			await AuthenticationUtils.logoutUser();

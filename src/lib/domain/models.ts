@@ -20,10 +20,24 @@ export interface Food {
     description: string;
     imageUrl: string;
     averageRating: number;
+    toppings: Topping[];
 }
 
 export interface Topping {
     id: number;
     name: string;
     price: number;
+}
+
+export interface Size {
+    id: number;
+    name: string;
+}
+
+export interface FoodPortion {
+    id: number;
+    price: number;
+    discount: number;
+    size: Size;
+    foodId: number;
 }

@@ -12,6 +12,26 @@
 	background: #8b0000 !important;
 }
 
+.green-button {
+	background: #00bb00 !important;
+	border: none;
+	color: white !important;
+}
+
+.green-button:hover {
+	background: #006400 !important;
+}
+
+.dark-green-button {
+	background: #006400 !important;
+	border: none;
+	color: white !important;
+}
+
+.dark-green-button:hover {
+	background: #00bb00 !important;
+}
+
 .mb-20px {
 	margin-bottom: 20px;
 }
