@@ -3,7 +3,7 @@
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 
 	export let food: Food;
-	export let updateSelectedFoodId: (foodId: number) => void;
+	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
 </script>
 
 <div class="card">
@@ -15,7 +15,7 @@
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item">Average Rating: /</li>
 	</ul>
-	{#if $AuthenticatedCustomerStore != null}
+	{#if $AuthenticatedCustomerStore != null && updateSelectedFoodId != null}
 		<button class="card-link btn red-button" data-bs-toggle="modal" data-bs-target="#exampleModal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
 	{/if}
 </div>

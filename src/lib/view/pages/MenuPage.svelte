@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import FoodCard from '$lib/view/components/FoodCard.svelte';
 	import { MenuFoodsStore } from '$lib/stores/MenuFoodsStore';
@@ -8,37 +7,41 @@
 	import AddToOrderModal from "$lib/view/components/modals/AddToOrderModal.svelte";
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 
-	let categoryId: string | null = page.url.searchParams.get('categoryId');
-	let isLoaded: boolean = false;
+	const categoryId: string | null = page.url.searchParams.get('categoryId');
+	let modal: AddToOrderModal | null = null;
 
-	onMount(async () => {
+	async function loadData(): Promise<void> {
 		await StoreOperations.setMenuFoodsByCategoryId(categoryId ? Number(categoryId) : undefined);
-		await StoreOperations.setAddToCartFood($MenuFoodsStore[0].id);
-		isLoaded = true;
-	});
+	}
 </script>
 
 <svelte:head>
 	<title>Pizza Delicious - Menu</title>
 </svelte:head>
 
-{#if isLoaded}
-	<div id="showcase">
-		<h1>Menu</h1>
-	</div>
+<div id="showcase">
+	<h1>Menu</h1>
+</div>
+{#await loadData() then _}
+	{#if $AuthenticatedCustomerStore != null}
+		<AddToOrderModal bind:this={modal} />
+	{/if}
 	<div class="container">
 		<MenuTabs />
 		<div class="row">
-			{#each $MenuFoodsStore as food}
-				<FoodCard {food} updateSelectedFoodId={StoreOperations.setAddToCartFood}></FoodCard>
-			{/each}
+			{#if modal != null}
+				{#each $MenuFoodsStore as food}
+					<FoodCard {food} updateSelectedFoodId={modal.setCurrentFood}></FoodCard>
+				{/each}
+			{:else}
+				{#each $MenuFoodsStore as food}
+					<FoodCard {food}></FoodCard>
+				{/each}
+			{/if}
 		</div>
 		<hr />
 	</div>
-	{#if $AuthenticatedCustomerStore != null}
-		<AddToOrderModal />
-	{/if}
-{/if}
+{/await}
 
 <style>
 	#showcase {

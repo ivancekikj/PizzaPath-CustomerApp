@@ -3,7 +3,6 @@
 	import { CategoriesStore } from '$lib/stores/CategoriesStore';
 	import { StoreOperations } from '$lib/stores/StoreOperations';
 	import { AuthenticatedCustomerStore } from '$lib/stores/AuthenticatedCustomerStore';
-	import {AuthenticationUtils} from "$lib/view/utils/AuthenticationUtils";
 
 	onMount(() => {
 		window.$('[data-bs-toggle="tooltip"]').tooltip();
@@ -73,7 +72,7 @@
 						<a class="nav-link" href="/account">Account ({$AuthenticatedCustomerStore.username})</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/" on:click={AuthenticationUtils.logoutUser}>Logout</a>
+						<a class="nav-link" href="/" on:click={StoreOperations.logoutUser}>Logout</a>
 					</li>
 				{:else}
 					<li class="nav-item">

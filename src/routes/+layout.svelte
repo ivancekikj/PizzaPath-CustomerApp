@@ -7,10 +7,10 @@
 	import {CategoryRepository} from "$lib/repository/CategoryRepository";
 	import {CategoriesStore} from "$lib/stores/CategoriesStore";
 	import {page} from "$app/state";
-	import {AuthenticationUtils} from "$lib/view/utils/AuthenticationUtils";
 	import {CustomerRepository} from "$lib/repository/CustomerRepository";
 	import axios from "axios";
 	import {goto} from "$app/navigation";
+	import {StoreOperations} from "$lib/stores/StoreOperations";
 
 	axios.defaults.withCredentials = true;
 	let isAuthenticationLoaded: boolean = false;
@@ -36,7 +36,7 @@
 			await goto("/login");
 		}
 		if ($AuthenticatedCustomerStore != null && ["/register", "/login"].includes(page.url.pathname)) {
-			await AuthenticationUtils.logoutUser();
+			await StoreOperations.logoutUser();
 		}
 		await loadCategories();
 		isAuthenticationLoaded = true;
