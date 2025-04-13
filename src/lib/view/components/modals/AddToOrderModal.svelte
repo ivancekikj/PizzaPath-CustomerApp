@@ -6,6 +6,7 @@
     import {MenuFoodsStore} from "$lib/stores/MenuFoodsStore";
     import {FoodPortionsStore} from "$lib/stores/FoodPortionsStore";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
+    import {OrderRepository} from "$lib/repository/OrderRepository";
 
     const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
     let isButtonClicked: boolean = false;
@@ -35,6 +36,7 @@
     }
 
     async function handleSubmit(): Promise<void> {
+        await OrderRepository.addItem(currentData);
         window.location.href = "/order";
     }
 
