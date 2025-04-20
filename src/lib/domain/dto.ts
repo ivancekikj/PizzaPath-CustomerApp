@@ -6,6 +6,7 @@ export interface CustomerLoginDto {
 }
 
 export interface SelectedFood {
+    id: number;
     food: Food;
     portions: FoodPortion[];
     selectedPortionId: number;

@@ -1,3 +1,5 @@
+import type {SelectedFood} from "$lib/domain/dto";
+
 export interface Category {
     id: number;
     name: string;
@@ -40,4 +42,12 @@ export interface FoodPortion {
     discount: number;
     size: Size;
     foodId: number;
+}
+
+export interface Order {
+    id: number;
+    dateTimeEdited: string;
+    status: string;
+    description: string;
+    items: SelectedFood[];
 }
