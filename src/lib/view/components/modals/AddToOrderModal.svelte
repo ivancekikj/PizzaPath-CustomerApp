@@ -24,6 +24,7 @@
         const foodPortions: FoodPortion[] = $FoodPortionsStore.filter(portion => portion.foodId === foodId)
             .sort((p1, p2) => p1.price - p2.price);
         const selectedFood: SelectedFood = {
+            id: 1,
             food: food,
             portions: foodPortions,
             selectedQuantity: 1,

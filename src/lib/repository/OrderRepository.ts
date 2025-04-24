@@ -29,7 +29,7 @@ async function getCurrentItems(): Promise<Order> {
                 id: item.id,
                 selectedQuantity: item.quantity,
                 selectedPortionId: item.food_portion_id,
-                selectedToppingIds: item.toppings_ids,
+                selectedToppingIds: item.topping_ids,
                 food: {
                     id: item.food.id,
                     name: item.food.name,
