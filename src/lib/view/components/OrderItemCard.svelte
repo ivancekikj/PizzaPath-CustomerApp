@@ -3,9 +3,10 @@
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
 
     export let item: SelectedFood;
+    export let hasBottomMargin: boolean = true;
 </script>
 
-<div class="card mb-50px">
+<div class="card {hasBottomMargin ? 'mb-50px' : ''}">
     <div class="row g-0">
         <div class="col-md-4">
             <img src="{item.food.imageUrl}" class="img-fluid rounded-start" alt="Image of {item.food.name}">

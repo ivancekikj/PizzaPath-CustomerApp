@@ -4,14 +4,14 @@
 	import OrderItemCard from "$lib/view/components/OrderItemCard.svelte";
 	import {MenuUtils} from "$lib/view/utils/MenuUtils";
 
-	let order: Order;
+	let order: Order | null = null;
 
 	async function loadOrder(): Promise<void> {
 		order = await OrderRepository.getCurrentItems();
 	}
 
 	function calculateTotalOrderPrice(): number {
-		return order.items.map(MenuUtils.calculateTotalPrice).reduce((a, b) => a + b, 0);
+		return order!.items.map(MenuUtils.calculateTotalPrice).reduce((a, b) => a + b, 0);
 	}
 </script>
 
@@ -20,32 +20,36 @@
 </svelte:head>
 
 {#await loadOrder() then _}
-	<div class="container mt-100px mb-50px">
+	<div class="container mt-100px mb-100px">
 		<div class="row justify-content-between">
 			<div class="col-8">
-				{#each order.items as item}
-					<OrderItemCard {item} />
-				{/each}
+				{#if order !== null}
+					{#each order.items as item, i}
+						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} />
+					{/each}
+				{:else}
+					<p>Order currently empty.</p>
+				{/if}
 			</div>
 			<div class="col-3">
 				<div class="card mb-50px">
 					<div class="card-body">
-						<h5 class="card-title mb-20px">Order Details</h5>
-						<p class="card-text m-0">Order number: <span class="fw-bold">{order.id}</span></p>
-						<p class="card-text m-0">Number of items: <span class="fw-bold">{order.items.length}</span></p>
+						<h5 class="card-title mb-20px fw-bold">Order Details</h5>
+						<p class="card-text m-0">Order number: <span class="fw-bold">{order ? order.id : "/"}</span></p>
+						<p class="card-text m-0">Number of items: <span class="fw-bold">{order ? order.items.length : "/"}</span></p>
 						<p class="card-text m-0">Coupons redeemed: /</p>
 						<p class="card-text m-0">Coupons earned: /</p>
-						<p class="card-text mb-20px">Total: <span class="fw-bold">{calculateTotalOrderPrice()} ден</span></p>
-						<p class="card-text">Status: <span class="fw-bold">{order.status}</span></p>
+						<p class="card-text mb-20px">Total: <span class="fw-bold">{order ? (calculateTotalOrderPrice() + " ден") : "/"}</span></p>
+						<p class="card-text">Status: <span class="fw-bold">{order ? order.status : "/"}</span></p>
 					</div>
 				</div>
 				<div class="mb-50px">
 					<label for="description" class="form-label">Description</label>
-					<textarea class="form-control" id="description"></textarea>
+					<textarea class="form-control" id="description" disabled={order == null}></textarea>
 				</div>
 				<div>
-					<button class="btn red-button w-100 mb-20px">Empty Order</button>
-					<button class="btn green-button w-100">Submit Order</button>
+					<button class="btn red-button w-100 mb-20px" disabled={order == null}>Empty Order</button>
+					<button class="btn green-button w-100" disabled={order == null}>Submit Order</button>
 				</div>
 			</div>
 		</div>

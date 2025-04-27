@@ -17,8 +17,11 @@ async function addItem(item: SelectedFood): Promise<void> {
     );
 }
 
-async function getCurrentItems(): Promise<Order> {
+async function getCurrentItems(): Promise<Order | null> {
     const response: AxiosResponse<any, any> = await axios.get(`${ApiData.ADMIN_APP_URL}/api/orders/current-order/`);
+    if (response.data === "") {
+        return null;
+    }
     return {
         id: response.data.id,
         dateTimeEdited: response.data.date_time_edited,
