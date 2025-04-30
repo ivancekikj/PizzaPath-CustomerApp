@@ -5,13 +5,18 @@
 	import {MenuUtils} from "$lib/view/utils/MenuUtils";
 
 	let order: Order | null = null;
+	let orderPriceTotal: number = NaN;
 
 	async function loadOrder(): Promise<void> {
 		order = await OrderRepository.getCurrentItems();
 	}
 
-	function calculateTotalOrderPrice(): number {
-		return order!.items.map(MenuUtils.calculateTotalPrice).reduce((a, b) => a + b, 0);
+	function calculateTotalOrderPrice(): void {
+		orderPriceTotal = order ? order.items.map(MenuUtils.calculateTotalPrice).reduce((a, b) => a + b, 0) : NaN;
+	}
+
+	function capitalizeStatus(status: string): string {
+		return status.charAt(0).toUpperCase() + status.slice(1);
 	}
 </script>
 
@@ -25,7 +30,7 @@
 			<div class="col-8">
 				{#if order !== null}
 					{#each order.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} />
+						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} onItemUpdate={calculateTotalOrderPrice} />
 					{/each}
 				{:else}
 					<p>Order currently empty.</p>
@@ -35,12 +40,12 @@
 				<div class="card mb-50px">
 					<div class="card-body">
 						<h5 class="card-title mb-20px fw-bold">Order Details</h5>
-						<p class="card-text m-0">Order number: <span class="fw-bold">{order ? order.id : "/"}</span></p>
-						<p class="card-text m-0">Number of items: <span class="fw-bold">{order ? order.items.length : "/"}</span></p>
-						<p class="card-text m-0">Coupons redeemed: /</p>
-						<p class="card-text m-0">Coupons earned: /</p>
-						<p class="card-text mb-20px">Total: <span class="fw-bold">{order ? (calculateTotalOrderPrice() + " ден") : "/"}</span></p>
-						<p class="card-text">Status: <span class="fw-bold">{order ? order.status : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{order ? order.id : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{order ? order.items.length : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">/</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">/</span></p>
+						<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{order ? (orderPriceTotal + " ден") : "/"}</span></p>
+						<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{order ? capitalizeStatus(order.status) : "/"}</span></p>
 					</div>
 				</div>
 				<div class="mb-50px">

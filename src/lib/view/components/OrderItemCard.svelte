@@ -4,6 +4,9 @@
 
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
+    export let onItemUpdate: () => void;
+
+    onItemUpdate();
 </script>
 
 <div class="card {hasBottomMargin ? 'mb-50px' : ''}">
@@ -19,10 +22,10 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <div class="input-width">
-                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} />
+                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemUpdate} />
                     </div>
                     <div class="input-width">
-                        <select class="form-select" id="size" bind:value={item.selectedPortionId}>
+                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate}>
                             {#each item.portions as portion}
                                 <option value={portion.id}>{portion.size.name} ({portion.price} мкд)</option>
                             {/each}
