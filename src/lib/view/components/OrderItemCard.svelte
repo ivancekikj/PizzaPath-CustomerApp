@@ -1,12 +1,18 @@
 <script lang="ts">
     import type {SelectedFood} from "$lib/domain/dto";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
+    import {OrderRepository} from "$lib/repository/OrderRepository";
 
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
-    export let onItemUpdate: () => void;
+    export let updateTotalOrderPrice: () => void;
 
-    onItemUpdate();
+    async function onItemUpdate(): Promise<void> {
+        updateTotalOrderPrice();
+        await OrderRepository.updateItem(item);
+    }
+
+    updateTotalOrderPrice();
 </script>
 
 <div class="card {hasBottomMargin ? 'mb-50px' : ''}">

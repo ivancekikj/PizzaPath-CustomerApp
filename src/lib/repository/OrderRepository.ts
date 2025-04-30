@@ -60,7 +60,22 @@ async function getCurrentItems(): Promise<Order | null> {
     } as Order;
 }
 
+async function updateItem(item: SelectedFood): Promise<void> {
+    await axios.put(
+        `${ApiData.ADMIN_APP_URL}/api/orders/current-order/items/${item.id}/`,
+        {
+            quantity: item.selectedQuantity,
+            food_portion_id: item.selectedPortionId,
+            toppings_ids: item.selectedToppingIds
+        },
+        {
+            headers: { 'Content-Type': 'application/json' }
+        }
+    );
+}
+
 export const OrderRepository = {
     addItem,
-    getCurrentItems
+    getCurrentItems,
+    updateItem
 };

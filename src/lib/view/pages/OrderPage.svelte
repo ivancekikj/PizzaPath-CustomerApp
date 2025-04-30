@@ -30,7 +30,7 @@
 			<div class="col-8">
 				{#if order !== null}
 					{#each order.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} onItemUpdate={calculateTotalOrderPrice} />
+						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} />
 					{/each}
 				{:else}
 					<p>Order currently empty.</p>
