@@ -38,24 +38,26 @@
 				{/if}
 			</div>
 			<div class="col-3">
-				<div class="card mb-50px">
-					<div class="card-body">
-						<h5 class="card-title mb-20px fw-bold">Order Details</h5>
-						<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{order ? order.id : "/"}</span></p>
-						<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{order ? order.items.length : "/"}</span></p>
-						<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">/</span></p>
-						<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">/</span></p>
-						<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{order ? (orderPriceTotal + " ден") : "/"}</span></p>
-						<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{order ? capitalizeStatus(order.status) : "/"}</span></p>
+				<div class="position-fixed">
+					<div class="card mb-50px">
+						<div class="card-body">
+							<h5 class="card-title mb-20px fw-bold">Order Details</h5>
+							<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{order ? order.id : "/"}</span></p>
+							<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{order ? order.items.length : "/"}</span></p>
+							<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">/</span></p>
+							<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">/</span></p>
+							<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{order ? (orderPriceTotal + " ден") : "/"}</span></p>
+							<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{order ? capitalizeStatus(order.status) : "/"}</span></p>
+						</div>
 					</div>
-				</div>
-				<div class="mb-50px">
-					<label for="description" class="form-label">Description</label>
-					<textarea class="form-control" id="description" disabled={order == null}></textarea>
-				</div>
-				<div>
-					<button class="btn red-button w-100 mb-20px" disabled={order == null}>Empty Order</button>
-					<button class="btn green-button w-100" disabled={order == null}>Submit Order</button>
+					<div class="mb-50px">
+						<label for="description" class="form-label">Description</label>
+						<textarea class="form-control" id="description" disabled={order == null}></textarea>
+					</div>
+					<div>
+						<button class="btn red-button w-100 mb-20px" disabled={order == null}>Empty Order</button>
+						<button class="btn green-button w-100" disabled={order == null}>Submit Order</button>
+					</div>
 				</div>
 			</div>
 		</div>
