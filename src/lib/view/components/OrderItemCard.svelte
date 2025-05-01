@@ -6,6 +6,7 @@
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
     export let updateTotalOrderPrice: () => void;
+    export let setItemForToppings: (item: SelectedFood) => void;
 
     async function onItemUpdate(): Promise<void> {
         updateTotalOrderPrice();
@@ -39,7 +40,7 @@
                     </div>
                     {#if item.food.toppings.length > 0}
                         <div class="col-4">
-                            <button class="btn btn-primary green-button w-100" >Toppings</button>
+                            <button class="btn btn-primary green-button w-100" data-bs-toggle="modal" data-bs-target="#edit-toppings-modal" on:click={() => setItemForToppings(item)}>Toppings</button>
                         </div>
                     {/if}
                 </div>

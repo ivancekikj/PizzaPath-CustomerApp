@@ -4,12 +4,17 @@
 	import OrderItemCard from "$lib/view/components/OrderItemCard.svelte";
 	import {MenuUtils} from "$lib/view/utils/MenuUtils";
 	import EditOrderToppingsModal from "$lib/view/components/modals/EditOrderToppingsModal.svelte";
+	import type {SelectedFood} from "$lib/domain/dto";
 
 	let order: Order | null = null;
 	let orderPriceTotal: number = NaN;
+	let currentItemForToppings: SelectedFood | null = null;
 
 	async function loadOrder(): Promise<void> {
 		order = await OrderRepository.getCurrentItems();
+		if (order && order.items.some(item => item.food.toppings.length > 0)) {
+			setCurrentItemForToppings(order.items.filter(item => item.food.toppings.length > 0)[0]);
+		}
 	}
 
 	function calculateTotalOrderPrice(): void {
@@ -18,6 +23,10 @@
 
 	function capitalizeStatus(status: string): string {
 		return status.charAt(0).toUpperCase() + status.slice(1);
+	}
+
+	function setCurrentItemForToppings(item: SelectedFood): void {
+		currentItemForToppings = item;
 	}
 </script>
 
@@ -31,7 +40,7 @@
 			<div class="col-8">
 				{#if order !== null}
 					{#each order.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} />
+						<OrderItemCard {item} hasBottomMargin={i < order.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings}/>
 					{/each}
 				{:else}
 					<p>Order currently empty.</p>
@@ -62,12 +71,14 @@
 			</div>
 		</div>
 	</div>
-	<EditOrderToppingsModal></EditOrderToppingsModal>
+	{#if currentItemForToppings}
+		<EditOrderToppingsModal item={currentItemForToppings} updateTotalOrderPrice={calculateTotalOrderPrice}></EditOrderToppingsModal>
+	{/if}
 {/await}
 
 <style>
 	#description {
 		resize: none;
-		height: 200px
+		height: 200px;
 	}
 </style>
