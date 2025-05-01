@@ -26,20 +26,22 @@
                     <h5 class="fw-bold">{item.food.name}</h5>
                     <i class="fa-solid fa-circle-xmark x-icon"></i>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <div class="input-width">
+                <div class="row justify-content-between">
+                    <div class="{item.food.toppings.length > 0 ? 'col-3' : 'col-5'}">
                         <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemUpdate} />
                     </div>
-                    <div class="input-width">
+                    <div class="{item.food.toppings.length > 0 ? 'col-5' : 'col-7'}">
                         <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate}>
                             {#each item.portions as portion}
                                 <option value={portion.id}>{portion.size.name} ({portion.price} мкд)</option>
                             {/each}
                         </select>
                     </div>
-                    <div class="input-width">
-                        <button class="btn btn-primary green-button w-100">Toppings</button>
-                    </div>
+                    {#if item.food.toppings.length > 0}
+                        <div class="col-4">
+                            <button class="btn btn-primary green-button w-100" >Toppings</button>
+                        </div>
+                    {/if}
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>
@@ -64,9 +66,5 @@
     .x-icon:hover {
         color: #8b0000 !important;
         cursor: pointer;
-    }
-
-    .input-width {
-        width: 30%;
     }
 </style>

@@ -3,6 +3,7 @@
 	import type {Order} from "$lib/domain/models";
 	import OrderItemCard from "$lib/view/components/OrderItemCard.svelte";
 	import {MenuUtils} from "$lib/view/utils/MenuUtils";
+	import EditOrderToppingsModal from "$lib/view/components/modals/EditOrderToppingsModal.svelte";
 
 	let order: Order | null = null;
 	let orderPriceTotal: number = NaN;
@@ -59,6 +60,7 @@
 			</div>
 		</div>
 	</div>
+	<EditOrderToppingsModal></EditOrderToppingsModal>
 {/await}
 
 <style>
