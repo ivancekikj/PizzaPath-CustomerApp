@@ -2,12 +2,25 @@
     import Modal from "$lib/view/components/modals/Modal.svelte";
     import type {SelectedFood} from "$lib/domain/dto";
     import {OrderRepository} from "$lib/repository/OrderRepository";
+    import {OrderStore} from "$lib/stores/OrderStore";
 
     export let item: SelectedFood;
     export let updateTotalOrderPrice: () => void;
 
     async function onItemUpdate(): Promise<void> {
         updateTotalOrderPrice();
+        OrderStore.update((store) => {
+            if (store) {
+                const index = store.items.findIndex(i => i.id === item.id);
+                if (index !== -1) {
+                    store.items[index] = item;
+                }
+                return {
+                    ...store,
+                };
+            }
+            return null;
+        });
         await OrderRepository.updateItem(item);
     }
 </script>
