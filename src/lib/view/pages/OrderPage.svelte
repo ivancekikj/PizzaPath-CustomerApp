@@ -8,9 +8,11 @@
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;
+	let description: string
 
 	async function loadOrder(): Promise<void> {
 		OrderStore.setValue(await OrderRepository.getCurrentItems());
+		description = $OrderStore && $OrderStore.description ? $OrderStore.description : "";
 		if ($OrderStore && $OrderStore.items.some(item => item.food.toppings.length > 0)) {
 			setCurrentItemForToppings($OrderStore.items.filter(item => item.food.toppings.length > 0)[0]);
 		}
@@ -26,6 +28,16 @@
 
 	function setCurrentItemForToppings(item: SelectedFood): void {
 		currentItemForToppings = item;
+	}
+
+	async function updateDescription(): Promise<void> {
+		OrderStore.update((store) => {
+			if (store) {
+				store.description = description;
+			}
+			return store;
+		});
+		await OrderRepository.update(description);
 	}
 </script>
 
@@ -60,7 +72,7 @@
 					</div>
 					<div class="mb-50px">
 						<label for="description" class="form-label">Description</label>
-						<textarea class="form-control" id="description" disabled={$OrderStore == null}></textarea>
+						<textarea class="form-control" id="description" disabled={$OrderStore == null} bind:value={description} on:input={updateDescription}></textarea>
 					</div>
 					<div>
 						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null}>Empty Order</button>
