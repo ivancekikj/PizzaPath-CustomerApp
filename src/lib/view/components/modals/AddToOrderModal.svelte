@@ -50,7 +50,7 @@
     setCurrentFood($MenuFoodsStore[0].id);
 </script>
 
-<Modal title="Add Food to Order">
+<Modal title="Add Food to Order" id="add-to-cart-modal">
     <div slot="body">
         <div class="mb-20px">
             <label for="food_name" class="form-label">Food</label>

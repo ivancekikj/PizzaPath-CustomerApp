@@ -16,7 +16,7 @@
 		<li class="list-group-item">Average Rating: /</li>
 	</ul>
 	{#if $AuthenticatedCustomerStore != null && updateSelectedFoodId != null}
-		<button class="card-link btn red-button" data-bs-toggle="modal" data-bs-target="#exampleModal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
+		<button class="card-link btn red-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
 	{/if}
 </div>
 

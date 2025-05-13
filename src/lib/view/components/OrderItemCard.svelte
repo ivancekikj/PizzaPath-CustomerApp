@@ -1,9 +1,19 @@
 <script lang="ts">
     import type {SelectedFood} from "$lib/domain/dto";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
+    import {OrderRepository} from "$lib/repository/OrderRepository";
 
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
+    export let updateTotalOrderPrice: () => void;
+    export let setItemForToppings: (item: SelectedFood) => void;
+
+    async function onItemUpdate(): Promise<void> {
+        updateTotalOrderPrice();
+        await OrderRepository.updateItem(item);
+    }
+
+    updateTotalOrderPrice();
 </script>
 
 <div class="card {hasBottomMargin ? 'mb-50px' : ''}">
@@ -17,20 +27,22 @@
                     <h5 class="fw-bold">{item.food.name}</h5>
                     <i class="fa-solid fa-circle-xmark x-icon"></i>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <div class="input-width">
-                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} />
+                <div class="row justify-content-between">
+                    <div class="{item.food.toppings.length > 0 ? 'col-3' : 'col-5'}">
+                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemUpdate} />
                     </div>
-                    <div class="input-width">
-                        <select class="form-select" id="size" bind:value={item.selectedPortionId}>
+                    <div class="{item.food.toppings.length > 0 ? 'col-5' : 'col-7'}">
+                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate}>
                             {#each item.portions as portion}
                                 <option value={portion.id}>{portion.size.name} ({portion.price} мкд)</option>
                             {/each}
                         </select>
                     </div>
-                    <div class="input-width">
-                        <button class="btn btn-primary green-button w-100">Toppings</button>
-                    </div>
+                    {#if item.food.toppings.length > 0}
+                        <div class="col-4">
+                            <button class="btn btn-primary green-button w-100" data-bs-toggle="modal" data-bs-target="#edit-toppings-modal" on:click={() => setItemForToppings(item)}>Toppings</button>
+                        </div>
+                    {/if}
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>
@@ -55,9 +67,5 @@
     .x-icon:hover {
         color: #8b0000 !important;
         cursor: pointer;
-    }
-
-    .input-width {
-        width: 30%;
     }
 </style>
