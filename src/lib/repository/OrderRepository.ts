@@ -86,9 +86,19 @@ async function update(description: string): Promise<void> {
     );
 }
 
+async function deleteItem(id: number): Promise<void> {
+    await axios.delete(
+        `${ApiData.ADMIN_APP_URL}/api/orders/current-order/items/${id}/`,
+        {
+            headers: { 'Content-Type': 'application/json' }
+        }
+    );
+}
+
 export const OrderRepository = {
     addItem,
     getCurrentItems,
     updateItem,
-    update
+    update,
+    deleteItem
 };

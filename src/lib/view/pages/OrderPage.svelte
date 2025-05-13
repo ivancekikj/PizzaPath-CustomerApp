@@ -49,7 +49,7 @@
 	<div class="container mt-100px mb-100px">
 		<div class="row justify-content-between">
 			<div class="col-8">
-				{#if $OrderStore !== null}
+				{#if $OrderStore !== null && $OrderStore.items.length > 0}
 					{#each $OrderStore.items as item, i}
 						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings}/>
 					{/each}
@@ -75,8 +75,8 @@
 						<textarea class="form-control" id="description" disabled={$OrderStore == null} bind:value={description} on:input={updateDescription}></textarea>
 					</div>
 					<div>
-						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null}>Empty Order</button>
-						<button class="btn green-button w-100" disabled={$OrderStore == null}>Submit Order</button>
+						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null}>Delete Order</button>
+						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0}>Submit Order</button>
 					</div>
 				</div>
 			</div>
