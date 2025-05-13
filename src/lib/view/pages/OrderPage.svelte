@@ -58,7 +58,7 @@
 				{/if}
 			</div>
 			<div class="col-3">
-				<div class="position-fixed">
+				<div class="sticky-details">
 					<div class="card mb-50px">
 						<div class="card-body">
 							<h5 class="card-title mb-20px fw-bold">Order Details</h5>
@@ -91,5 +91,10 @@
 	#description {
 		resize: none;
 		height: 200px;
+	}
+
+	.sticky-details {
+		position: sticky;
+		top: 190px;
 	}
 </style>
