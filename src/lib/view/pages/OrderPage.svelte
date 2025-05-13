@@ -72,7 +72,7 @@
 							<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{$OrderStore ? $OrderStore.items.length : "/"}</span></p>
 							<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">/</span></p>
 							<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">/</span></p>
-							<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{$OrderStore ? (orderPriceTotal + " ден") : "/"}</span></p>
+							<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{$OrderStore && !isNaN(orderPriceTotal) ? (orderPriceTotal + " ден") : "/"}</span></p>
 							<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{$OrderStore ? capitalizeStatus($OrderStore.status) : "/"}</span></p>
 						</div>
 					</div>
