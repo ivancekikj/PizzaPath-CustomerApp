@@ -5,6 +5,7 @@
 	import EditOrderToppingsModal from "$lib/view/components/modals/EditOrderToppingsModal.svelte";
 	import type {SelectedFood} from "$lib/domain/dto";
 	import {OrderStore} from "$lib/stores/OrderStore";
+	import ConfirmModal from "$lib/view/components/modals/ConfirmModal.svelte";
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;
@@ -28,6 +29,11 @@
 
 	function setCurrentItemForToppings(item: SelectedFood): void {
 		currentItemForToppings = item;
+	}
+
+	async function deleteOrder(): Promise<void> {
+		await OrderRepository.delete();
+		window.location.href = "/order";
 	}
 
 	async function updateDescription(): Promise<void> {
@@ -75,7 +81,7 @@
 						<textarea class="form-control" id="description" disabled={$OrderStore == null} bind:value={description} on:input={updateDescription}></textarea>
 					</div>
 					<div>
-						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null}>Delete Order</button>
+						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
 						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0}>Submit Order</button>
 					</div>
 				</div>
@@ -84,6 +90,9 @@
 	</div>
 	{#if currentItemForToppings}
 		<EditOrderToppingsModal item={currentItemForToppings} updateTotalOrderPrice={calculateTotalOrderPrice}></EditOrderToppingsModal>
+	{/if}
+	{#if $OrderStore != null}
+		<ConfirmModal title="Delete Order" id="empty-order-modal" onSubmit={deleteOrder} content="Are you sure you want to delete the order? All of the data will be lost!"></ConfirmModal>
 	{/if}
 {/await}
 
