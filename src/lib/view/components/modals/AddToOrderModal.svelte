@@ -56,7 +56,7 @@
             <label for="food_name" class="form-label">Food</label>
             <input type="text" class="form-control" name="food_name" id="food_name" disabled value={currentData.food.name} />
         </div>
-        <div class="mb-20xp">
+        <div class="mb-20px">
             <label for="size" class="form-label">Size</label>
             <select class="form-select" id="size" bind:value={currentData.selectedPortionId}>
                 {#each currentData.portions as portion}
