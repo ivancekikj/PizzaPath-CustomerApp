@@ -2,6 +2,7 @@
     import type {SelectedFood} from "$lib/domain/dto";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/repository/OrderRepository";
+    import {OrderStore} from "$lib/stores/OrderStore";
 
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
@@ -11,6 +12,18 @@
     async function onItemUpdate(): Promise<void> {
         updateTotalOrderPrice();
         await OrderRepository.updateItem(item);
+    }
+
+    async function deleteItem(): Promise<void> {
+        OrderStore.update((store) => {
+            if (store) {
+                store.items = store.items.filter(i => i.id !== item.id);
+                return { ...store };
+            }
+            return null;
+        });
+        updateTotalOrderPrice();
+        await OrderRepository.deleteItem(item.id);
     }
 
     updateTotalOrderPrice();
@@ -23,9 +36,11 @@
         </div>
         <div class="col-md-8 p-2">
             <div class="card-body d-flex flex-column justify-content-between h-100">
-                <div class="d-flex justify-content-between">
-                    <h5 class="fw-bold">{item.food.name}</h5>
-                    <i class="fa-solid fa-circle-xmark x-icon"></i>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold m-0">{item.food.name}</h5>
+                    <button class="btn btn-primary red-button rounded-circle" on:click={deleteItem} aria-label="Delete">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
                 <div class="row justify-content-between">
                     <div class="{item.food.toppings.length > 0 ? 'col-3' : 'col-5'}">
@@ -56,16 +71,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .x-icon {
-        color: #fe0000 !important;
-        transform: scale(1.5);
-        transform-origin: top right;
-    }
-
-    .x-icon:hover {
-        color: #8b0000 !important;
-        cursor: pointer;
-    }
-</style>
