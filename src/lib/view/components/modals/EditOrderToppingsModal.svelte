@@ -35,7 +35,7 @@
             <div class="form-label">Toppings</div>
             {#each item.food.toppings as topping}
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="toppings" value={topping.id} id="topping-{topping.name}" bind:group={item.selectedToppingIds} on:change={onItemUpdate}>
+                    <input type="checkbox" class="form-check-input" name="toppings" value={topping.id} id="topping-{topping.name}" bind:group={item.selectedToppingIds} on:change={onItemUpdate} disabled={$OrderStore && $OrderStore.status !== "edit"}>
                     <label class="form-check-label" for="topping-{topping.name}">{topping.name} ({topping.price} ден)</label>
                 </div>
             {/each}

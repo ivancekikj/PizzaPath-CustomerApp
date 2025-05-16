@@ -38,16 +38,16 @@
             <div class="card-body d-flex flex-column justify-content-between h-100">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold m-0">{item.food.name}</h5>
-                    <button class="btn btn-primary red-button rounded-circle" on:click={deleteItem} aria-label="Delete">
+                    <button class="btn btn-primary red-button rounded-circle" on:click={deleteItem} aria-label="Delete" disabled={$OrderStore && $OrderStore.status !== "edit"}>
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 <div class="row justify-content-between">
                     <div class="{item.food.toppings.length > 0 ? 'col-3' : 'col-5'}">
-                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemUpdate} />
+                        <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemUpdate} disabled={$OrderStore && $OrderStore.status !== "edit"} />
                     </div>
                     <div class="{item.food.toppings.length > 0 ? 'col-5' : 'col-7'}">
-                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate}>
+                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate} disabled={$OrderStore && $OrderStore.status !== "edit"}>
                             {#each item.portions as portion}
                                 <option value={portion.id}>{portion.size.name} ({portion.price} мкд)</option>
                             {/each}
@@ -61,7 +61,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>
-                        <input type="checkbox" class="form-check-input" id="coupon"/>
+                        <input type="checkbox" class="form-check-input" id="coupon" disabled={$OrderStore && $OrderStore.status !== "edit"}/>
                         <label for="coupon" class="form-label">Redeem coupons</label>
                     </div>
                     <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(item).discount * 100}%</span></div>

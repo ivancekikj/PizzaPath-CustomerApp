@@ -36,6 +36,11 @@
 		window.location.href = "/order";
 	}
 
+	async function submitOrder(): Promise<void> {
+		await OrderRepository.submit();
+		window.location.href = "/order";
+	}
+
 	async function updateDescription(): Promise<void> {
 		OrderStore.update((store) => {
 			if (store) {
@@ -78,11 +83,11 @@
 					</div>
 					<div class="mb-50px">
 						<label for="description" class="form-label">Description</label>
-						<textarea class="form-control" id="description" disabled={$OrderStore == null} bind:value={description} on:input={updateDescription}></textarea>
+						<textarea class="form-control" id="description" disabled={$OrderStore == null || $OrderStore.status !== "edit"} bind:value={description} on:input={updateDescription}></textarea>
 					</div>
 					<div>
-						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
-						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0}>Submit Order</button>
+						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
+						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0 || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#submit-order-modal">Submit Order</button>
 					</div>
 				</div>
 			</div>
@@ -92,7 +97,14 @@
 		<EditOrderToppingsModal item={currentItemForToppings} updateTotalOrderPrice={calculateTotalOrderPrice}></EditOrderToppingsModal>
 	{/if}
 	{#if $OrderStore != null}
-		<ConfirmModal title="Delete Order" id="empty-order-modal" onSubmit={deleteOrder} content="Are you sure you want to delete the order? All of the data will be lost!"></ConfirmModal>
+		<ConfirmModal title="Delete Order" id="empty-order-modal" onSubmit={deleteOrder}>
+			<p slot="content">Are you sure you want to delete the order? All of the data will be lost!</p>
+		</ConfirmModal>
+	{/if}
+	{#if $OrderStore && $OrderStore.items.length > 0 && $OrderStore.status === "edit"}
+		<ConfirmModal title="Submit Order" id="submit-order-modal" onSubmit={submitOrder}>
+			<p slot="content">Are you sure you want to submit the order? You won’t be able to edit it anymore.</p>
+		</ConfirmModal>
 	{/if}
 {/await}
 

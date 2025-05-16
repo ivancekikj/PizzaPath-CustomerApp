@@ -3,13 +3,14 @@
 
     export let title: string;
     export let id: string;
-    export let content: string;
     export let onSubmit: () => Promise<void>;
+
+    console.log('modal')
 </script>
 
 <Modal {title} {id}>
     <div slot="body">
-        <p>{content}</p>
+        <slot name="content"></slot>
     </div>
     <div slot="footer">
         <button type="button" class="btn dark-green-button" data-bs-dismiss="modal">Close</button>
