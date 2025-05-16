@@ -104,11 +104,24 @@ async function deleteOrder() {
     );
 }
 
+async function submit(): Promise<void> {
+    await axios.put(
+        `${ApiData.ADMIN_APP_URL}/api/orders/current-order/`,
+        {
+            submitted: true
+        },
+        {
+            headers: { 'Content-Type': 'application/json' }
+        }
+    );
+}
+
 export const OrderRepository = {
     addItem,
     getCurrentItems,
     updateItem,
     update,
     deleteItem,
-    delete: deleteOrder
+    delete: deleteOrder,
+    submit
 };
