@@ -83,10 +83,10 @@
 					</div>
 					<div class="mb-50px">
 						<label for="description" class="form-label">Description</label>
-						<textarea class="form-control" id="description" disabled={$OrderStore == null} bind:value={description} on:input={updateDescription}></textarea>
+						<textarea class="form-control" id="description" disabled={$OrderStore == null || $OrderStore.status !== "edit"} bind:value={description} on:input={updateDescription}></textarea>
 					</div>
 					<div>
-						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
+						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
 						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0 || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#submit-order-modal">Submit Order</button>
 					</div>
 				</div>
