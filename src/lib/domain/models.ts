@@ -14,6 +14,12 @@ export interface Customer {
     phoneNumber: string;
     password: string;
     isSubscribedToNewsletter: boolean;
+    coupons: CouponReward[];
+}
+
+export interface CouponReward {
+    foodPortionId: number;
+    count: number;
 }
 
 export interface Food {
@@ -42,6 +48,7 @@ export interface FoodPortion {
     discount: number;
     size: Size;
     foodId: number;
+    couponValue: number;
 }
 
 export interface Order {

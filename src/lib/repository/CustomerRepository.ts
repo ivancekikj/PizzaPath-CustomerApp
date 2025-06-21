@@ -37,6 +37,10 @@ async function getCurrent(): Promise<Customer> {
 		address: response.data.address,
 		password: response.data.password,
 		isSubscribedToNewsletter: response.data.is_subscribed_to_newsletter,
+		coupons: response.data.coupons.map((coupon: any) => ({
+			foodPortionId: coupon.food_portion_id,
+			count: coupon.count
+		}))
 	} as Customer;
 }
 
