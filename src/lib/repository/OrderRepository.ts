@@ -9,7 +9,8 @@ async function addItem(item: SelectedFood): Promise<void> {
         {
             quantity: item.selectedQuantity,
             food_portion_id: item.selectedPortionId,
-            toppings_ids: item.selectedToppingIds
+            toppings_ids: item.selectedToppingIds,
+            are_coupons_used: item.areCouponsUsed,
         },
         {
             headers: { 'Content-Type': 'application/json' }

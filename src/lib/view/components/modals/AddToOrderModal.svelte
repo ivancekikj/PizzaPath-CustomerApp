@@ -18,7 +18,7 @@
 
     function setAreCouponsDisabled(): void {
         const portion: FoodPortion = MenuUtils.findPortionById(currentData);
-        areCouponsDisabled = !($AuthenticatedCustomerStore?.coupons.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue) ?? false);
+        areCouponsDisabled = !($AuthenticatedCustomerStore?.coupons.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * currentData.selectedQuantity) ?? false);
         if (areCouponsDisabled && currentData.areCouponsUsed) {
             currentData.areCouponsUsed = false;
         }
