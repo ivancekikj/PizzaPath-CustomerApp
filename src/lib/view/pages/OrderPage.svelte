@@ -6,6 +6,10 @@
 	import type {SelectedFood} from "$lib/domain/dto";
 	import {OrderStore} from "$lib/stores/OrderStore";
 	import ConfirmModal from "$lib/view/components/modals/ConfirmModal.svelte";
+	import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
+	import {CouponRepository} from "$lib/repository/CouponRepository";
+	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
+	import {EnabledItemCouponsStore} from "$lib/stores/EnabledItemCouponsStore";
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;
@@ -13,6 +17,13 @@
 
 	async function loadOrder(): Promise<void> {
 		OrderStore.setValue(await OrderRepository.getCurrentItems());
+		if ($CustomerCouponsStore.length === 0) {
+			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
+		}
+		OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
+		if ($OrderStore) {
+			EnabledItemCouponsStore.setValue(new Set($OrderStore?.items.filter(item => item.areCouponsUsed || item.selectedQuantity * MenuUtils.findPortionById(item).couponValue <= $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === item.selectedPortionId)!.count).map(item => item.id)));
+		}
 		description = $OrderStore && $OrderStore.description ? $OrderStore.description : "";
 		if ($OrderStore && $OrderStore.items.some(item => item.food.toppings.length > 0)) {
 			setCurrentItemForToppings($OrderStore.items.filter(item => item.food.toppings.length > 0)[0]);
@@ -75,8 +86,8 @@
 							<h5 class="card-title mb-20px fw-bold">Order Details</h5>
 							<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{$OrderStore ? $OrderStore.id : "/"}</span></p>
 							<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{$OrderStore ? $OrderStore.items.length : "/"}</span></p>
-							<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">/</span></p>
-							<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">/</span></p>
+							<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.redeemedCoupons : "/"}</span></p>
+							<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.earnedCoupons : "/"}</span></p>
 							<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{$OrderStore && !isNaN(orderPriceTotal) ? (orderPriceTotal + " ден") : "/"}</span></p>
 							<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{$OrderStore ? capitalizeStatus($OrderStore.status) : "/"}</span></p>
 						</div>

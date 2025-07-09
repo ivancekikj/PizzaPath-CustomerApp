@@ -58,3 +58,9 @@ export interface Order {
     description: string;
     items: SelectedFood[];
 }
+
+export interface OrderCouponInfo {
+    coupons: CouponReward[];
+    earnedCoupons: number;
+    redeemedCoupons: number;
+}

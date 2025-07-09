@@ -5,7 +5,8 @@ import {get} from "svelte/store";
 
 function calculateTotalPrice(selectedFood: SelectedFood) {
     const portion: FoodPortion = findPortionById(selectedFood);
-    if (selectedFood.areCouponsUsed && get(AuthenticatedCustomerStore)?.coupons.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * selectedFood.selectedQuantity))
+    const condition = get(AuthenticatedCustomerStore)?.coupons.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * selectedFood.selectedQuantity);
+    if (selectedFood.areCouponsUsed && condition)
         return 0;
     const toppingsTotal: number = selectedFood.selectedToppingIds
         .map(id => selectedFood.food.toppings.find(topping => topping.id === id)!.price)
