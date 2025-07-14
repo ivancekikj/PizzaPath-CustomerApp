@@ -38,7 +38,17 @@
     }
 
     async function onItemSelectionChange(): Promise<void> {
-
+        let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
+        const portion: FoodPortion = MenuUtils.findPortionById(item);
+        let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
+        const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id);
+        const leftOverCoupons = portionCoupons ? portionCoupons.count - usedCoupons : 0;
+        const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && !i.areCouponsUsed);
+        const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
+        unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
+        disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
+        EnabledItemCouponsStore.update(store => new Set<number>([...store]));
+        await onItemUpdate();
     }
 
     async function onItemPortionChange(): Promise<void> {
@@ -92,7 +102,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>
-                        <input type="checkbox" class="form-check-input" id="coupon" bind:checked={item.areCouponsUsed} disabled={$OrderStore && $OrderStore.status !== "edit" || !$EnabledItemCouponsStore.has(item.id)}/>
+                        <input type="checkbox" class="form-check-input" id="coupon" bind:checked={item.areCouponsUsed} on:change={onItemSelectionChange} disabled={$OrderStore && $OrderStore.status !== "edit" || !$EnabledItemCouponsStore.has(item.id)}/>
                         <label for="coupon" class="form-label">Redeem coupons</label>
                     </div>
                     <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(item).discount * 100}%</span></div>
