@@ -52,7 +52,19 @@
     }
 
     async function onItemPortionChange(): Promise<void> {
-
+        item.areCouponsUsed = false;
+        item.portions.forEach(portion => {
+            let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && i.areCouponsUsed);
+            let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
+            const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id);
+            const leftOverCoupons = portionCoupons ? portionCoupons.count - usedCoupons : 0;
+            const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && !i.areCouponsUsed);
+            const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
+            unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
+            disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
+            EnabledItemCouponsStore.update(store => new Set<number>([...store]));
+        });
+        await onItemUpdate();
     }
 
     async function deleteItem(): Promise<void> {
@@ -88,7 +100,7 @@
                         <input type="number" class="form-control" name="quantity" id="quantity" min="1" bind:value={item.selectedQuantity} on:change={onItemQuantityChange} disabled={$OrderStore && $OrderStore.status !== "edit"} />
                     </div>
                     <div class="{item.food.toppings.length > 0 ? 'col-5' : 'col-7'}">
-                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemUpdate} disabled={$OrderStore && $OrderStore.status !== "edit"}>
+                        <select class="form-select" id="size" bind:value={item.selectedPortionId} on:change={onItemPortionChange} disabled={$OrderStore && $OrderStore.status !== "edit"}>
                             {#each item.portions as portion}
                                 <option value={portion.id}>{portion.size.name} ({portion.price} мкд)</option>
                             {/each}
