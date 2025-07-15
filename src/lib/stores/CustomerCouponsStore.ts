@@ -5,5 +5,5 @@ const customerCoupons: Writable<CouponReward[]> = writable<CouponReward[]>([]);
 
 export const CustomerCouponsStore = {
     subscribe: customerCoupons.subscribe,
-    setValue: (value: CouponReward[] ) => customerCoupons.set(value)
+    setValue: (value: CouponReward[]) => customerCoupons.set(value)
 };

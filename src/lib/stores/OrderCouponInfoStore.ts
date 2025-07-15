@@ -5,5 +5,6 @@ const orderCouponInfo: Writable<OrderCouponInfo | null> = writable<OrderCouponIn
 
 export const OrderCouponInfoStore = {
     subscribe: orderCouponInfo.subscribe,
-    setValue: (value: OrderCouponInfo | null) => orderCouponInfo.set(value)
+    setValue: (value: OrderCouponInfo | null) => orderCouponInfo.set(value),
+    update: (updater: (value: OrderCouponInfo | null) => OrderCouponInfo | null) => orderCouponInfo.update(updater)
 };

@@ -11,10 +11,12 @@
     export let item: SelectedFood;
     export let hasBottomMargin: boolean = true;
     export let updateTotalOrderPrice: () => void;
+    export let updateOrderCouponInfo: () => void;
     export let setItemForToppings: (item: SelectedFood) => void;
 
     async function onItemUpdate(): Promise<void> {
         updateTotalOrderPrice();
+        updateOrderCouponInfo();
         // await OrderRepository.updateItem(item);
     }
 

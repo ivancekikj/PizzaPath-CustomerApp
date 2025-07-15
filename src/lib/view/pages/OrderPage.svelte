@@ -10,6 +10,7 @@
 	import {CouponRepository} from "$lib/repository/CouponRepository";
 	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 	import {EnabledItemCouponsStore} from "$lib/stores/EnabledItemCouponsStore";
+	import type {CouponReward} from "$lib/domain/models";
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;
@@ -28,6 +29,30 @@
 		if ($OrderStore && $OrderStore.items.some(item => item.food.toppings.length > 0)) {
 			setCurrentItemForToppings($OrderStore.items.filter(item => item.food.toppings.length > 0)[0]);
 		}
+	}
+
+	function updateOrderCouponInfo(): void {
+		let earnedCoupons = 0;
+		let redeemedCoupons = 0;
+		const couponByFoodPortionId: Map<number, CouponReward> = new Map();
+		$CustomerCouponsStore.filter(c => $OrderStore!.items.some(item => item.selectedPortionId === c.foodPortionId))
+				.forEach(c => couponByFoodPortionId.set(c.foodPortionId, { ...c }));
+		$OrderStore!.items.filter(item => item.areCouponsUsed)
+				.forEach(item => {
+					const portion = MenuUtils.findPortionById(item);
+					redeemedCoupons += item.selectedQuantity * portion.couponValue;
+					earnedCoupons += item.selectedQuantity;
+					couponByFoodPortionId.get(item.selectedPortionId)!.count -= item.selectedQuantity * portion.couponValue;
+				});
+		OrderCouponInfoStore.update((store) => {
+			if (store) {
+				store.earnedCoupons = earnedCoupons;
+				store.redeemedCoupons = redeemedCoupons;
+				store.coupons = Array.from(couponByFoodPortionId.values());
+				return { ...store };
+			}
+			return store;
+		});
 	}
 
 	function calculateTotalOrderPrice(): void {
@@ -73,7 +98,7 @@
 			<div class="col-8">
 				{#if $OrderStore !== null && $OrderStore.items.length > 0}
 					{#each $OrderStore.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings}/>
+						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings} {updateOrderCouponInfo}/>
 					{/each}
 				{:else}
 					<p>Order currently empty.</p>
