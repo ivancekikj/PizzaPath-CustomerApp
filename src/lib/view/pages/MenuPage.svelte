@@ -6,12 +6,21 @@
 	import { StoreOperations } from '$lib/stores/StoreOperations';
 	import AddToOrderModal from "$lib/view/components/modals/AddToOrderModal.svelte";
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
+	import {CouponRepository} from "$lib/repository/CouponRepository";
+	import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
 
 	const categoryId: string | null = page.url.searchParams.get('categoryId');
 	let modal: AddToOrderModal | null = null;
 
 	async function loadData(): Promise<void> {
 		await StoreOperations.setMenuFoodsByCategoryId(categoryId ? Number(categoryId) : undefined);
+		if ($CustomerCouponsStore.length == 0) {
+			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
+		}
+		if (!$OrderCouponInfoStore) {
+			OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
+		}
 	}
 </script>
 

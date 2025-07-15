@@ -1,7 +1,7 @@
 <script lang="ts">
     import Modal from "$lib/view/components/modals/Modal.svelte";
     import type {SelectedFood} from "$lib/domain/dto";
-    import type {Food} from "$lib/domain/models";
+    import type {CouponReward, Food} from "$lib/domain/models";
     import type {FoodPortion} from "$lib/domain/models.js";
     import {MenuFoodsStore} from "$lib/stores/MenuFoodsStore";
     import {FoodPortionsStore} from "$lib/stores/FoodPortionsStore";
@@ -9,6 +9,8 @@
     import {OrderRepository} from "$lib/repository/OrderRepository";
     import CheckboxInput from "$lib/view/components/CheckboxInput.svelte";
     import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+    import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
+    import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 
     const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
     let isButtonClicked: boolean = false;
@@ -18,7 +20,12 @@
 
     function setAreCouponsDisabled(): void {
         const portion: FoodPortion = MenuUtils.findPortionById(currentData);
-        areCouponsDisabled = !($AuthenticatedCustomerStore?.coupons.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * currentData.selectedQuantity) ?? false);
+        const coupon: CouponReward | undefined = $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === portion.id);
+        if (coupon) {
+            areCouponsDisabled = !(coupon.count >= portion.couponValue * currentData.selectedQuantity);
+        } else {
+            areCouponsDisabled = !$CustomerCouponsStore!.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * currentData.selectedQuantity);
+        }
         if (areCouponsDisabled && currentData.areCouponsUsed) {
             currentData.areCouponsUsed = false;
         }

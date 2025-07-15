@@ -14,7 +14,6 @@ export interface Customer {
     phoneNumber: string;
     password: string;
     isSubscribedToNewsletter: boolean;
-    coupons: CouponReward[];
 }
 
 export interface CouponReward {
