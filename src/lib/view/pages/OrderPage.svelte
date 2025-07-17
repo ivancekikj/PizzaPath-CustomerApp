@@ -10,7 +10,7 @@
 	import {CouponRepository} from "$lib/repository/CouponRepository";
 	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 	import {EnabledItemCouponsStore} from "$lib/stores/EnabledItemCouponsStore";
-	import type {CouponReward} from "$lib/domain/models";
+	import type {CouponReward, FoodPortion} from "$lib/domain/models";
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;
@@ -23,12 +23,34 @@
 		}
 		OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
 		if ($OrderStore) {
-			EnabledItemCouponsStore.setValue(new Set($OrderStore?.items.filter(item => item.areCouponsUsed || item.selectedQuantity * MenuUtils.findPortionById(item).couponValue <= $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === item.selectedPortionId)!.count).map(item => item.id)));
+			EnabledItemCouponsStore.setValue(new Set($OrderStore!.items.filter(isItemEnabledForSelection).map(item => item.id)));
 		}
 		description = $OrderStore && $OrderStore.description ? $OrderStore.description : "";
 		if ($OrderStore && $OrderStore.items.some(item => item.food.toppings.length > 0)) {
 			setCurrentItemForToppings($OrderStore.items.filter(item => item.food.toppings.length > 0)[0]);
 		}
+	}
+
+	function updateEnabledItemsForPortion(portion: FoodPortion): void {
+		let selectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && i.areCouponsUsed);
+		let usedCoupons = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
+		const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id) || {count: 0, foodPortionId: portion.id};
+		const leftOverCoupons: number = portionCoupons.count - usedCoupons;
+		const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && !i.areCouponsUsed);
+		const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
+		unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
+		disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
+		EnabledItemCouponsStore.update(store => new Set([...store]));
+	}
+
+	function isItemEnabledForSelection(item: SelectedFood): boolean {
+		if (item.areCouponsUsed)
+			return true;
+		const portion: FoodPortion = MenuUtils.findPortionById(item);
+		const coupon: CouponReward | undefined = $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === item.selectedPortionId);
+		if (!coupon)
+			return false;
+		return item.selectedQuantity * portion.couponValue <= coupon.count
 	}
 
 	function updateOrderCouponInfo(): void {
@@ -98,7 +120,7 @@
 			<div class="col-8">
 				{#if $OrderStore !== null && $OrderStore.items.length > 0}
 					{#each $OrderStore.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings} {updateOrderCouponInfo}/>
+						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings} {updateOrderCouponInfo} {updateEnabledItemsForPortion}/>
 					{/each}
 				{:else}
 					<p>Order currently empty.</p>

@@ -3,8 +3,7 @@
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/repository/OrderRepository";
     import {OrderStore} from "$lib/stores/OrderStore";
-    import type {CouponReward, FoodPortion} from "$lib/domain/models";
-    import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+    import type {FoodPortion} from "$lib/domain/models";
     import {EnabledItemCouponsStore} from "$lib/stores/EnabledItemCouponsStore";
     import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 
@@ -13,59 +12,34 @@
     export let updateTotalOrderPrice: () => void;
     export let updateOrderCouponInfo: () => void;
     export let setItemForToppings: (item: SelectedFood) => void;
+    export let updateEnabledItemsForPortion: (portion: FoodPortion) => void;
 
     async function onItemUpdate(): Promise<void> {
         updateTotalOrderPrice();
         updateOrderCouponInfo();
-        // await OrderRepository.updateItem(item);
+        await OrderRepository.updateItem(item);
     }
 
     async function onItemQuantityChange(): Promise<void> {
         let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
         const portion: FoodPortion = MenuUtils.findPortionById(item);
         let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
-        const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id);
-        if (item.areCouponsUsed && usedCoupons > portionCoupons!.count) {
+        const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id) || {count: 0, foodPortionId: portion.id};
+        if (item.areCouponsUsed && usedCoupons > portionCoupons.count) {
             item.areCouponsUsed = false;
-            selectedPortionItems = selectedPortionItems.filter(i => i.id !== item.id);
-            usedCoupons -= item.selectedQuantity * portion.couponValue;
         }
-        const leftOverCoupons = portionCoupons ? portionCoupons.count - usedCoupons : 0;
-        const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && !i.areCouponsUsed);
-        const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
-        unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
-        disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
-        EnabledItemCouponsStore.update(store => new Set<number>([...store]));
+        updateEnabledItemsForPortion(portion);
         await onItemUpdate();
     }
 
     async function onItemSelectionChange(): Promise<void> {
-        let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
-        const portion: FoodPortion = MenuUtils.findPortionById(item);
-        let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
-        const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id);
-        const leftOverCoupons = portionCoupons ? portionCoupons.count - usedCoupons : 0;
-        const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && !i.areCouponsUsed);
-        const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
-        unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
-        disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
-        EnabledItemCouponsStore.update(store => new Set<number>([...store]));
+        updateEnabledItemsForPortion(MenuUtils.findPortionById(item));
         await onItemUpdate();
     }
 
     async function onItemPortionChange(): Promise<void> {
         item.areCouponsUsed = false;
-        item.portions.forEach(portion => {
-            let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && i.areCouponsUsed);
-            let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
-            const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id);
-            const leftOverCoupons = portionCoupons ? portionCoupons.count - usedCoupons : 0;
-            const unselectedPortionItems = $OrderStore!.items.filter(i => i.selectedPortionId === portion.id && !i.areCouponsUsed);
-            const disabledCoupons = unselectedPortionItems.filter(i => i.selectedQuantity * portion.couponValue > leftOverCoupons);
-            unselectedPortionItems.forEach(i => $EnabledItemCouponsStore.add(i.id));
-            disabledCoupons.forEach(i => $EnabledItemCouponsStore.delete(i.id));
-            EnabledItemCouponsStore.update(store => new Set<number>([...store]));
-        });
+        item.portions.forEach(updateEnabledItemsForPortion);
         await onItemUpdate();
     }
 
@@ -77,8 +51,22 @@
             }
             return null;
         });
+        getPortionsInOrder().forEach(updateEnabledItemsForPortion);
         updateTotalOrderPrice();
+        updateOrderCouponInfo();
         await OrderRepository.deleteItem(item.id);
+    }
+
+    function getPortionsInOrder(): FoodPortion[] {
+        const portionsIds: Set<number> = new Set()
+        const result: FoodPortion[] = [];
+        $OrderStore!.items.forEach(i => {
+            if (!portionsIds.has(i.selectedPortionId)) {
+                portionsIds.add(i.selectedPortionId);
+                result.push(MenuUtils.findPortionById(i));
+            }
+        });
+        return result;
     }
 
     updateTotalOrderPrice();

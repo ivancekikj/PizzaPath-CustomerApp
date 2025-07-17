@@ -15,6 +15,8 @@
 
 	async function loadData(): Promise<void> {
 		await StoreOperations.setMenuFoodsByCategoryId(categoryId ? Number(categoryId) : undefined);
+		if (!$AuthenticatedCustomerStore)
+			return;
 		if ($CustomerCouponsStore.length == 0) {
 			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
 		}
