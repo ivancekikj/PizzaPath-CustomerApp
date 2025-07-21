@@ -4,8 +4,6 @@
     export let title: string;
     export let id: string;
     export let onSubmit: () => Promise<void>;
-
-    console.log('modal')
 </script>
 
 <Modal {title} {id}>

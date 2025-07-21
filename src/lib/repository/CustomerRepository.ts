@@ -27,7 +27,7 @@ async function create(customer: Customer): Promise<void> {
 }
 
 async function getCurrent(): Promise<Customer> {
-	const response = await axios.get(`${ApiData.ADMIN_APP_URL}/api/accounts/customers/`);
+	const response = await axios.get(`${ApiData.ADMIN_APP_URL}/api/accounts/customers/logged-in-customer/`);
 	return {
 		username: response.data.username,
 		email: response.data.email,
@@ -36,7 +36,7 @@ async function getCurrent(): Promise<Customer> {
 		phoneNumber: response.data.phone_number,
 		address: response.data.address,
 		password: response.data.password,
-		isSubscribedToNewsletter: response.data.is_subscribed_to_newsletter,
+		isSubscribedToNewsletter: response.data.is_subscribed_to_newsletter
 	} as Customer;
 }
 

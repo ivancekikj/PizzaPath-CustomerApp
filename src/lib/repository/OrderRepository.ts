@@ -9,7 +9,8 @@ async function addItem(item: SelectedFood): Promise<void> {
         {
             quantity: item.selectedQuantity,
             food_portion_id: item.selectedPortionId,
-            toppings_ids: item.selectedToppingIds
+            toppings_ids: item.selectedToppingIds,
+            are_coupons_used: item.areCouponsUsed,
         },
         {
             headers: { 'Content-Type': 'application/json' }
@@ -33,6 +34,7 @@ async function getCurrentItems(): Promise<Order | null> {
                 selectedQuantity: item.quantity,
                 selectedPortionId: item.food_portion_id,
                 selectedToppingIds: item.topping_ids,
+                areCouponsUsed: item.are_coupons_used,
                 food: {
                     id: item.food.id,
                     name: item.food.name,
@@ -49,6 +51,7 @@ async function getCurrentItems(): Promise<Order | null> {
                     id: portion.id,
                     price: portion.price,
                     discount: portion.discount,
+                    couponValue: portion.coupon_value,
                     size: {
                         id: portion.size.id,
                         name: portion.size.name
@@ -66,7 +69,8 @@ async function updateItem(item: SelectedFood): Promise<void> {
         {
             quantity: item.selectedQuantity,
             food_portion_id: item.selectedPortionId,
-            toppings_ids: item.selectedToppingIds
+            toppings_ids: item.selectedToppingIds,
+            are_coupons_used: item.areCouponsUsed,
         },
         {
             headers: { 'Content-Type': 'application/json' }

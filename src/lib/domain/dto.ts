@@ -12,4 +12,5 @@ export interface SelectedFood {
     selectedPortionId: number;
     selectedQuantity: number;
     selectedToppingIds: number[];
+    areCouponsUsed: boolean;
 }

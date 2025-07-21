@@ -16,6 +16,11 @@ export interface Customer {
     isSubscribedToNewsletter: boolean;
 }
 
+export interface CouponReward {
+    foodPortionId: number;
+    count: number;
+}
+
 export interface Food {
     id: number;
     name: string;
@@ -42,6 +47,7 @@ export interface FoodPortion {
     discount: number;
     size: Size;
     foodId: number;
+    couponValue: number;
 }
 
 export interface Order {
@@ -50,4 +56,10 @@ export interface Order {
     status: string;
     description: string;
     items: SelectedFood[];
+}
+
+export interface OrderCouponInfo {
+    coupons: CouponReward[];
+    earnedCoupons: number;
+    redeemedCoupons: number;
 }

@@ -1,22 +1,41 @@
 <script lang="ts">
     import Modal from "$lib/view/components/modals/Modal.svelte";
     import type {SelectedFood} from "$lib/domain/dto";
-    import type {Food} from "$lib/domain/models";
+    import type {CouponReward, Food} from "$lib/domain/models";
     import type {FoodPortion} from "$lib/domain/models.js";
     import {MenuFoodsStore} from "$lib/stores/MenuFoodsStore";
     import {FoodPortionsStore} from "$lib/stores/FoodPortionsStore";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/repository/OrderRepository";
+    import CheckboxInput from "$lib/view/components/CheckboxInput.svelte";
+    import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+    import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
+    import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 
     const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
     let isButtonClicked: boolean = false;
     let currentData: SelectedFood;
     let total: number = 0;
+    let areCouponsDisabled: boolean = false;
+
+    function setAreCouponsDisabled(): void {
+        const portion: FoodPortion = MenuUtils.findPortionById(currentData);
+        const coupon: CouponReward | undefined = $OrderCouponInfoStore?.coupons.find(c => c.foodPortionId === portion.id);
+        if (coupon) {
+            areCouponsDisabled = !(coupon.count >= portion.couponValue * currentData.selectedQuantity);
+        } else {
+            areCouponsDisabled = !$CustomerCouponsStore!.some(coupon => coupon.foodPortionId === portion.id && coupon.count >= portion.couponValue * currentData.selectedQuantity);
+        }
+        if (areCouponsDisabled && currentData.areCouponsUsed) {
+            currentData.areCouponsUsed = false;
+        }
+    }
 
     export function setCurrentFood(foodId: number): void {
         isButtonClicked = true;
         if (valuesByFoodId.has(foodId)) {
             currentData = valuesByFoodId.get(foodId)!;
+            setAreCouponsDisabled();
             total = MenuUtils.calculateTotalPrice(currentData);
             return;
         }
@@ -30,9 +49,11 @@
             selectedQuantity: 1,
             selectedPortionId: foodPortions[0].id,
             selectedToppingIds: [],
+            areCouponsUsed: false
         };
         valuesByFoodId.set(foodId, selectedFood);
         currentData = selectedFood;
+        setAreCouponsDisabled();
         total = MenuUtils.calculateTotalPrice(currentData);
     }
 
@@ -43,6 +64,7 @@
 
     $: {
         if (isButtonClicked) {
+            setAreCouponsDisabled();
             total = MenuUtils.calculateTotalPrice(currentData);
         }
     }
@@ -79,6 +101,9 @@
                 {/each}
             </div>
         {/if}
+        <div class="mb-20px">
+            <CheckboxInput name="coupon" label="Redeem coupons" bind:value={currentData.areCouponsUsed} bind:disabled={areCouponsDisabled}></CheckboxInput>
+        </div>
         <div class="d-flex justify-content-between">
             <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(currentData).discount * 100}%</span></div>
             <div>Total: <span class="fw-bold">{total} ден</span></div>

@@ -18,6 +18,7 @@ async function get(categoryId?: number): Promise<FoodPortion[]> {
                 name: portion.size.name
             },
             foodId: portion.food,
+            couponValue: portion.coupon_value
         } as FoodPortion;
     });
 }
