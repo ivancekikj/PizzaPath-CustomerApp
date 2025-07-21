@@ -20,7 +20,7 @@
 
     function setAreCouponsDisabled(): void {
         const portion: FoodPortion = MenuUtils.findPortionById(currentData);
-        const coupon: CouponReward | undefined = $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === portion.id);
+        const coupon: CouponReward | undefined = $OrderCouponInfoStore?.coupons.find(c => c.foodPortionId === portion.id);
         if (coupon) {
             areCouponsDisabled = !(coupon.count >= portion.couponValue * currentData.selectedQuantity);
         } else {
