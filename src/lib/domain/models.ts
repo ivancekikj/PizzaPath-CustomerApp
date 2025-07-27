@@ -63,3 +63,17 @@ export interface OrderCouponInfo {
     earnedCoupons: number;
     redeemedCoupons: number;
 }
+
+export interface DetailedCoupon {
+    foodPortionId: number;
+    foodName: string;
+    sizeName: string;
+    couponValue: number;
+    count: number;
+}
+
+export interface CategoryCoupons {
+    categoryId: number;
+    categoryName: string;
+    coupons: DetailedCoupon[];
+}
