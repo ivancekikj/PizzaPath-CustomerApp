@@ -11,7 +11,7 @@
         {#each categoryCoupons as category, i}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{i+1}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{i+1}" aria-expanded="false" aria-controls="collapse{i+1}">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{i+1}" aria-expanded="false" aria-controls="collapse{i+1}">
                         {category.categoryName}
                     </button>
                 </h2>
@@ -32,6 +32,18 @@
 {/if}
 
 <style>
+    .accordion-button {
+        background: #fe0000 !important;
+        color: white !important;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+        outline: none;
+    }
+    .accordion-button.collapsed {
+        background: white !important;
+        color: black !important;
+    }
     .accordion-button::after {
         transform: rotate(90deg);
     }
