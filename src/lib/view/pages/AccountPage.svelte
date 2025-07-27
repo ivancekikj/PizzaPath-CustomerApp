@@ -1,17 +1,28 @@
 <script lang="ts">
 	import CouponsAccordion from "$lib/view/components/CouponsAccordion.svelte";
+	import type {CategoryCoupons} from "$lib/domain/models";
+	import {CouponRepository} from "$lib/repository/CouponRepository";
+
+	let categoryCoupons: CategoryCoupons[];
+
+	async function loadData(): Promise<void> {
+		const couponsByCategoryId = await CouponRepository.getDetailedCouponInformation();
+		categoryCoupons = Array.from(couponsByCategoryId.values()).sort((a, b) => a.categoryName.localeCompare(b.categoryName));
+	}
 </script>
 
 <svelte:head>
 	<title>Pizza Delicious - Account</title>
 </svelte:head>
 
-<div class="container mt-100px mb-100px">
-	<div class="row justify-content-between">
-		<div class="col-8"></div>
-		<div class="col-3">
-			<h1 class="mb-50px">Earned coupons</h1>
-			<CouponsAccordion />
+{#await loadData() then _}
+	<div class="container mt-100px mb-100px">
+		<div class="row justify-content-between">
+			<div class="col-8"></div>
+			<div class="col-3">
+				<h1 class="mb-50px">Earned coupons</h1>
+				<CouponsAccordion {categoryCoupons} />
+			</div>
 		</div>
 	</div>
-</div>
+{/await}
