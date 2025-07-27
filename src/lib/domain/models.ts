@@ -77,3 +77,10 @@ export interface CategoryCoupons {
     categoryName: string;
     coupons: DetailedCoupon[];
 }
+
+export interface NewsletterPost {
+    id: number;
+    title: string;
+    content: string;
+    date: string;
+}
