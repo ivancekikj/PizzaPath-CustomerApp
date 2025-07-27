@@ -38,44 +38,50 @@
 
     async function initialLoad(): Promise<void> {
         totalCount = await NewsletterPostsRepository.getCurrentUserReceivedPostsCount();
+        if (totalCount === 0)
+            return;
         await loadPosts();
     }
 </script>
 
 {#await initialLoad() then _}
-    <div class="row g-4">
-        {#each posts as post}
-            <div class="col-md-6 col-lg-6">
-                <div class="card p-3">
-                    <div class="card-body">
-                        <h5 class="post-title">{post.title}</h5>
-                        <p class="card-text">
-                            {#if post.content.length > 100}
-                                {getFirst100Chars(post.content)}
-                                <span class="more">more</span>
-                            {:else}
-                                {post.content}
-                            {/if}
-                        </p>
-                        <p class="fw-bold mb-0">Posted on: <span class="fw-normal">{post.date}</span></p>
+    {#if totalCount === 0}
+        <p>No posts received.</p>
+    {:else}
+        <div class="row g-4">
+            {#each posts as post}
+                <div class="col-md-6 col-lg-6">
+                    <div class="card p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">{post.title}</h5>
+                            <p class="card-text">
+                                {#if post.content.length > 100}
+                                    {getFirst100Chars(post.content)}
+                                    <span class="more">more</span>
+                                {:else}
+                                    {post.content}
+                                {/if}
+                            </p>
+                            <p class="fw-bold mb-0">Posted on: <span class="fw-normal">{post.date}</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {/each}
-    </div>
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <div>Showing posts {startPostIndex} to {endPostIndex} out of {totalCount}.</div>
-        <nav>
-            <ul class="pagination mb-0">
-                <li class="page-item">
-                    <button class="page-link" disabled={leftDisabled} on:click={loadPreviousPage}>&lt;</button>
-                </li>
-                <li class="page-item">
-                    <button class="page-link" disabled={rightDisabled} on:click={loadNextPage}>&gt;</button>
-                </li>
-            </ul>
-        </nav>
-    </div>
+            {/each}
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div>Showing posts {startPostIndex} to {endPostIndex} out of {totalCount}.</div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item">
+                        <button class="page-link" disabled={leftDisabled} on:click={loadPreviousPage}>&lt;</button>
+                    </li>
+                    <li class="page-item">
+                        <button class="page-link" disabled={rightDisabled} on:click={loadNextPage}>&gt;</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    {/if}
 {/await}
 
 <style>
@@ -83,15 +89,28 @@
         border-radius: 10px;
         height: 100%;
     }
-    .post-title {
-        font-weight: bold;
-    }
+
     .more {
         color: #007bff;
         text-decoration: none;
     }
+
     .more:hover {
         text-decoration: underline;
         cursor: pointer;
+    }
+
+    .page-item > button {
+        color: black;
+    }
+
+    .page-item > button:disabled {
+        background: lightgray;
+        color: white;
+    }
+
+    .page-item > button:focus {
+        box-shadow: none;
+        outline: none;
     }
 </style>
