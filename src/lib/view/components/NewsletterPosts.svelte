@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {NewsletterPost} from "$lib/domain/models";
     import {NewsletterPostsRepository} from "$lib/repository/NewsletterPostsRepository";
+    import NewsletterPostModal from "$lib/view/components/modals/NewsletterPostModal.svelte";
 
     let posts: NewsletterPost[];
     let totalCount: number;
@@ -9,6 +10,7 @@
     let endPostIndex = -1;
     let leftDisabled = false;
     let rightDisabled = false;
+    let selectedPost: NewsletterPost;
 
     async function loadPosts(): Promise<void> {
         posts = await NewsletterPostsRepository.getCurrentUserReceivedPosts(page);
@@ -41,6 +43,11 @@
         if (totalCount === 0)
             return;
         await loadPosts();
+        setSelectedPost(posts[0]);
+    }
+    
+    function setSelectedPost(post: NewsletterPost): void {
+        selectedPost = post;
     }
 </script>
 
@@ -48,6 +55,7 @@
     {#if totalCount === 0}
         <p>No posts received.</p>
     {:else}
+        <NewsletterPostModal post={selectedPost} />
         <div class="row g-4">
             {#each posts as post}
                 <div class="col-md-6 col-lg-6">
@@ -57,7 +65,7 @@
                             <p class="card-text">
                                 {#if post.content.length > 100}
                                     {getFirst100Chars(post.content)}
-                                    <span class="more">more</span>
+                                    <span class="more" role="button" tabindex="0" on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedPost(post)} data-bs-toggle="modal" data-bs-target="#newsletter-post-modal" on:click={() => setSelectedPost(post)}>more</span>
                                 {:else}
                                     {post.content}
                                 {/if}
