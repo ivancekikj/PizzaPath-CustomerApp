@@ -14,3 +14,12 @@ export interface SelectedFood {
     selectedToppingIds: number[];
     areCouponsUsed: boolean;
 }
+
+export interface CustomerUpdateDto {
+    username: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    phoneNumber: string;
+    isSubscribedToNewsletter: boolean;
+}
