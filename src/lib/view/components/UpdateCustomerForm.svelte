@@ -6,6 +6,7 @@
     import {Converters} from "$lib/view/utils/Converters";
     import type {CustomerUpdateDto} from "$lib/domain/dto";
     import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+    import ConfirmModal from "$lib/view/components/modals/ConfirmModal.svelte";
 
     let model: CustomerUpdateDto = {
         username: $AuthenticatedCustomerStore!.username,
@@ -22,15 +23,23 @@
         address: null,
         phoneNumber: null,
     });
+    let hiddenButton: HTMLInputElement;
 
-    async function handleSubmit(event: Event): Promise<void> {
+    async function validateForm(event: Event): Promise<void> {
         event.preventDefault();
         const refs: Record<string, TextInput | null> = await inputRefs;
-
         Object.values(refs).forEach((ref) => ref?.validate());
-        const allValid: boolean = Object.values(refs).every((ref) => ref?.getIsValid());
+        const areAllValid = Object.values(refs).every((ref) => ref?.getIsValid());
+        if (areAllValid) {
+            hiddenButton.click();
+        }
+    }
 
-        if (allValid) {
+    async function submitData(): Promise<void> {
+        const refs: Record<string, TextInput | null> = await inputRefs;
+        Object.values(refs).forEach((ref) => ref?.validate());
+        const areAllValid = Object.values(refs).every((ref) => ref?.getIsValid());
+        if (areAllValid) {
             try {
                 await CustomerRepository.update(model);
             } catch (errorEntries: any) {
@@ -44,7 +53,7 @@
     }
 </script>
 
-<form class="mx-auto" on:submit={handleSubmit}>
+<form class="mx-auto" on:submit={validateForm}>
     <h1 class="mb-50px">Account Details</h1>
     {#await inputRefs then refs}
         <div class="row justify-content-between mb-50px">
@@ -109,7 +118,11 @@
         </div>
     {/await}
     <button type="submit" class="btn btn-primary d-inline-block px-5 red-button">Submit</button>
+    <input type="hidden" data-bs-toggle="modal" data-bs-target="#update-customer-modal" bind:this={hiddenButton}>
 </form>
+<ConfirmModal title="Save Changes" id="update-customer-modal" onSubmit={submitData}>
+    <p slot="content">Are you sure you want to save the changes to you account information?</p>
+</ConfirmModal>
 
 <style>
     form {
