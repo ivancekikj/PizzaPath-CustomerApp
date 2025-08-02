@@ -1,6 +1,7 @@
 import { ApiData } from '$lib/repository/ApiData';
 import axios, { AxiosError } from 'axios';
 import type {Customer} from "$lib/domain/models";
+import type {CustomerUpdateDto} from "$lib/domain/dto";
 
 async function create(customer: Customer): Promise<void> {
 	try {
@@ -40,7 +41,30 @@ async function getCurrent(): Promise<Customer> {
 	} as Customer;
 }
 
+async function update(dto: CustomerUpdateDto): Promise<void> {
+	try {
+		await axios.put(
+			`${ApiData.ADMIN_APP_URL}/api/accounts/customers/logged-in-customer/`,
+			{
+				username: dto.username,
+				first_name: dto.firstName,
+				last_name: dto.lastName,
+				address: dto.address,
+				phone_number: dto.phoneNumber,
+				is_subscribed_to_newsletter: dto.isSubscribedToNewsletter
+			},
+			{
+				headers: { 'Content-Type': 'application/json' }
+			}
+		);
+	} catch (error) {
+		const err: AxiosError = error as AxiosError;
+		throw err.response?.data;
+	}
+}
+
 export const CustomerRepository = {
 	create,
 	getCurrent,
+	update,
 };
