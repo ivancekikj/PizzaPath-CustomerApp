@@ -9,6 +9,8 @@
 	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 	import {CouponRepository} from "$lib/repository/CouponRepository";
 	import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
+	import {OrderedFoodsStore} from "$lib/stores/OrderedFoodsStore";
+	import {FoodRepository} from "$lib/repository/FoodRepository";
 
 	const categoryId: string | null = page.url.searchParams.get('categoryId');
 	let modal: AddToOrderModal | null = null;
@@ -23,6 +25,7 @@
 		if (!$OrderCouponInfoStore) {
 			OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
 		}
+		OrderedFoodsStore.setValue(await FoodRepository.getOrderedFoodIds());
 	}
 </script>
 
