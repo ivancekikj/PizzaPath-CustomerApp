@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Food } from '$lib/domain/models';
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+	import {OrderedFoodsStore} from "$lib/stores/OrderedFoodsStore";
 
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
@@ -14,6 +15,9 @@
 	</div>
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item">Average Rating: /</li>
+		{#if $OrderedFoodsStore.has(food.id)}
+			<li class="list-group-item">My rating: /</li>
+		{/if}
 	</ul>
 	{#if $AuthenticatedCustomerStore != null && updateSelectedFoodId != null}
 		<button class="card-link btn red-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
