@@ -39,7 +39,9 @@
 					</div>
 					{#if userRatingValue !== -1}
 						<div class="d-flex align-items-center">
-							<button class="btn red-button" on:click={deleteRating}>Clear</button>
+							<button class="btn red-button" aria-label="Delete" on:click={deleteRating}>
+								<i class="fa-solid fa-xmark"></i>
+							</button>
 						</div>
 					{/if}
 				{:else}
