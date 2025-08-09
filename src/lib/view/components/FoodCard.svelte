@@ -7,6 +7,7 @@
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
 	export let userRatingValue: number = -1;
+	const inputs: HTMLInputElement[] = Array(5).fill(null);
 
 	async function updateRating(value: number): Promise<void> {
 		userRatingValue = value;
