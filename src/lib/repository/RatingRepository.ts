@@ -24,7 +24,17 @@ async function setRating(foodId: number, value: number): Promise<void> {
     );
 }
 
+async function deleteRating(foodId: number): Promise<void> {
+    await axios.delete(
+        `${ApiData.ADMIN_APP_URL}/api/accounts/customers/logged-in-customer/food-ratings/?food_id=${foodId}`,
+        {
+            headers: { 'Content-Type': 'application/json' }
+        }
+    );
+}
+
 export const RatingRepository = {
     getCurrentUserReviews,
-    setRating
+    setRating,
+    deleteRating
 };
