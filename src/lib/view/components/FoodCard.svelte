@@ -2,9 +2,16 @@
 	import type { Food } from '$lib/domain/models';
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 	import {OrderedFoodsStore} from "$lib/stores/OrderedFoodsStore";
+	import {RatingRepository} from "$lib/repository/RatingRepository";
 
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
+	export let userRatingValue: number = -1;
+
+	async function updateRating(value: number): Promise<void> {
+		userRatingValue = value;
+		await RatingRepository.setRating(food.id, userRatingValue);
+	}
 </script>
 
 <div class="card">
@@ -21,7 +28,7 @@
 				{#if $OrderedFoodsStore.has(food.id)}
 					<div class="star-rating d-inline-flex">
 						{#each [5, 4, 3, 2, 1] as i}
-							<input type="radio" id="star-{food.id}-{i}" name="rating-{food.id}" value="{i}">
+							<input type="radio" id="star-{food.id}-{i}" name="rating-{food.id}" value="{i}" checked={i === userRatingValue} on:change={async () => await updateRating(i)}>
 							<label class="pb-1" for="star-{food.id}-{i}">★</label>
 						{/each}
 					</div>
