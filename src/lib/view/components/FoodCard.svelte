@@ -7,10 +7,16 @@
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
 	export let userRatingValue: number = -1;
+	const inputs: HTMLInputElement[] = Array(5).fill(null);
 
 	async function updateRating(value: number): Promise<void> {
 		userRatingValue = value;
 		await RatingRepository.setRating(food.id, userRatingValue);
+	}
+	
+	async function deleteRating(): Promise<void> {
+		userRatingValue = -1;
+		await RatingRepository.deleteRating(food.id);
 	}
 </script>
 
@@ -32,6 +38,11 @@
 							<label class="pb-1" for="star-{food.id}-{i}">★</label>
 						{/each}
 					</div>
+					{#if userRatingValue !== -1}
+						<div class="d-flex align-items-center">
+							<button class="btn red-button" on:click={deleteRating}>Clear</button>
+						</div>
+					{/if}
 				{:else}
 					<span class="py-3 fw-bold">No rating until ordered.</span>
 				{/if}
@@ -39,7 +50,7 @@
 		{/if}
 	</ul>
 	{#if $AuthenticatedCustomerStore != null && updateSelectedFoodId != null}
-		<button class="card-link btn red-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
+		<button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
 	{/if}
 </div>
 
