@@ -7,15 +7,18 @@
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
 	export let userRatingValue: number = -1;
+	export let averageRating: number | null = null;
 
 	async function updateRating(value: number): Promise<void> {
 		userRatingValue = value;
 		await RatingRepository.setRating(food.id, userRatingValue);
+		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
 	}
 	
 	async function deleteRating(): Promise<void> {
 		userRatingValue = -1;
 		await RatingRepository.deleteRating(food.id);
+		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
 	}
 </script>
 
@@ -26,7 +29,16 @@
 		<p class="card-text">{food.description}</p>
 	</div>
 	<ul class="list-group list-group-flush">
-		<li class="list-group-item">Average Rating: /</li>
+		<li class="list-group-item d-flex justify-content-between align-items-center">
+			<span>Average Rating:</span>
+			<span class="fw-bold">
+				{#if averageRating != null}
+					{averageRating} / 5
+				{:else}
+					/
+				{/if}
+			</span>
+		</li>
 		{#if $AuthenticatedCustomerStore}
 			<li class="list-group-item d-flex justify-content-between align-content-center">
 				<span class="d-flex align-items-center">My rating:</span>
