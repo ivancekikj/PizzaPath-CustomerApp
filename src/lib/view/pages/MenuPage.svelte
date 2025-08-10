@@ -18,9 +18,11 @@
 			? parseInt(categoryIdQueryParam) : undefined;
 	let modal: AddToOrderModal | null = null;
 	let ratingValueByFoodId: Map<number, number>;
+	let averageRatingByFoodId: Map<number, number>;
 
 	async function loadData(): Promise<void> {
 		await StoreOperations.setMenuFoodsByCategoryId(categoryId);
+		averageRatingByFoodId = await RatingRepository.getAverageRatingOfEachFood();
 		if (!$AuthenticatedCustomerStore)
 			return;
 		if ($CustomerCouponsStore.length == 0) {
@@ -35,6 +37,10 @@
 
 	function getFoodRating(foodId: number): number {
 		return ratingValueByFoodId.get(foodId) ?? -1;
+	}
+
+	function getAverageFoodRating(foodId: number): number | null {
+		return averageRatingByFoodId.get(foodId) ?? null;
 	}
 </script>
 
@@ -54,11 +60,11 @@
 		<div class="row">
 			{#if modal != null}
 				{#each $MenuFoodsStore as food}
-					<FoodCard {food} updateSelectedFoodId={modal.setCurrentFood} userRatingValue={getFoodRating(food.id)}></FoodCard>
+					<FoodCard {food} updateSelectedFoodId={modal.setCurrentFood} userRatingValue={getFoodRating(food.id)} averageRating={getAverageFoodRating(food.id)}></FoodCard>
 				{/each}
 			{:else}
 				{#each $MenuFoodsStore as food}
-					<FoodCard {food}></FoodCard>
+					<FoodCard {food} averageRating={getAverageFoodRating(food.id)}></FoodCard>
 				{/each}
 			{/if}
 		</div>
