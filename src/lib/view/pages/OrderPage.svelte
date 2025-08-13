@@ -59,13 +59,14 @@
 		const couponByFoodPortionId: Map<number, CouponReward> = new Map();
 		$CustomerCouponsStore.filter(c => $OrderStore!.items.some(item => item.selectedPortionId === c.foodPortionId))
 				.forEach(c => couponByFoodPortionId.set(c.foodPortionId, { ...c }));
-		$OrderStore!.items.filter(item => item.areCouponsUsed)
-				.forEach(item => {
-					const portion = MenuUtils.findPortionById(item);
-					redeemedCoupons += item.selectedQuantity * portion.couponValue;
-					earnedCoupons += item.selectedQuantity;
-					couponByFoodPortionId.get(item.selectedPortionId)!.count -= item.selectedQuantity * portion.couponValue;
-				});
+		$OrderStore!.items.forEach(item => {
+			const portion = MenuUtils.findPortionById(item);
+			if (item.areCouponsUsed) {
+				redeemedCoupons += item.selectedQuantity * portion.couponValue;
+				couponByFoodPortionId.get(item.selectedPortionId)!.count -= item.selectedQuantity * portion.couponValue;
+			}
+			earnedCoupons += item.selectedQuantity;
+		});
 		OrderCouponInfoStore.update((store) => {
 			if (store) {
 				store.earnedCoupons = earnedCoupons;

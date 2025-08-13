@@ -6,6 +6,8 @@ import {FoodPortionRepository} from "$lib/repository/FoodPortionRepository";
 import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 import {AuthenticationRepository} from "$lib/repository/AuthenticationRepository";
 import {OrderedFoodsStore} from "$lib/stores/OrderedFoodsStore";
+import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
+import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 
 async function setMenuFoodsByCategoryId(categoryId?: number): Promise<void> {
 	MenuFoodsStore.setValue(await FoodRepository.get(categoryId));
@@ -16,6 +18,8 @@ async function setMenuFoodsByCategoryId(categoryId?: number): Promise<void> {
 async function logoutUser(): Promise<void> {
 	AuthenticatedCustomerStore.set(null);
 	OrderedFoodsStore.setValue(new Set());
+	OrderCouponInfoStore.setValue(null);
+	CustomerCouponsStore.setValue([]);
 	await AuthenticationRepository.logout();
 }
 
