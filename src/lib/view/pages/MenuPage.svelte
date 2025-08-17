@@ -74,7 +74,7 @@
 
 <style>
 	#showcase {
-		background: url('/img/menu-showcase.jpg') no-repeat center center/cover;
+		background: url('/img/menu/menu-showcase.jpg') no-repeat center center/cover;
 		height: 500px;
 		display: flex;
 		justify-content: center;
