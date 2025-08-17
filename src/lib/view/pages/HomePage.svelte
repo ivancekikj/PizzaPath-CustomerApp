@@ -1,3 +1,7 @@
+<script lang="ts">
+	import PopularFoodsSection from "$lib/view/components/PopularFoodsSection.svelte";
+</script>
+
 <svelte:head>
 	<title>Pizza Delicious - Home</title>
 </svelte:head>
@@ -6,7 +10,7 @@
 	<div id="showcase-content">
 		<h1 class="text-center mb-50px fw-bold text-white">Welcome to Pizza Delicious!</h1>
 		<div class="mb-50px d-flex justify-content-center">
-			<h2 class="text-center fw-bold py-4 px-5 rounded rounded-2 bg-white">
+			<h2 class="text-center fw-bold py-4 px-5 rounded rounded-2 text-white">
 				Are you hungry?<br>
 				Don't wait!<br>
 				Order now!
@@ -18,6 +22,7 @@
 	</div>
 </div>
 <div class="container mb-100px">
+	<PopularFoodsSection />
 	<div class="text-center mb-5">
 		<h2 class="fw-bold mb-20px">Our Services</h2>
 		<p class="text-muted w-75 mx-auto mb-50px">
@@ -76,7 +81,7 @@
 	}
 
 	#showcase-content h2 {
-		mix-blend-mode: screen;
+		background: #fe0000 !important;
 	}
 
 	.service-card {
