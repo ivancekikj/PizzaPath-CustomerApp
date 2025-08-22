@@ -1,8 +1,10 @@
 <script lang="ts">
     import type {Food} from "$lib/domain/models";
+    import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 
     export let food: Food;
     export let averageRating: number | null = null;
+    export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
 </script>
 
 <div class="card">
@@ -23,6 +25,9 @@
 			</span>
         </li>
     </ul>
+    {#if $AuthenticatedCustomerStore && updateSelectedFoodId}
+        <button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#home-page-add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
+    {/if}
 </div>
 
 <style>
