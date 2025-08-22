@@ -1,15 +1,51 @@
 <script lang="ts">
     import {FoodRepository} from "$lib/repository/FoodRepository";
     import {RatingRepository} from "$lib/repository/RatingRepository";
-    import type {Food} from "$lib/domain/models";
+    import type {Food, FoodPortion} from "$lib/domain/models";
     import PopularFoodCard from "$lib/view/components/PopularFoodCard.svelte";
+    import {FoodPortionRepository} from "$lib/repository/FoodPortionRepository";
+    import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+    import HomePageAddToOrderModal from "$lib/view/components/modals/HomePageAddToOrderModal.svelte";
+    import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
+    import {CouponRepository} from "$lib/repository/CouponRepository";
+    import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
 
     let foods: Food[] = [];
     let ratingByFoodId: Map<number, number> = new Map<number, number>();
+    let portionsByFoodId: Map<number, FoodPortion[]> = new Map<number, FoodPortion[]>();
+    let modal: HomePageAddToOrderModal | null = null;
 
     async function loadData(): Promise<void> {
         foods = await FoodRepository.getMostPopularFoods();
         ratingByFoodId = await RatingRepository.getAverageRatingOfEachFood();
+        if (!$AuthenticatedCustomerStore)
+            return;
+        await loadPortions();
+        if ($CustomerCouponsStore.length == 0) {
+            CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
+        }
+        if (!$OrderCouponInfoStore) {
+            OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
+        }
+    }
+
+    function getFoodById(): Map<number, Food> {
+        const foodById: Map<number, Food> = new Map<number, Food>();
+        foods.forEach(food => foodById.set(food.id, food));
+        return foodById;
+    }
+
+    async function loadPortions(): Promise<void> {
+        const foodIds = new Set(foods.map(food => food.id));
+        portionsByFoodId = new Map<number, FoodPortion[]>();
+        (await FoodPortionRepository.get())
+            .filter(p => foodIds.has(p.foodId))
+            .forEach(portion => {
+                if (!portionsByFoodId.has(portion.foodId)) {
+                    portionsByFoodId.set(portion.foodId, []);
+                }
+                portionsByFoodId.get(portion.foodId)!.push(portion);
+            });
     }
 
     function getAverageFoodRating(foodId: number): number | null {
@@ -17,24 +53,27 @@
     }
 </script>
 
-<section class="mb-100px">
-    <div class="d-flex align-items-center justify-content-between mb-50px">
-        <hr>
-        <h2 class="fw-bold text-center">Our Most Ordered Menu Items</h2>
-        <hr>
-    </div>
-    <div class="row justify-content-between">
-        {#await loadData() then _}
+{#await loadData() then _}
+    {#if $AuthenticatedCustomerStore && foods.length > 0}
+        <HomePageAddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
+    {/if}
+    <section class="mb-100px">
+        <div class="d-flex align-items-center justify-content-between mb-50px">
+            <hr>
+            <h2 class="fw-bold text-center">Our Most Ordered Menu Items</h2>
+            <hr>
+        </div>
+        <div class="row justify-content-between">
             {#if foods.length > 0}
                 {#each foods as food}
-                    <PopularFoodCard {food} averageRating={getAverageFoodRating(food.id)}></PopularFoodCard>
+                    <PopularFoodCard {food} averageRating={getAverageFoodRating(food.id)} updateSelectedFoodId={modal?.setCurrentFood}></PopularFoodCard>
                 {/each}
             {:else}
                 <p class="text-center">No orders have been placed.</p>
             {/if}
-        {/await}
-    </div>
-</section>
+        </div>
+    </section>
+{/await}
 
 <style>
     hr {

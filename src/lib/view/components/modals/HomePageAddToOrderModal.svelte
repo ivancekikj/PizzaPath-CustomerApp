@@ -3,14 +3,14 @@
     import type {SelectedFood} from "$lib/domain/dto";
     import type {CouponReward, Food} from "$lib/domain/models";
     import type {FoodPortion} from "$lib/domain/models.js";
-    import {MenuFoodsStore} from "$lib/stores/MenuFoodsStore";
-    import {FoodPortionsStore} from "$lib/stores/FoodPortionsStore";
     import {MenuUtils} from "$lib/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/repository/OrderRepository";
     import CheckboxInput from "$lib/view/components/CheckboxInput.svelte";
     import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
     import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
 
+    export let foodById: Map<number, Food>;
+    export let portionsByFoodId: Map<number, FoodPortion[]>;
     const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
     let isButtonClicked: boolean = false;
     let currentData: SelectedFood;
@@ -38,8 +38,8 @@
             total = MenuUtils.calculateTotalPrice(currentData);
             return;
         }
-        const food: Food = $MenuFoodsStore.find(food => food.id === foodId)!;
-        const foodPortions: FoodPortion[] = $FoodPortionsStore.filter(portion => portion.foodId === foodId)
+        const food: Food = foodById.get(foodId)!;
+        const foodPortions: FoodPortion[] = portionsByFoodId.get(foodId)!
             .sort((p1, p2) => p1.price - p2.price);
         const selectedFood: SelectedFood = {
             id: 1,
@@ -68,10 +68,10 @@
         }
     }
 
-    setCurrentFood($MenuFoodsStore[0].id);
+    setCurrentFood(Number(foodById.keys().next().value));
 </script>
 
-<Modal title="Add Food to Order" id="add-to-cart-modal">
+<Modal title="Add Food to Order" id="home-page-add-to-cart-modal">
     <div slot="body">
         <div class="mb-20px">
             <label for="food_name" class="form-label">Food</label>
