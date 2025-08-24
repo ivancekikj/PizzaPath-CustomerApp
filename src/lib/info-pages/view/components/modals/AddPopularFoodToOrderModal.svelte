@@ -5,7 +5,6 @@
     import type {FoodPortion} from "$lib/core/domain/models.js";
     import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/core/repository/OrderRepository";
-    import CheckboxInput from "$lib/core/view/components/CheckboxInput.svelte";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 
@@ -101,7 +100,8 @@
             </div>
         {/if}
         <div class="mb-20px">
-            <CheckboxInput name="coupon" label="Redeem coupons" bind:value={currentData.areCouponsUsed} bind:disabled={areCouponsDisabled}></CheckboxInput>
+            <label for="coupon" class="form-label">Redeem coupons</label>
+            <input type="checkbox" class="form-check-input d-block" id="coupon" bind:checked={currentData.areCouponsUsed} disabled={areCouponsDisabled} />
         </div>
         <div class="d-flex justify-content-between">
             <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(currentData).discount * 100}%</span></div>

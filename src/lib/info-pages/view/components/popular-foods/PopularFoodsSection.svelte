@@ -1,14 +1,14 @@
 <script lang="ts">
-    import {FoodRepository} from "$lib/core/repository/FoodRepository";
     import {RatingRepository} from "$lib/core/repository/RatingRepository";
     import type {Food, FoodPortion} from "$lib/core/domain/models";
-    import PopularFoodCard from "$lib/core/view/components/PopularFoodCard.svelte";
+    import PopularFoodCard from "$lib/info-pages/view/components/popular-foods/PopularFoodCard.svelte";
     import {FoodPortionRepository} from "$lib/core/repository/FoodPortionRepository";
     import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-    import HomePageAddToOrderModal from "$lib/core/view/components/modals/HomePageAddToOrderModal.svelte";
+    import HomePageAddToOrderModal from "$lib/info-pages/view/components/modals/AddPopularFoodToOrderModal.svelte";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
     import {CouponRepository} from "$lib/core/repository/CouponRepository";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
+    import {PopularFoodRepository} from "$lib/info-pages/repository/PopularFoodRepository";
 
     let foods: Food[] = [];
     let ratingByFoodId: Map<number, number> = new Map<number, number>();
@@ -16,7 +16,7 @@
     let modal: HomePageAddToOrderModal | null = null;
 
     async function loadData(): Promise<void> {
-        foods = await FoodRepository.getMostPopularFoods();
+        foods = await PopularFoodRepository.getMostPopularFoods();
         ratingByFoodId = await RatingRepository.getAverageRatingOfEachFood();
         if (!$AuthenticatedCustomerStore)
             return;

@@ -1,5 +1,5 @@
 <script>
-	import AboutPage from '$lib/core/view/pages/AboutPage.svelte';
+	import AboutPage from '$lib/info-pages/view/pages/AboutPage.svelte';
 </script>
 
 <AboutPage />

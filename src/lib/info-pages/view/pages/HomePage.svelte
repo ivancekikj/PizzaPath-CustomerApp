@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PopularFoodsSection from "$lib/core/view/components/PopularFoodsSection.svelte";
+	import PopularFoodsSection from "$lib/info-pages/view/components/popular-foods/PopularFoodsSection.svelte";
 </script>
 
 <svelte:head>
