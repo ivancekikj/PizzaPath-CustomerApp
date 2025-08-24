@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Customer } from '$lib/core/domain/models';
-	import { CustomerRepository } from '$lib/core/repository/CustomerRepository';
-	import TextInput from '$lib/core/view/components/TextInput.svelte';
-	import { type Validator, Validators } from '$lib/core/view/utils/Validators';
-	import CheckboxInput from '$lib/core/view/components/CheckboxInput.svelte';
+	import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository';
+	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte';
+	import { type Validator, Validators } from '$lib/accounts/view/components/account/validation/Validators';
+	import CheckboxInput from '$lib/accounts/view/components/account/inputs/CheckboxInput.svelte';
 	import { Converters } from '$lib/core/view/utils/Converters';
 	import {goto} from "$app/navigation";
 

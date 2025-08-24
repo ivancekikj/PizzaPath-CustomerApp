@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {Validators} from "$lib/core/view/utils/Validators";
-    import TextInput from "$lib/core/view/components/TextInput.svelte";
-    import CheckboxInput from "$lib/core/view/components/CheckboxInput.svelte";
-    import {CustomerRepository} from "$lib/core/repository/CustomerRepository";
+    import {Validators} from "$lib/accounts/view/components/account/validation/Validators";
+    import TextInput from "$lib/accounts/view/components/account/inputs/TextInput.svelte";
+    import CheckboxInput from "$lib/accounts/view/components/account/inputs/CheckboxInput.svelte";
     import {Converters} from "$lib/core/view/utils/Converters";
-    import type {CustomerUpdateDto} from "$lib/core/domain/dto";
+    import type {CustomerUpdateDto} from "$lib/accounts/domain/dto";
     import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
     import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";
+    import {CustomerRepository} from "$lib/accounts/repository/CustomerRepository";
 
     let model: CustomerUpdateDto = {
         username: $AuthenticatedCustomerStore!.username,

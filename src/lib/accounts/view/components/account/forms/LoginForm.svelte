@@ -1,10 +1,10 @@
 <script lang="ts">
-	import TextInput from "$lib/core/view/components/TextInput.svelte";
-	import type {CustomerLoginDto} from "$lib/core/domain/dto";
-	import {AuthenticationRepository} from "$lib/core/repository/AuthenticationRepository";
+	import TextInput from "$lib/accounts/view/components/account/inputs/TextInput.svelte";
+	import type {CustomerLoginDto} from "$lib/accounts/domain/dto";
 	import {goto} from "$app/navigation";
 	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-	import {CustomerRepository} from "$lib/core/repository/CustomerRepository";
+	import {CustomerRepository} from "$lib/accounts/repository/CustomerRepository";
+	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
@@ -15,13 +15,13 @@
 
 	async function loginUser(): Promise<void> {
 		try {
-			await AuthenticationRepository.login(loginData);
+			await CustomerRepository.login(loginData);
 		} catch (error: any) {
 			errorMessage = error.detail;
 			setTimeout(() => errorMessage = "", 3000);
 			return;
 		}
-		AuthenticatedCustomerStore.set(await CustomerRepository.getCurrent());
+		AuthenticatedCustomerStore.set(await AuthenticatedCustomerRepository.getCurrent());
 		await goto("/");
 	}
 

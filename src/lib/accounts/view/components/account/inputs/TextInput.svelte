@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Validator, Validators } from '$lib/core/view/utils/Validators';
+	import { type Validator, Validators } from '$lib/accounts/view/components/account/validation/Validators';
 
 	export let label: string;
 	export let name: string;

@@ -1,9 +1,9 @@
-import type {SelectedFood} from "$lib/core/domain/dto";
+import type {OrderItem} from "$lib/core/domain/models";
 import axios, {type AxiosResponse} from "axios";
 import {ApiData} from "$lib/core/repository/ApiData";
 import type {Food, FoodPortion, Order, Size, Topping} from "$lib/core/domain/models";
 
-async function addItem(item: SelectedFood): Promise<void> {
+async function addItem(item: OrderItem): Promise<void> {
     await axios.post(
         `${ApiData.ADMIN_APP_URL}/api/orders/current-order/items/`,
         {
@@ -58,12 +58,12 @@ async function getCurrentItems(): Promise<Order | null> {
                     } as Size,
                     foodId: portion.food_id
                 } as FoodPortion))
-            } as SelectedFood;
+            } as OrderItem;
         })
     } as Order;
 }
 
-async function updateItem(item: SelectedFood): Promise<void> {
+async function updateItem(item: OrderItem): Promise<void> {
     await axios.put(
         `${ApiData.ADMIN_APP_URL}/api/orders/current-order/items/${item.id}/`,
         {

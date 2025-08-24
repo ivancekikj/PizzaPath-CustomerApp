@@ -1,19 +1,18 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
-    import type {SelectedFood} from "$lib/core/domain/dto";
+    import type {OrderItem} from "$lib/core/domain/models";
     import type {CouponReward, Food} from "$lib/core/domain/models";
     import type {FoodPortion} from "$lib/core/domain/models.js";
     import {MenuFoodsStore} from "$lib/core/stores/MenuFoodsStore";
     import {FoodPortionsStore} from "$lib/core/stores/FoodPortionsStore";
     import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/core/repository/OrderRepository";
-    import CheckboxInput from "$lib/core/view/components/CheckboxInput.svelte";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 
-    const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
+    const valuesByFoodId: Map<number, OrderItem> = new Map<number, OrderItem>();
     let isButtonClicked: boolean = false;
-    let currentData: SelectedFood;
+    let currentData: OrderItem;
     let total: number = 0;
     let areCouponsDisabled: boolean = false;
 
@@ -41,7 +40,7 @@
         const food: Food = $MenuFoodsStore.find(food => food.id === foodId)!;
         const foodPortions: FoodPortion[] = $FoodPortionsStore.filter(portion => portion.foodId === foodId)
             .sort((p1, p2) => p1.price - p2.price);
-        const selectedFood: SelectedFood = {
+        const selectedFood: OrderItem = {
             id: 1,
             food: food,
             portions: foodPortions,
@@ -101,7 +100,8 @@
             </div>
         {/if}
         <div class="mb-20px">
-            <CheckboxInput name="coupon" label="Redeem coupons" bind:value={currentData.areCouponsUsed} bind:disabled={areCouponsDisabled}></CheckboxInput>
+            <label for="coupon" class="form-label">Redeem coupons</label>
+            <input type="checkbox" class="form-check-input d-block" id="coupon" bind:checked={currentData.areCouponsUsed} disabled={areCouponsDisabled} />
         </div>
         <div class="d-flex justify-content-between">
             <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(currentData).discount * 100}%</span></div>

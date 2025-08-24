@@ -7,7 +7,7 @@
 	import {CategoryRepository} from "$lib/core/repository/CategoryRepository";
 	import {CategoriesStore} from "$lib/core/stores/CategoriesStore";
 	import {page} from "$app/state";
-	import {CustomerRepository} from "$lib/core/repository/CustomerRepository";
+	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
 	import axios from "axios";
 	import {goto} from "$app/navigation";
 	import {StoreOperations} from "$lib/core/stores/StoreOperations";
@@ -18,7 +18,7 @@
 	async function loadAuthentication(): Promise<void> {
 		let customer: Customer;
 		try {
-			customer = await CustomerRepository.getCurrent();
+			customer = await AuthenticatedCustomerRepository.getCurrent();
 		} catch (error: any) {
 			return;
 		}

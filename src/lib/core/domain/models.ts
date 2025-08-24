@@ -1,5 +1,3 @@
-import type {SelectedFood} from "$lib/core/domain/dto";
-
 export interface Category {
     id: number;
     name: string;
@@ -55,7 +53,7 @@ export interface Order {
     dateTimeEdited: string;
     status: string;
     description: string;
-    items: SelectedFood[];
+    items: OrderItem[];
 }
 
 export interface OrderCouponInfo {
@@ -64,23 +62,12 @@ export interface OrderCouponInfo {
     redeemedCoupons: number;
 }
 
-export interface DetailedCoupon {
-    foodPortionId: number;
-    foodName: string;
-    sizeName: string;
-    couponValue: number;
-    count: number;
-}
-
-export interface CategoryCoupons {
-    categoryId: number;
-    categoryName: string;
-    coupons: DetailedCoupon[];
-}
-
-export interface NewsletterPost {
+export interface OrderItem {
     id: number;
-    title: string;
-    content: string;
-    date: string;
+    food: Food;
+    portions: FoodPortion[];
+    selectedPortionId: number;
+    selectedQuantity: number;
+    selectedToppingIds: number[];
+    areCouponsUsed: boolean;
 }

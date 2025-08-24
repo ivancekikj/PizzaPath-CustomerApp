@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type {NewsletterPost} from "$lib/core/domain/models";
-    import {NewsletterPostsRepository} from "$lib/core/repository/NewsletterPostsRepository";
-    import NewsletterPostModal from "$lib/core/view/components/modals/NewsletterPostModal.svelte";
+    import type {NewsletterPost} from "$lib/accounts/domain/models";
+    import {NewsletterPostsRepository} from "$lib/accounts/repository/NewsletterPostsRepository";
+    import NewsletterPostModal from "$lib/accounts/view/components/newsletter/NewsletterPostModal.svelte";
 
     let posts: NewsletterPost[];
     let totalCount: number;

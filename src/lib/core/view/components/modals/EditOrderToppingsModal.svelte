@@ -1,10 +1,10 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
-    import type {SelectedFood} from "$lib/core/domain/dto";
+    import type {OrderItem} from "$lib/core/domain/models";
     import {OrderRepository} from "$lib/core/repository/OrderRepository";
     import {OrderStore} from "$lib/core/stores/OrderStore";
 
-    export let item: SelectedFood;
+    export let item: OrderItem;
     export let updateTotalOrderPrice: () => void;
 
     async function onItemUpdate(): Promise<void> {

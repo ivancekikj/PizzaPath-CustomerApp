@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
-    import type {NewsletterPost} from "$lib/core/domain/models";
+    import type {NewsletterPost} from "$lib/accounts/domain/models";
 
     export let post: NewsletterPost;
 </script>

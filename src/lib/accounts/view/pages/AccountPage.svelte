@@ -1,14 +1,14 @@
 <script lang="ts">
-	import CouponsAccordion from "$lib/core/view/components/CouponsAccordion.svelte";
-	import type {CategoryCoupons} from "$lib/core/domain/models";
-	import {CouponRepository} from "$lib/core/repository/CouponRepository";
-	import NewsletterPosts from "$lib/core/view/components/NewsletterPosts.svelte";
-	import UpdateCustomerForm from "$lib/core/view/components/UpdateCustomerForm.svelte";
+	import CouponsAccordion from "$lib/accounts/view/components/coupons/CouponsAccordion.svelte";
+	import type {CategoryCoupons} from "$lib/accounts/domain/models";
+	import {CouponRepository} from "$lib/accounts/repository/CouponRepository";
+	import NewsletterPosts from "$lib/accounts/view/components/newsletter/NewsletterPosts.svelte";
+	import UpdateCustomerForm from "$lib/accounts/view/components/account/forms/UpdateCustomerForm.svelte";
 
 	let categoryCoupons: CategoryCoupons[];
 
 	async function loadData(): Promise<void> {
-		const couponsByCategoryId = await CouponRepository.getDetailedCouponInformation();
+		const couponsByCategoryId = await CouponRepository.getDetailedCurrentUserCouponInformation();
 		categoryCoupons = Array.from(couponsByCategoryId.values()).sort((a, b) => a.categoryName.localeCompare(b.categoryName));
 	}
 </script>

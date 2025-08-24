@@ -1,7 +1,7 @@
-import type {SelectedFood} from "$lib/core/domain/dto";
+import type {OrderItem} from "$lib/core/domain/models";
 import type {FoodPortion} from "$lib/core/domain/models";
 
-function calculateTotalPrice(selectedFood: SelectedFood) {
+function calculateTotalPrice(selectedFood: OrderItem) {
     const portion: FoodPortion = findPortionById(selectedFood);
     if (selectedFood.areCouponsUsed)
         return 0;
@@ -15,7 +15,7 @@ function calculateTotalPrice(selectedFood: SelectedFood) {
     return Math.ceil(price);
 }
 
-function findPortionById(selectedFood: SelectedFood): FoodPortion {
+function findPortionById(selectedFood: OrderItem): FoodPortion {
     return selectedFood.portions.find(p => p.id === selectedFood.selectedPortionId)!;
 }
 

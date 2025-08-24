@@ -1,5 +1,5 @@
 <script>
-	import RegisterForm from '$lib/core/view/components/RegisterForm.svelte';
+	import RegisterForm from '$lib/accounts/view/components/account/forms/RegisterForm.svelte';
 </script>
 
 <svelte:head>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {CategoryCoupons} from "$lib/core/domain/models";
+    import type {CategoryCoupons} from "$lib/accounts/domain/models";
 
     export let categoryCoupons: CategoryCoupons[];
 </script>

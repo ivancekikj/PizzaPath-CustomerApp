@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
-    import type {SelectedFood} from "$lib/core/domain/dto";
+    import type {OrderItem} from "$lib/core/domain/models";
     import type {CouponReward, Food} from "$lib/core/domain/models";
     import type {FoodPortion} from "$lib/core/domain/models.js";
     import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
@@ -10,9 +10,9 @@
 
     export let foodById: Map<number, Food>;
     export let portionsByFoodId: Map<number, FoodPortion[]>;
-    const valuesByFoodId: Map<number, SelectedFood> = new Map<number, SelectedFood>();
+    const valuesByFoodId: Map<number, OrderItem> = new Map<number, OrderItem>();
     let isButtonClicked: boolean = false;
-    let currentData: SelectedFood;
+    let currentData: OrderItem;
     let total: number = 0;
     let areCouponsDisabled: boolean = false;
 
@@ -40,7 +40,7 @@
         const food: Food = foodById.get(foodId)!;
         const foodPortions: FoodPortion[] = portionsByFoodId.get(foodId)!
             .sort((p1, p2) => p1.price - p2.price);
-        const selectedFood: SelectedFood = {
+        const selectedFood: OrderItem = {
             id: 1,
             food: food,
             portions: foodPortions,

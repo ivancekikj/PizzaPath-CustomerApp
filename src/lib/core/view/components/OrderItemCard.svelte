@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {SelectedFood} from "$lib/core/domain/dto";
+    import type {OrderItem} from "$lib/core/domain/models";
     import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
     import {OrderRepository} from "$lib/core/repository/OrderRepository";
     import {OrderStore} from "$lib/core/stores/OrderStore";
@@ -7,11 +7,11 @@
     import {EnabledItemCouponsStore} from "$lib/core/stores/EnabledItemCouponsStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 
-    export let item: SelectedFood;
+    export let item: OrderItem;
     export let hasBottomMargin: boolean = true;
     export let updateTotalOrderPrice: () => void;
     export let updateOrderCouponInfo: () => void;
-    export let setItemForToppings: (item: SelectedFood) => void;
+    export let setItemForToppings: (item: OrderItem) => void;
     export let updateEnabledItemsForPortion: (portion: FoodPortion) => void;
 
     async function onItemUpdate(): Promise<void> {
@@ -21,7 +21,7 @@
     }
 
     async function onItemQuantityChange(): Promise<void> {
-        let selectedPortionItems: SelectedFood[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
+        let selectedPortionItems: OrderItem[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
         const portion: FoodPortion = MenuUtils.findPortionById(item);
         let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
         const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id) || {count: 0, foodPortionId: portion.id};

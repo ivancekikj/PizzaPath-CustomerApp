@@ -1,4 +1,4 @@
-import type {NewsletterPost} from "$lib/core/domain/models";
+import type {NewsletterPost} from "$lib/accounts/domain/models";
 import axios from "axios";
 import {ApiData} from "$lib/core/repository/ApiData";
 

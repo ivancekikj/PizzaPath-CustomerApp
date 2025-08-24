@@ -3,7 +3,7 @@
 	import OrderItemCard from "$lib/core/view/components/OrderItemCard.svelte";
 	import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
 	import EditOrderToppingsModal from "$lib/core/view/components/modals/EditOrderToppingsModal.svelte";
-	import type {SelectedFood} from "$lib/core/domain/dto";
+	import type {OrderItem} from "$lib/core/domain/models";
 	import {OrderStore} from "$lib/core/stores/OrderStore";
 	import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";
 	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
@@ -13,7 +13,7 @@
 	import type {CouponReward, FoodPortion} from "$lib/core/domain/models";
 
 	let orderPriceTotal: number = NaN;
-	let currentItemForToppings: SelectedFood | null = null;
+	let currentItemForToppings: OrderItem | null = null;
 	let description: string
 
 	async function loadOrder(): Promise<void> {
@@ -43,7 +43,7 @@
 		EnabledItemCouponsStore.update(store => new Set([...store]));
 	}
 
-	function isItemEnabledForSelection(item: SelectedFood): boolean {
+	function isItemEnabledForSelection(item: OrderItem): boolean {
 		if (item.areCouponsUsed)
 			return true;
 		const portion: FoodPortion = MenuUtils.findPortionById(item);
@@ -86,7 +86,7 @@
 		return status.charAt(0).toUpperCase() + status.slice(1);
 	}
 
-	function setCurrentItemForToppings(item: SelectedFood): void {
+	function setCurrentItemForToppings(item: OrderItem): void {
 		currentItemForToppings = item;
 	}
 
