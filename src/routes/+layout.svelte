@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Footer from '$lib/view/components/Footer.svelte';
-	import Header from '$lib/view/components/Header.svelte';
+	import Footer from '$lib/core/view/components/Footer.svelte';
+	import Header from '$lib/core/view/components/Header.svelte';
 	import type {Customer} from "$lib/domain/models";
 	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
 	import {onMount} from "svelte";

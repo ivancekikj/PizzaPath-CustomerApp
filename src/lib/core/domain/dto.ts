@@ -1,0 +1,25 @@
+import type {Food, FoodPortion} from "$lib/core/domain/models";
+
+export interface CustomerLoginDto {
+    username: string;
+    password: string;
+}
+
+export interface SelectedFood {
+    id: number;
+    food: Food;
+    portions: FoodPortion[];
+    selectedPortionId: number;
+    selectedQuantity: number;
+    selectedToppingIds: number[];
+    areCouponsUsed: boolean;
+}
+
+export interface CustomerUpdateDto {
+    username: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    phoneNumber: string;
+    isSubscribedToNewsletter: boolean;
+}

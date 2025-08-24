@@ -1,5 +1,5 @@
 <script>
-	import MenuPage from '$lib/view/pages/MenuPage.svelte';
+	import MenuPage from '$lib/core/view/pages/MenuPage.svelte';
 </script>
 
 <MenuPage />
