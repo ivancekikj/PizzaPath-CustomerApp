@@ -1,5 +1,5 @@
-import type {SelectedFood} from "$lib/domain/dto";
-import type {FoodPortion} from "$lib/domain/models";
+import type {SelectedFood} from "$lib/core/domain/dto";
+import type {FoodPortion} from "$lib/core/domain/models";
 
 function calculateTotalPrice(selectedFood: SelectedFood) {
     const portion: FoodPortion = findPortionById(selectedFood);

@@ -1,5 +1,4 @@
 import { type Writable, writable } from 'svelte/store';
-import type {FoodPortion, Order} from '$lib/core/domain/models';
 
 const enabledItemCoupons: Writable<Set<number>> = writable<Set<number>>(new Set());
 

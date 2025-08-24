@@ -1,16 +1,16 @@
 <script lang="ts">
 	import Footer from '$lib/core/view/components/Footer.svelte';
 	import Header from '$lib/core/view/components/Header.svelte';
-	import type {Customer} from "$lib/domain/models";
-	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+	import type {Customer} from "$lib/core/domain/models";
+	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {onMount} from "svelte";
-	import {CategoryRepository} from "$lib/repository/CategoryRepository";
-	import {CategoriesStore} from "$lib/stores/CategoriesStore";
+	import {CategoryRepository} from "$lib/core/repository/CategoryRepository";
+	import {CategoriesStore} from "$lib/core/stores/CategoriesStore";
 	import {page} from "$app/state";
-	import {CustomerRepository} from "$lib/repository/CustomerRepository";
+	import {CustomerRepository} from "$lib/core/repository/CustomerRepository";
 	import axios from "axios";
 	import {goto} from "$app/navigation";
-	import {StoreOperations} from "$lib/stores/StoreOperations";
+	import {StoreOperations} from "$lib/core/stores/StoreOperations";
 
 	axios.defaults.withCredentials = true;
 	let isAuthenticationLoaded: boolean = false;

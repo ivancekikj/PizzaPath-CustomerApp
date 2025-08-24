@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {type Validator, Validators} from "$lib/core/view/utils/Validators";
+    import {Validators} from "$lib/core/view/utils/Validators";
     import TextInput from "$lib/core/view/components/TextInput.svelte";
     import CheckboxInput from "$lib/core/view/components/CheckboxInput.svelte";
     import {CustomerRepository} from "$lib/core/repository/CustomerRepository";

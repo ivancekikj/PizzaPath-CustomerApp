@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CouponsAccordion from "$lib/core/view/components/CouponsAccordion.svelte";
-	import type {CategoryCoupons} from "$lib/domain/models";
-	import {CouponRepository} from "$lib/repository/CouponRepository";
+	import type {CategoryCoupons} from "$lib/core/domain/models";
+	import {CouponRepository} from "$lib/core/repository/CouponRepository";
 	import NewsletterPosts from "$lib/core/view/components/NewsletterPosts.svelte";
 	import UpdateCustomerForm from "$lib/core/view/components/UpdateCustomerForm.svelte";
 

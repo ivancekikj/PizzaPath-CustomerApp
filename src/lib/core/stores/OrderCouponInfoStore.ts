@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type {FoodPortion, OrderCouponInfo} from '$lib/core/domain/models';
+import type {OrderCouponInfo} from '$lib/core/domain/models';
 
 const orderCouponInfo: Writable<OrderCouponInfo | null> = writable<OrderCouponInfo | null>(null);
 

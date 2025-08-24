@@ -1,16 +1,16 @@
 <script lang="ts">
-	import {OrderRepository} from "$lib/repository/OrderRepository";
+	import {OrderRepository} from "$lib/core/repository/OrderRepository";
 	import OrderItemCard from "$lib/core/view/components/OrderItemCard.svelte";
 	import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
 	import EditOrderToppingsModal from "$lib/core/view/components/modals/EditOrderToppingsModal.svelte";
-	import type {SelectedFood} from "$lib/domain/dto";
-	import {OrderStore} from "$lib/stores/OrderStore";
+	import type {SelectedFood} from "$lib/core/domain/dto";
+	import {OrderStore} from "$lib/core/stores/OrderStore";
 	import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";
-	import {OrderCouponInfoStore} from "$lib/stores/OrderCouponInfoStore";
-	import {CouponRepository} from "$lib/repository/CouponRepository";
-	import {CustomerCouponsStore} from "$lib/stores/CustomerCouponsStore";
-	import {EnabledItemCouponsStore} from "$lib/stores/EnabledItemCouponsStore";
-	import type {CouponReward, FoodPortion} from "$lib/domain/models";
+	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
+	import {CouponRepository} from "$lib/core/repository/CouponRepository";
+	import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
+	import {EnabledItemCouponsStore} from "$lib/core/stores/EnabledItemCouponsStore";
+	import type {CouponReward, FoodPortion} from "$lib/core/domain/models";
 
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: SelectedFood | null = null;

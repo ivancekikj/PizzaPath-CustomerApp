@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type {CouponReward, FoodPortion, OrderCouponInfo} from '$lib/core/domain/models';
+import type {CouponReward} from '$lib/core/domain/models';
 
 const customerCoupons: Writable<CouponReward[]> = writable<CouponReward[]>([]);
 
