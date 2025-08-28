@@ -4,7 +4,7 @@
 	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte';
 	import { type Validator, Validators } from '$lib/accounts/view/components/account/validation/Validators';
 	import CheckboxInput from '$lib/accounts/view/components/account/inputs/CheckboxInput.svelte';
-	import { Converters } from '$lib/core/view/utils/Converters';
+	import { Converters } from '$lib/accounts/view/components/account/validation/Converters';
 	import {goto} from "$app/navigation";
 
 	let registration: Customer = {} as Customer;

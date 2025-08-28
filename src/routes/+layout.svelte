@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Footer from '$lib/core/view/components/Footer.svelte';
-	import Header from '$lib/core/view/components/Header.svelte';
+	import Footer from '$lib/core/view/components/base-structure/Footer.svelte';
+	import Header from '$lib/core/view/components/base-structure/Header.svelte';
 	import type {Customer} from "$lib/core/domain/models";
 	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {onMount} from "svelte";
@@ -10,7 +10,6 @@
 	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
 	import axios from "axios";
 	import {goto} from "$app/navigation";
-	import {StoreOperations} from "$lib/core/stores/StoreOperations";
 
 	axios.defaults.withCredentials = true;
 	let isAuthenticationLoaded: boolean = false;
@@ -32,11 +31,12 @@
 
 	onMount(async () => {
 		await loadAuthentication();
-		if ($AuthenticatedCustomerStore == null && ["/account", "/order"].includes(page.url.pathname)) {
+		if (!$AuthenticatedCustomerStore && ["/account", "/order"].includes(page.url.pathname)) {
 			await goto("/login");
 		}
-		if ($AuthenticatedCustomerStore != null && ["/register", "/login"].includes(page.url.pathname)) {
-			await StoreOperations.logoutUser();
+		if ($AuthenticatedCustomerStore && ["/register", "/login"].includes(page.url.pathname)) {
+			AuthenticatedCustomerStore.set(null);
+			await AuthenticatedCustomerRepository.logout();
 		}
 		await loadCategories();
 		isAuthenticationLoaded = true;

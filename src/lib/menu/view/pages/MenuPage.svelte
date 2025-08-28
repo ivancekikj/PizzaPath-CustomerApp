@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import FoodCard from '$lib/core/view/components/FoodCard.svelte';
+	import FoodCard from '$lib/menu/view/components/menu-items/FoodCard.svelte';
 	import { MenuFoodsStore } from '$lib/core/stores/MenuFoodsStore';
-	import MenuTabs from '$lib/core/view/components/MenuTabs.svelte';
+	import MenuTabs from '$lib/menu/view/components/menu-items/MenuTabs.svelte';
 	import { StoreOperations } from '$lib/core/stores/StoreOperations';
-	import AddToOrderModal from "$lib/core/view/components/modals/AddToOrderModal.svelte";
+	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
 	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 	import {CouponRepository} from "$lib/core/repository/CouponRepository";
 	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
-	import {OrderedFoodsStore} from "$lib/core/stores/OrderedFoodsStore";
-	import {FoodRepository} from "$lib/core/repository/FoodRepository";
+	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
 	import {RatingRepository} from "$lib/core/repository/RatingRepository";
+	import {CustomerOrderedFoodsRepository} from "$lib/menu/repository/CustomerOrderedFoodsRepository";
+	import {CustomerFoodRatingRepository} from "$lib/menu/repository/CustomerFoodRatingRepository";
 
 	const categoryIdQueryParam: string | null = page.url.searchParams.get('categoryId');
 	const categoryId: number | undefined = categoryIdQueryParam && !isNaN(Number(categoryIdQueryParam))
@@ -31,8 +32,8 @@
 		if (!$OrderCouponInfoStore) {
 			OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
 		}
-		OrderedFoodsStore.setValue(await FoodRepository.getOrderedFoodIds());
-		ratingValueByFoodId = await RatingRepository.getCurrentUserReviews();
+		OrderedFoodsStore.setValue(await CustomerOrderedFoodsRepository.getOrderedFoodIds());
+		ratingValueByFoodId = await CustomerFoodRatingRepository.getCurrentUserReviews();
 	}
 
 	function getFoodRating(foodId: number): number {

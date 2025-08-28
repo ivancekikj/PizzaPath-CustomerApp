@@ -1,8 +1,8 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
     import type {OrderItem} from "$lib/core/domain/models";
-    import {OrderRepository} from "$lib/core/repository/OrderRepository";
-    import {OrderStore} from "$lib/core/stores/OrderStore";
+    import {OrderRepository} from "$lib/orders/repository/OrderRepository";
+    import {OrderStore} from "$lib/orders/stores/OrderStore";
 
     export let item: OrderItem;
     export let updateTotalOrderPrice: () => void;

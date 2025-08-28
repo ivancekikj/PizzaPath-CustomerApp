@@ -1,15 +1,14 @@
 <script lang="ts">
     import Modal from "$lib/core/view/components/modals/Modal.svelte";
-    import type {OrderItem} from "$lib/core/domain/models";
+    import {OrderItem} from "$lib/core/domain/models";
     import type {CouponReward, Food} from "$lib/core/domain/models";
     import type {FoodPortion} from "$lib/core/domain/models.js";
-    import {MenuFoodsStore} from "$lib/core/stores/MenuFoodsStore";
-    import {FoodPortionsStore} from "$lib/core/stores/FoodPortionsStore";
-    import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
-    import {OrderRepository} from "$lib/core/repository/OrderRepository";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
+    import {OrderItemRepository} from "$lib/core/repository/OrderItemRepository";
 
+    export let foodById: Map<number, Food>;
+    export let portionsByFoodId: Map<number, FoodPortion[]>;
     const valuesByFoodId: Map<number, OrderItem> = new Map<number, OrderItem>();
     let isButtonClicked: boolean = false;
     let currentData: OrderItem;
@@ -17,7 +16,7 @@
     let areCouponsDisabled: boolean = false;
 
     function setAreCouponsDisabled(): void {
-        const portion: FoodPortion = MenuUtils.findPortionById(currentData);
+        const portion: FoodPortion = currentData.getSelectedPortion();
         const coupon: CouponReward | undefined = $OrderCouponInfoStore?.coupons.find(c => c.foodPortionId === portion.id);
         if (coupon) {
             areCouponsDisabled = !(coupon.count >= portion.couponValue * currentData.selectedQuantity);
@@ -34,43 +33,35 @@
         if (valuesByFoodId.has(foodId)) {
             currentData = valuesByFoodId.get(foodId)!;
             setAreCouponsDisabled();
-            total = MenuUtils.calculateTotalPrice(currentData);
+            total = currentData.calculateTotalPrice();
             return;
         }
-        const food: Food = $MenuFoodsStore.find(food => food.id === foodId)!;
-        const foodPortions: FoodPortion[] = $FoodPortionsStore.filter(portion => portion.foodId === foodId)
+        const food: Food = foodById.get(foodId)!;
+        const foodPortions: FoodPortion[] = portionsByFoodId.get(foodId)!
             .sort((p1, p2) => p1.price - p2.price);
-        const selectedFood: OrderItem = {
-            id: 1,
-            food: food,
-            portions: foodPortions,
-            selectedQuantity: 1,
-            selectedPortionId: foodPortions[0].id,
-            selectedToppingIds: [],
-            areCouponsUsed: false
-        };
+        const selectedFood: OrderItem = new OrderItem(1, food, foodPortions, foodPortions[0].id, 1, [], false);
         valuesByFoodId.set(foodId, selectedFood);
         currentData = selectedFood;
         setAreCouponsDisabled();
-        total = MenuUtils.calculateTotalPrice(currentData);
+        total = currentData.calculateTotalPrice();
     }
 
     async function handleSubmit(): Promise<void> {
-        await OrderRepository.addItem(currentData);
+        await OrderItemRepository.addItem(currentData);
         window.location.href = "/order";
     }
 
     $: {
         if (isButtonClicked) {
             setAreCouponsDisabled();
-            total = MenuUtils.calculateTotalPrice(currentData);
+            total = currentData.calculateTotalPrice();
         }
     }
 
-    setCurrentFood($MenuFoodsStore[0].id);
+    setCurrentFood(Number(foodById.keys().next().value));
 </script>
 
-<Modal title="Add Food to Order" id="add-to-cart-modal">
+<Modal title="Add Food to Order" id="home-page-add-to-cart-modal">
     <div slot="body">
         <div class="mb-20px">
             <label for="food_name" class="form-label">Food</label>
@@ -104,7 +95,7 @@
             <input type="checkbox" class="form-check-input d-block" id="coupon" bind:checked={currentData.areCouponsUsed} disabled={areCouponsDisabled} />
         </div>
         <div class="d-flex justify-content-between">
-            <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(currentData).discount * 100}%</span></div>
+            <div>Discount: <span class="fw-bold">{currentData.getSelectedPortion().discount * 100}%</span></div>
             <div>Total: <span class="fw-bold">{total} ден</span></div>
         </div>
     </div>

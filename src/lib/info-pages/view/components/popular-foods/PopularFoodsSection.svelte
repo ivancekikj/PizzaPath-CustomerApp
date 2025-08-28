@@ -4,7 +4,7 @@
     import PopularFoodCard from "$lib/info-pages/view/components/popular-foods/PopularFoodCard.svelte";
     import {FoodPortionRepository} from "$lib/core/repository/FoodPortionRepository";
     import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-    import HomePageAddToOrderModal from "$lib/info-pages/view/components/modals/AddPopularFoodToOrderModal.svelte";
+    import HomePageAddToOrderModal from "$lib/info-pages/view/components/popular-foods/AddPopularFoodToOrderModal.svelte";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
     import {CouponRepository} from "$lib/core/repository/CouponRepository";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";

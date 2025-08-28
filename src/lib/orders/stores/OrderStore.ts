@@ -1,5 +1,5 @@
 import {writable, type Writable} from "svelte/store";
-import type {Order} from "$lib/core/domain/models";
+import type {Order} from "$lib/orders/domain/models";
 
 const order: Writable<Order | null> = writable<Order | null>(null);
 

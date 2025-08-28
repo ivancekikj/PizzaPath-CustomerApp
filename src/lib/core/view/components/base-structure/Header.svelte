@@ -3,6 +3,13 @@
 	import { CategoriesStore } from '$lib/core/stores/CategoriesStore';
 	import { StoreOperations } from '$lib/core/stores/StoreOperations';
 	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore';
+	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
+
+	async function logoutCustomer(event: MouseEvent, href: string): Promise<void> {
+		event.preventDefault();
+		await AuthenticatedCustomerRepository.logout();
+		window.location.href = href;
+	}
 
 	onMount(() => {
 		window.$('[data-bs-toggle="tooltip"]').tooltip();
@@ -11,7 +18,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
 	<div class="container">
-		<a class="navbar-brand" href="/static">
+		<a class="navbar-brand" href="/">
 			<img id="logo" src="/img/logo.svg" alt="Company logo" />
 		</a>
 		<button
@@ -28,7 +35,7 @@
 		<div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="/static">Home</a>
+					<a class="nav-link" href="/">Home</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="/about">About</a>
@@ -72,7 +79,7 @@
 						<a class="nav-link" href="/account">Account ({$AuthenticatedCustomerStore.username})</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/static" on:click={StoreOperations.logoutUser}>Logout</a>
+						<a class="nav-link" href="/" on:click={async (e) => await logoutCustomer(e, "/")}>Logout</a>
 					</li>
 				{:else}
 					<li class="nav-item">

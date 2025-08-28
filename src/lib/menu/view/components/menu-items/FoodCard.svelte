@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Food } from '$lib/core/domain/models';
 	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-	import {OrderedFoodsStore} from "$lib/core/stores/OrderedFoodsStore";
+	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
 	import {RatingRepository} from "$lib/core/repository/RatingRepository";
+	import {CustomerFoodRatingRepository} from "$lib/menu/repository/CustomerFoodRatingRepository.js";
 
 	export let food: Food;
 	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
@@ -11,13 +12,13 @@
 
 	async function updateRating(value: number): Promise<void> {
 		userRatingValue = value;
-		await RatingRepository.setRating(food.id, userRatingValue);
+		await CustomerFoodRatingRepository.setCurrentCustomerRating(food.id, userRatingValue);
 		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
 	}
 	
 	async function deleteRating(): Promise<void> {
 		userRatingValue = -1;
-		await RatingRepository.deleteRating(food.id);
+		await CustomerFoodRatingRepository.deleteCurrentCustomerRating(food.id);
 		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
 	}
 </script>

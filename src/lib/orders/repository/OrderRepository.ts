@@ -1,41 +1,23 @@
-import type {OrderItem} from "$lib/core/domain/models";
 import axios, {type AxiosResponse} from "axios";
 import {ApiData} from "$lib/core/repository/ApiData";
-import type {Food, FoodPortion, Order, Size, Topping} from "$lib/core/domain/models";
+import {type Food, type FoodPortion, OrderItem, type Size, type Topping} from "$lib/core/domain/models";
+import {type Order} from "$lib/orders/domain/models";
 
-async function addItem(item: OrderItem): Promise<void> {
-    await axios.post(
-        `${ApiData.ADMIN_APP_URL}/api/orders/current-order/items/`,
-        {
-            quantity: item.selectedQuantity,
-            food_portion_id: item.selectedPortionId,
-            toppings_ids: item.selectedToppingIds,
-            are_coupons_used: item.areCouponsUsed,
-        },
-        {
-            headers: { 'Content-Type': 'application/json' }
-        }
-    );
-}
-
-async function getCurrentItems(): Promise<Order | null> {
+async function getCurrentUserOrder(): Promise<Order | null> {
     const response: AxiosResponse<any, any> = await axios.get(`${ApiData.ADMIN_APP_URL}/api/orders/current-order/`);
     if (response.data === "") {
         return null;
     }
+
     return {
         id: response.data.id,
         dateTimeEdited: response.data.date_time_edited,
         description: response.data.description,
         status: response.data.status,
         items: response.data.items.map((item: any) => {
-            return {
-                id: item.id,
-                selectedQuantity: item.quantity,
-                selectedPortionId: item.food_portion_id,
-                selectedToppingIds: item.topping_ids,
-                areCouponsUsed: item.are_coupons_used,
-                food: {
+            return new OrderItem(
+                item.id,
+                {
                     id: item.food.id,
                     name: item.food.name,
                     description: item.food.description,
@@ -47,7 +29,7 @@ async function getCurrentItems(): Promise<Order | null> {
                         price: topping.price
                     } as Topping))
                 } as Food,
-                portions: item.food_portions.map((portion: any) => ({
+                item.food_portions.map((portion: any) => ({
                     id: portion.id,
                     price: portion.price,
                     discount: portion.discount,
@@ -57,9 +39,13 @@ async function getCurrentItems(): Promise<Order | null> {
                         name: portion.size.name
                     } as Size,
                     foodId: portion.food_id
-                } as FoodPortion))
-            } as OrderItem;
-        })
+                } as FoodPortion)),
+                item.food_portion_id,
+                item.quantity,
+                item.topping_ids,
+                item.are_coupons_used
+            );
+        }),
     } as Order;
 }
 
@@ -78,7 +64,7 @@ async function updateItem(item: OrderItem): Promise<void> {
     );
 }
 
-async function update(description: string): Promise<void> {
+async function updateCurrentUserOrder(description: string): Promise<void> {
     await axios.put(
         `${ApiData.ADMIN_APP_URL}/api/orders/current-order/`,
         {
@@ -99,7 +85,7 @@ async function deleteItem(id: number): Promise<void> {
     );
 }
 
-async function deleteOrder() {
+async function deleteCurrentUserOrder() {
     await axios.delete(
         `${ApiData.ADMIN_APP_URL}/api/orders/current-order/`,
         {
@@ -108,7 +94,7 @@ async function deleteOrder() {
     );
 }
 
-async function submit(): Promise<void> {
+async function submitCurrentUserOrder(): Promise<void> {
     await axios.put(
         `${ApiData.ADMIN_APP_URL}/api/orders/current-order/`,
         {
@@ -121,11 +107,10 @@ async function submit(): Promise<void> {
 }
 
 export const OrderRepository = {
-    addItem,
-    getCurrentItems,
+    getCurrentUserOrder,
     updateItem,
-    update,
+    updateCurrentUserOrder,
     deleteItem,
-    delete: deleteOrder,
-    submit
+    deleteCurrentUserOrder,
+    submitCurrentUserOrder
 };

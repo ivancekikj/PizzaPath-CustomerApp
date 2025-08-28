@@ -1,10 +1,9 @@
 <script lang="ts">
-    import type {OrderItem} from "$lib/core/domain/models";
-    import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
-    import {OrderRepository} from "$lib/core/repository/OrderRepository";
-    import {OrderStore} from "$lib/core/stores/OrderStore";
+    import {OrderItem} from "$lib/core/domain/models";
+    import {OrderRepository} from "$lib/orders/repository/OrderRepository";
+    import {OrderStore} from "$lib/orders/stores/OrderStore";
     import type {FoodPortion} from "$lib/core/domain/models";
-    import {EnabledItemCouponsStore} from "$lib/core/stores/EnabledItemCouponsStore";
+    import {EnabledItemCouponsStore} from "$lib/orders/stores/EnabledItemCouponsStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 
     export let item: OrderItem;
@@ -22,7 +21,7 @@
 
     async function onItemQuantityChange(): Promise<void> {
         let selectedPortionItems: OrderItem[] = $OrderStore!.items.filter(i => i.selectedPortionId === item.selectedPortionId && i.areCouponsUsed);
-        const portion: FoodPortion = MenuUtils.findPortionById(item);
+        const portion: FoodPortion = item.getSelectedPortion();
         let usedCoupons: number = selectedPortionItems.map(i => i.selectedQuantity * portion.couponValue).reduce((a, b) => a + b, 0);
         const portionCoupons = $CustomerCouponsStore.find(c => c.foodPortionId === portion.id) || {count: 0, foodPortionId: portion.id};
         if (item.areCouponsUsed && usedCoupons > portionCoupons.count) {
@@ -33,7 +32,7 @@
     }
 
     async function onItemSelectionChange(): Promise<void> {
-        updateEnabledItemsForPortion(MenuUtils.findPortionById(item));
+        updateEnabledItemsForPortion(item.getSelectedPortion());
         await onItemUpdate();
     }
 
@@ -63,7 +62,7 @@
         $OrderStore!.items.forEach(i => {
             if (!portionsIds.has(i.selectedPortionId)) {
                 portionsIds.add(i.selectedPortionId);
-                result.push(MenuUtils.findPortionById(i));
+                result.push(i.getSelectedPortion());
             }
         });
         return result;
@@ -107,8 +106,8 @@
                         <input type="checkbox" class="form-check-input" id="coupon" bind:checked={item.areCouponsUsed} on:change={onItemSelectionChange} disabled={$OrderStore && $OrderStore.status !== "edit" || !$EnabledItemCouponsStore.has(item.id)}/>
                         <label for="coupon" class="form-label">Redeem coupons</label>
                     </div>
-                    <div>Discount: <span class="fw-bold">{MenuUtils.findPortionById(item).discount * 100}%</span></div>
-                    <div>Total: <span class="fw-bold">{MenuUtils.calculateTotalPrice(item)} ден</span></div>
+                    <div>Discount: <span class="fw-bold">{item.getSelectedPortion().discount * 100}%</span></div>
+                    <div>Total: <span class="fw-bold">{item.calculateTotalPrice()} ден</span></div>
                 </div>
             </div>
         </div>

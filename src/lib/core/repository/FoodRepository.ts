@@ -24,13 +24,6 @@ async function get(categoryId?: number): Promise<Food[]> {
 	});
 }
 
-async function getOrderedFoodIds(): Promise<Set<number>> {
-	const response = await axios.get(`${ApiData.ADMIN_APP_URL}/api/accounts/customers/logged-in-customer/ordered-foods/ids/`);
-	return new Set(response.data);
-}
-
-
 export const FoodRepository = {
 	get,
-	getOrderedFoodIds,
 };

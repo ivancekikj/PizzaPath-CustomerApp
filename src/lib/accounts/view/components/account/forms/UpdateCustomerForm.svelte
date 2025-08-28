@@ -2,7 +2,7 @@
     import {Validators} from "$lib/accounts/view/components/account/validation/Validators";
     import TextInput from "$lib/accounts/view/components/account/inputs/TextInput.svelte";
     import CheckboxInput from "$lib/accounts/view/components/account/inputs/CheckboxInput.svelte";
-    import {Converters} from "$lib/core/view/utils/Converters";
+    import {Converters} from "$lib/accounts/view/components/account/validation/Converters";
     import type {CustomerUpdateDto} from "$lib/accounts/domain/dto";
     import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
     import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";

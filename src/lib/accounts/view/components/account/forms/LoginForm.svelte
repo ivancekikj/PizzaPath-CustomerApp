@@ -1,10 +1,7 @@
 <script lang="ts">
 	import TextInput from "$lib/accounts/view/components/account/inputs/TextInput.svelte";
 	import type {CustomerLoginDto} from "$lib/accounts/domain/dto";
-	import {goto} from "$app/navigation";
-	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {CustomerRepository} from "$lib/accounts/repository/CustomerRepository";
-	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
 
 	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
@@ -21,8 +18,7 @@
 			setTimeout(() => errorMessage = "", 3000);
 			return;
 		}
-		AuthenticatedCustomerStore.set(await AuthenticatedCustomerRepository.getCurrent());
-		await goto("/");
+		window.location.href = "/";
 	}
 
 	async function handleSubmit(event: Event): Promise<void> {

@@ -1,15 +1,14 @@
 <script lang="ts">
-	import {OrderRepository} from "$lib/core/repository/OrderRepository";
-	import OrderItemCard from "$lib/core/view/components/OrderItemCard.svelte";
-	import {MenuUtils} from "$lib/core/view/utils/MenuUtils";
-	import EditOrderToppingsModal from "$lib/core/view/components/modals/EditOrderToppingsModal.svelte";
-	import type {OrderItem} from "$lib/core/domain/models";
-	import {OrderStore} from "$lib/core/stores/OrderStore";
+	import {OrderRepository} from "$lib/orders/repository/OrderRepository";
+	import OrderItemCard from "$lib/orders/view/components/order-items/OrderItemCard.svelte";
+	import EditOrderToppingsModal from "$lib/orders/view/components/order-items/EditOrderToppingsModal.svelte";
+	import {OrderItem} from "$lib/core/domain/models";
+	import {OrderStore} from "$lib/orders/stores/OrderStore";
 	import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";
 	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
 	import {CouponRepository} from "$lib/core/repository/CouponRepository";
 	import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
-	import {EnabledItemCouponsStore} from "$lib/core/stores/EnabledItemCouponsStore";
+	import {EnabledItemCouponsStore} from "$lib/orders/stores/EnabledItemCouponsStore";
 	import type {CouponReward, FoodPortion} from "$lib/core/domain/models";
 
 	let orderPriceTotal: number = NaN;
@@ -17,7 +16,7 @@
 	let description: string
 
 	async function loadOrder(): Promise<void> {
-		OrderStore.setValue(await OrderRepository.getCurrentItems());
+		OrderStore.setValue(await OrderRepository.getCurrentUserOrder());
 		if ($CustomerCouponsStore.length === 0) {
 			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
 		}
@@ -46,7 +45,7 @@
 	function isItemEnabledForSelection(item: OrderItem): boolean {
 		if (item.areCouponsUsed)
 			return true;
-		const portion: FoodPortion = MenuUtils.findPortionById(item);
+		const portion: FoodPortion = item.getSelectedPortion();
 		const coupon: CouponReward | undefined = $OrderCouponInfoStore!.coupons.find(c => c.foodPortionId === item.selectedPortionId);
 		if (!coupon)
 			return false;
@@ -60,7 +59,7 @@
 		$CustomerCouponsStore.filter(c => $OrderStore!.items.some(item => item.selectedPortionId === c.foodPortionId))
 				.forEach(c => couponByFoodPortionId.set(c.foodPortionId, { ...c }));
 		$OrderStore!.items.forEach(item => {
-			const portion = MenuUtils.findPortionById(item);
+			const portion = item.getSelectedPortion();
 			if (item.areCouponsUsed) {
 				redeemedCoupons += item.selectedQuantity * portion.couponValue;
 				couponByFoodPortionId.get(item.selectedPortionId)!.count -= item.selectedQuantity * portion.couponValue;
@@ -79,7 +78,9 @@
 	}
 
 	function calculateTotalOrderPrice(): void {
-		orderPriceTotal = $OrderStore ? $OrderStore.items.map(MenuUtils.calculateTotalPrice).reduce((a, b) => a + b, 0) : NaN;
+		orderPriceTotal = $OrderStore
+				? $OrderStore.items.map(item => item.calculateTotalPrice()).reduce((a, b) => a + b, 0)
+				: NaN;
 	}
 
 	function capitalizeStatus(status: string): string {
@@ -91,12 +92,12 @@
 	}
 
 	async function deleteOrder(): Promise<void> {
-		await OrderRepository.delete();
+		await OrderRepository.deleteCurrentUserOrder();
 		window.location.href = "/order";
 	}
 
 	async function submitOrder(): Promise<void> {
-		await OrderRepository.submit();
+		await OrderRepository.submitCurrentUserOrder();
 		window.location.href = "/order";
 	}
 
@@ -107,7 +108,7 @@
 			}
 			return store;
 		});
-		await OrderRepository.update(description);
+		await OrderRepository.updateCurrentUserOrder(description);
 	}
 </script>
 
