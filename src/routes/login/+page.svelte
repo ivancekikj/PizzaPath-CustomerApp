@@ -1,5 +1,5 @@
 <script>
-	import LoginPage from '$lib/view/pages/LoginPage.svelte';
+	import LoginPage from '$lib/accounts/view/pages/LoginPage.svelte';
 </script>
 
 <LoginPage />

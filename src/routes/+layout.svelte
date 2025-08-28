@@ -1,16 +1,15 @@
 <script lang="ts">
-	import Footer from '$lib/view/components/Footer.svelte';
-	import Header from '$lib/view/components/Header.svelte';
-	import type {Customer} from "$lib/domain/models";
-	import {AuthenticatedCustomerStore} from "$lib/stores/AuthenticatedCustomerStore";
+	import Footer from '$lib/core/view/components/base-structure/Footer.svelte';
+	import Header from '$lib/core/view/components/base-structure/Header.svelte';
+	import type {Customer} from "$lib/core/domain/models";
+	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {onMount} from "svelte";
-	import {CategoryRepository} from "$lib/repository/CategoryRepository";
-	import {CategoriesStore} from "$lib/stores/CategoriesStore";
+	import {CategoryRepository} from "$lib/core/repository/CategoryRepository";
+	import {CategoriesStore} from "$lib/core/stores/CategoriesStore";
 	import {page} from "$app/state";
-	import {CustomerRepository} from "$lib/repository/CustomerRepository";
+	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
 	import axios from "axios";
 	import {goto} from "$app/navigation";
-	import {StoreOperations} from "$lib/stores/StoreOperations";
 
 	axios.defaults.withCredentials = true;
 	let isAuthenticationLoaded: boolean = false;
@@ -18,7 +17,7 @@
 	async function loadAuthentication(): Promise<void> {
 		let customer: Customer;
 		try {
-			customer = await CustomerRepository.getCurrent();
+			customer = await AuthenticatedCustomerRepository.getCurrent();
 		} catch (error: any) {
 			return;
 		}
@@ -32,11 +31,12 @@
 
 	onMount(async () => {
 		await loadAuthentication();
-		if ($AuthenticatedCustomerStore == null && ["/account", "/order"].includes(page.url.pathname)) {
+		if (!$AuthenticatedCustomerStore && ["/account", "/order"].includes(page.url.pathname)) {
 			await goto("/login");
 		}
-		if ($AuthenticatedCustomerStore != null && ["/register", "/login"].includes(page.url.pathname)) {
-			await StoreOperations.logoutUser();
+		if ($AuthenticatedCustomerStore && ["/register", "/login"].includes(page.url.pathname)) {
+			AuthenticatedCustomerStore.set(null);
+			await AuthenticatedCustomerRepository.logout();
 		}
 		await loadCategories();
 		isAuthenticationLoaded = true;
