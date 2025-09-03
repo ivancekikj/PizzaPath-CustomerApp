@@ -25,6 +25,7 @@ export interface Food {
     description: string;
     imageUrl: string;
     averageRating: number;
+    categoryId: number;
     toppings: Topping[];
 }
 

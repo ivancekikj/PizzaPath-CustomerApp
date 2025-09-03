@@ -15,6 +15,7 @@ async function get(categoryId?: number): Promise<Food[]> {
 			description: food.description,
 			imageUrl: food.image_url,
 			averageRating: food.average_rating,
+			categoryId: food.category,
 			toppings: food.toppings.map((topping: any) => ({
 				id: topping.id,
 				name: topping.name,

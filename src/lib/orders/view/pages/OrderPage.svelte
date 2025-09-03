@@ -6,23 +6,24 @@
 	import {OrderStore} from "$lib/orders/stores/OrderStore";
 	import ConfirmModal from "$lib/core/view/components/modals/ConfirmModal.svelte";
 	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
-	import {CouponRepository} from "$lib/core/repository/CouponRepository";
 	import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
 	import {EnabledItemCouponsStore} from "$lib/orders/stores/EnabledItemCouponsStore";
 	import type {CouponReward, FoodPortion} from "$lib/core/domain/models";
+	import type {Order} from "$lib/orders/domain/models";
 
+	export let order: Order | null;
 	let orderPriceTotal: number = NaN;
 	let currentItemForToppings: OrderItem | null = null;
-	let description: string
+	let description: string;
 
-	async function loadOrder(): Promise<void> {
-		OrderStore.setValue(await OrderRepository.getCurrentUserOrder());
-		if ($CustomerCouponsStore.length === 0) {
-			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
-		}
-		OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
+	setUpOrderData();
+
+	function setUpOrderData(): void {
+		OrderStore.setValue(order);
 		if ($OrderStore) {
-			EnabledItemCouponsStore.setValue(new Set($OrderStore!.items.filter(isItemEnabledForSelection).map(item => item.id)));
+			EnabledItemCouponsStore.setValue(
+					new Set($OrderStore!.items.filter(isItemEnabledForSelection).map(item => item.id))
+			);
 		}
 		description = $OrderStore && $OrderStore.description ? $OrderStore.description : "";
 		if ($OrderStore && $OrderStore.items.some(item => item.food.toppings.length > 0)) {
@@ -116,57 +117,55 @@
 	<title>Pizza Delicious - Order</title>
 </svelte:head>
 
-{#await loadOrder() then _}
-	<div class="container mt-100px mb-100px">
-		<div class="row justify-content-between">
-			<div class="col-8">
-				{#if $OrderStore !== null && $OrderStore.items.length > 0}
-					{#each $OrderStore.items as item, i}
-						<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings} {updateOrderCouponInfo} {updateEnabledItemsForPortion}/>
-					{/each}
-				{:else}
-					<p>Order currently empty.</p>
-				{/if}
-			</div>
-			<div class="col-3">
-				<div class="sticky-details">
-					<div class="card mb-50px">
-						<div class="card-body">
-							<h5 class="card-title mb-20px fw-bold">Order Details</h5>
-							<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{$OrderStore ? $OrderStore.id : "/"}</span></p>
-							<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{$OrderStore ? $OrderStore.items.length : "/"}</span></p>
-							<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.redeemedCoupons : "/"}</span></p>
-							<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.earnedCoupons : "/"}</span></p>
-							<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{$OrderStore && !isNaN(orderPriceTotal) ? (orderPriceTotal + " ден") : "/"}</span></p>
-							<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{$OrderStore ? capitalizeStatus($OrderStore.status) : "/"}</span></p>
-						</div>
+<div class="container mt-100px mb-100px">
+	<div class="row justify-content-between">
+		<div class="col-8">
+			{#if $OrderStore !== null && $OrderStore.items.length > 0}
+				{#each $OrderStore.items as item, i}
+					<OrderItemCard {item} hasBottomMargin={i < $OrderStore.items.length - 1} updateTotalOrderPrice={calculateTotalOrderPrice} setItemForToppings={setCurrentItemForToppings} {updateOrderCouponInfo} {updateEnabledItemsForPortion}/>
+				{/each}
+			{:else}
+				<p>Order currently empty.</p>
+			{/if}
+		</div>
+		<div class="col-3">
+			<div class="sticky-details">
+				<div class="card mb-50px">
+					<div class="card-body">
+						<h5 class="card-title mb-20px fw-bold">Order Details</h5>
+						<p class="card-text m-0 d-flex justify-content-between">Order number: <span class="fw-bold">{$OrderStore ? $OrderStore.id : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Number of items: <span class="fw-bold">{$OrderStore ? $OrderStore.items.length : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Coupons redeemed: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.redeemedCoupons : "/"}</span></p>
+						<p class="card-text m-0 d-flex justify-content-between">Coupons earned: <span class="fw-bold">{$OrderCouponInfoStore ? $OrderCouponInfoStore.earnedCoupons : "/"}</span></p>
+						<p class="card-text mb-20px d-flex justify-content-between">Total: <span class="fw-bold">{$OrderStore && !isNaN(orderPriceTotal) ? (orderPriceTotal + " ден") : "/"}</span></p>
+						<p class="card-text d-flex justify-content-between">Status: <span class="fw-bold">{$OrderStore ? capitalizeStatus($OrderStore.status) : "/"}</span></p>
 					</div>
-					<div class="mb-50px">
-						<label for="description" class="form-label">Description</label>
-						<textarea class="form-control" id="description" disabled={$OrderStore == null || $OrderStore.status !== "edit"} bind:value={description} on:input={updateDescription}></textarea>
-					</div>
-					<div>
-						<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
-						<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0 || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#submit-order-modal">Submit Order</button>
-					</div>
+				</div>
+				<div class="mb-50px">
+					<label for="description" class="form-label">Description</label>
+					<textarea class="form-control" id="description" disabled={$OrderStore == null || $OrderStore.status !== "edit"} bind:value={description} on:input={updateDescription}></textarea>
+				</div>
+				<div>
+					<button class="btn red-button w-100 mb-20px" disabled={$OrderStore == null || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#empty-order-modal">Delete Order</button>
+					<button class="btn green-button w-100" disabled={$OrderStore == null || $OrderStore.items.length === 0 || $OrderStore.status !== "edit"} data-bs-toggle="modal" data-bs-target="#submit-order-modal">Submit Order</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	{#if currentItemForToppings}
-		<EditOrderToppingsModal item={currentItemForToppings} updateTotalOrderPrice={calculateTotalOrderPrice}></EditOrderToppingsModal>
-	{/if}
-	{#if $OrderStore != null}
-		<ConfirmModal title="Delete Order" id="empty-order-modal" onSubmit={deleteOrder}>
-			<p slot="content">Are you sure you want to delete the order? All of the data will be lost!</p>
-		</ConfirmModal>
-	{/if}
-	{#if $OrderStore && $OrderStore.items.length > 0 && $OrderStore.status === "edit"}
-		<ConfirmModal title="Submit Order" id="submit-order-modal" onSubmit={submitOrder}>
-			<p slot="content">Are you sure you want to submit the order? You won’t be able to edit it anymore.</p>
-		</ConfirmModal>
-	{/if}
-{/await}
+</div>
+{#if currentItemForToppings}
+	<EditOrderToppingsModal item={currentItemForToppings} updateTotalOrderPrice={calculateTotalOrderPrice}></EditOrderToppingsModal>
+{/if}
+{#if $OrderStore != null}
+	<ConfirmModal title="Delete Order" id="empty-order-modal" onSubmit={deleteOrder}>
+		<p slot="content">Are you sure you want to delete the order? All of the data will be lost!</p>
+	</ConfirmModal>
+{/if}
+{#if $OrderStore && $OrderStore.items.length > 0 && $OrderStore.status === "edit"}
+	<ConfirmModal title="Submit Order" id="submit-order-modal" onSubmit={submitOrder}>
+		<p slot="content">Are you sure you want to submit the order? You won’t be able to edit it anymore.</p>
+	</ConfirmModal>
+{/if}
 
 <style>
 	#description {

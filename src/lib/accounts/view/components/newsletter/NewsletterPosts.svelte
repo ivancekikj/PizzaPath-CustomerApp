@@ -3,14 +3,16 @@
     import {NewsletterPostsRepository} from "$lib/accounts/repository/NewsletterPostsRepository";
     import NewsletterPostModal from "$lib/accounts/view/components/newsletter/NewsletterPostModal.svelte";
 
-    let posts: NewsletterPost[];
-    let totalCount: number;
+    export let posts: NewsletterPost[];
+    export let totalCount: number;
     let page = 1;
     let startPostIndex = -1;
     let endPostIndex = -1;
     let leftDisabled = false;
     let rightDisabled = false;
     let selectedPost: NewsletterPost;
+
+    initialSetup();
 
     async function loadPosts(): Promise<void> {
         posts = await NewsletterPostsRepository.getCurrentUserReceivedPosts(page);
@@ -38,12 +40,9 @@
         return text.length > 100 ? text.substring(0, 100) + '...' : text;
     }
 
-    async function initialLoad(): Promise<void> {
-        totalCount = await NewsletterPostsRepository.getCurrentUserReceivedPostsCount();
-        if (totalCount === 0)
-            return;
-        await loadPosts();
-        setSelectedPost(posts[0]);
+    function initialSetup(): void {
+        if (totalCount > 0)
+            setSelectedPost(posts[0]);
     }
     
     function setSelectedPost(post: NewsletterPost): void {
@@ -51,46 +50,44 @@
     }
 </script>
 
-{#await initialLoad() then _}
-    {#if totalCount === 0}
-        <p>No posts received.</p>
-    {:else}
-        <NewsletterPostModal post={selectedPost} />
-        <div class="row g-4">
-            {#each posts as post}
-                <div class="col-md-6 col-lg-6">
-                    <div class="card p-3">
-                        <div class="card-body">
-                            <h5 class="fw-bold">{post.title}</h5>
-                            <p class="card-text">
-                                {#if post.content.length > 100}
-                                    {getFirst100Chars(post.content)}
-                                    <span class="more" role="button" tabindex="0" on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedPost(post)} data-bs-toggle="modal" data-bs-target="#newsletter-post-modal" on:click={() => setSelectedPost(post)}>more</span>
-                                {:else}
-                                    {post.content}
-                                {/if}
-                            </p>
-                            <p class="fw-bold mb-0">Posted on: <span class="fw-normal">{post.date}</span></p>
-                        </div>
+{#if totalCount === 0}
+    <p>No posts received.</p>
+{:else}
+    <NewsletterPostModal post={selectedPost} />
+    <div class="row g-4">
+        {#each posts as post}
+            <div class="col-md-6 col-lg-6">
+                <div class="card p-3">
+                    <div class="card-body">
+                        <h5 class="fw-bold">{post.title}</h5>
+                        <p class="card-text">
+                            {#if post.content.length > 100}
+                                {getFirst100Chars(post.content)}
+                                <span class="more" role="button" tabindex="0" on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedPost(post)} data-bs-toggle="modal" data-bs-target="#newsletter-post-modal" on:click={() => setSelectedPost(post)}>more</span>
+                            {:else}
+                                {post.content}
+                            {/if}
+                        </p>
+                        <p class="fw-bold mb-0">Posted on: <span class="fw-normal">{post.date}</span></p>
                     </div>
                 </div>
-            {/each}
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div>Showing posts {startPostIndex} to {endPostIndex} out of {totalCount}.</div>
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item">
-                        <button class="page-link" disabled={leftDisabled} on:click={loadPreviousPage}>&lt;</button>
-                    </li>
-                    <li class="page-item">
-                        <button class="page-link" disabled={rightDisabled} on:click={loadNextPage}>&gt;</button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    {/if}
-{/await}
+            </div>
+        {/each}
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>Showing posts {startPostIndex} to {endPostIndex} out of {totalCount}.</div>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item">
+                    <button class="page-link" disabled={leftDisabled} on:click={loadPreviousPage}>&lt;</button>
+                </li>
+                <li class="page-item">
+                    <button class="page-link" disabled={rightDisabled} on:click={loadNextPage}>&gt;</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{/if}
 
 <style>
     .card {
