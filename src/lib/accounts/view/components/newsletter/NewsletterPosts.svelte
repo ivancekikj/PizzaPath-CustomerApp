@@ -16,6 +16,10 @@
 
     async function loadPosts(): Promise<void> {
         posts = await NewsletterPostsRepository.getCurrentUserReceivedPosts(page);
+        updatePagination();
+    }
+
+    function updatePagination(): void {
         startPostIndex = (page - 1) * 4 + 1;
         endPostIndex = Math.min(page * 4, totalCount);
         leftDisabled = startPostIndex === 1;
@@ -41,8 +45,10 @@
     }
 
     function initialSetup(): void {
-        if (totalCount > 0)
-            setSelectedPost(posts[0]);
+        if (totalCount === 0)
+            return;
+        setSelectedPost(posts[0]);
+        updatePagination();
     }
     
     function setSelectedPost(post: NewsletterPost): void {

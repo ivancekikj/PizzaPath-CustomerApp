@@ -2,7 +2,6 @@
 	import FoodCard from '$lib/menu/view/components/menu-items/FoodCard.svelte';
 	import MenuTabs from '$lib/menu/view/components/menu-items/MenuTabs.svelte';
 	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
-	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
 	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
 	import type {Category, Food, FoodPortion} from "$lib/core/domain/models";
 
@@ -15,13 +14,11 @@
 	export let orderedFoodIds: Set<number>;
 	let modal: AddToOrderModal | null = null;
 
-	setUpInitialData();
-
 	function setUpInitialData(): void {
 		const indexByCategory = new Map<number, number>();
 		categories.forEach((category, index) => indexByCategory.set(category.id, index));
 		foods.sort((f1, f2) => {
-			if (categoryId && f1.categoryId !== f2.categoryId) {
+			if (f1.categoryId !== f2.categoryId) {
 				const f1CategoryIndex = indexByCategory.get(f1.categoryId)!;
 				const f2CategoryIndex = indexByCategory.get(f2.categoryId)!;
 				return f1CategoryIndex - f2CategoryIndex;
@@ -44,6 +41,8 @@
 	function getAverageFoodRating(foodId: number): number | null {
 		return averageRatingByFoodId.get(foodId) ?? null;
 	}
+
+	setUpInitialData();
 </script>
 
 <svelte:head>
@@ -53,17 +52,15 @@
 <div id="showcase">
 	<h1>Menu</h1>
 </div>
-{#if $AuthenticatedCustomerStore && foods.length > 0 }
-	<AddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
-{/if}
 <div class="container">
 	<MenuTabs {categories} {categoryId} />
 	<div class="row">
 		{#if foods.length > 0}
 			{#each foods as food}
-				<FoodCard {food} updateSelectedFoodId={modal?.setCurrentFood} userRatingValue={getFoodRating(food.id)}
+				<FoodCard {food} bind:modal={modal} userRatingValue={getFoodRating(food.id)}
 						  averageRating={getAverageFoodRating(food.id)}></FoodCard>
 			{/each}
+			<AddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
 		{:else}
 			<p>No foods available.</p>
 		{/if}

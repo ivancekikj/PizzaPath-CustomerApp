@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ url }) => {
         ? parseInt(categoryIdQueryParam) : undefined;
 
     const foods = await FoodRepository.get(categoryId);
-    const portionsByFoodId = loadPortionsByFoodId();
+    const portionsByFoodId = await loadPortionsByFoodId(categoryId);
     const categories = get(CategoriesStore);
 
     const averageRatingByFoodId = await RatingRepository.getAverageRatingOfEachFood();
