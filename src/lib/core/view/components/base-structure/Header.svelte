@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { CategoriesStore } from '$lib/core/stores/CategoriesStore';
-	import { StoreOperations } from '$lib/core/stores/StoreOperations';
 	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore';
 	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
+	import {onMount} from "svelte";
+	import {CategoriesStore} from "$lib/core/stores/CategoriesStore";
 
 	async function logoutCustomer(event: MouseEvent, href: string): Promise<void> {
 		event.preventDefault();
@@ -11,9 +10,7 @@
 		window.location.href = href;
 	}
 
-	onMount(() => {
-		window.$('[data-bs-toggle="tooltip"]').tooltip();
-	});
+	onMount(() => window.$('[data-bs-toggle="tooltip"]').tooltip());
 </script>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
@@ -55,7 +52,6 @@
 							<a
 								class="dropdown-item"
 								href="/menu"
-								on:click={async () => await StoreOperations.setMenuFoodsByCategoryId()}
 								>Whole Menu</a
 							>
 						</li>
@@ -64,14 +60,13 @@
 								<a
 									class="dropdown-item"
 									href="/menu?categoryId={category.id}"
-									on:click={async () => await StoreOperations.setMenuFoodsByCategoryId(category.id)}
 									>{category.name}</a
 								>
 							</li>
 						{/each}
 					</ul>
 				</li>
-				{#if $AuthenticatedCustomerStore != null}
+				{#if $AuthenticatedCustomerStore}
 					<li class="nav-item">
 						<a class="nav-link" href="/order">Order</a>
 					</li>

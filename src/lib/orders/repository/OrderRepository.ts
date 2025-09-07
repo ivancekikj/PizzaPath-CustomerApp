@@ -23,6 +23,7 @@ async function getCurrentUserOrder(): Promise<Order | null> {
                     description: item.food.description,
                     imageUrl: item.food.image_url,
                     averageRating: item.food.average_rating,
+                    categoryId: item.food.category,
                     toppings: item.food.toppings.map((topping: any) => ({
                         id: topping.id,
                         name: topping.name,

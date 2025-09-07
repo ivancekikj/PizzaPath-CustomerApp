@@ -4,9 +4,10 @@
 	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
 	import {RatingRepository} from "$lib/core/repository/RatingRepository";
 	import {CustomerFoodRatingRepository} from "$lib/menu/repository/CustomerFoodRatingRepository.js";
+	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
 
 	export let food: Food;
-	export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
+	export let modal: AddToOrderModal | null = null;
 	export let userRatingValue: number = -1;
 	export let averageRating: number | null = null;
 
@@ -63,8 +64,8 @@
 			</li>
 		{/if}
 	</ul>
-	{#if $AuthenticatedCustomerStore != null && updateSelectedFoodId != null}
-		<button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
+	{#if $AuthenticatedCustomerStore}
+		<button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button>
 	{/if}
 </div>
 

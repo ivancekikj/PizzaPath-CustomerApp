@@ -1,26 +1,24 @@
 <script lang="ts">
-	import { CategoriesStore } from '$lib/core/stores/CategoriesStore';
-	import { CategoryIdStore } from '$lib/core/stores/CategoryIdStore';
-	import { StoreOperations } from '$lib/core/stores/StoreOperations';
+	import type {Category} from "$lib/core/domain/models";
+
+	export let categories: Category[];
+	export let categoryId: number | undefined;
 </script>
 
 <ul class="nav nav-tabs">
 	<li class="nav-item">
 		<a
-			class="nav-link {$CategoryIdStore ? undefined : 'active'}"
+			class="nav-link {categoryId ? undefined : 'active'}"
 			href="/menu"
-			aria-current={$CategoryIdStore ? undefined : 'page'}
-			on:click={async () => await StoreOperations.setMenuFoodsByCategoryId()}>Whole Menu</a
+			aria-current={categoryId ? undefined : 'page'}>Whole Menu</a
 		>
 	</li>
-	{#each $CategoriesStore as category}
+	{#each categories as category}
 		<li class="nav-item">
 			<a
-				class="nav-link {$CategoryIdStore === category.id ? 'active' : undefined}"
-				aria-current={$CategoryIdStore === category.id ? 'page' : undefined}
-				href="/menu?categoryId={category.id}"
-				on:click={async () => await StoreOperations.setMenuFoodsByCategoryId(category.id)}
-				>{category.name}</a
+				class="nav-link {categoryId && categoryId === category.id ? 'active' : undefined}"
+				aria-current={categoryId && categoryId === category.id ? 'page' : undefined}
+				href="/menu?categoryId={category.id}">{category.name}</a
 			>
 		</li>
 	{/each}

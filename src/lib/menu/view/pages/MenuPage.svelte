@@ -1,39 +1,37 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import FoodCard from '$lib/menu/view/components/menu-items/FoodCard.svelte';
-	import { MenuFoodsStore } from '$lib/core/stores/MenuFoodsStore';
 	import MenuTabs from '$lib/menu/view/components/menu-items/MenuTabs.svelte';
-	import { StoreOperations } from '$lib/core/stores/StoreOperations';
 	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
-	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-	import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
-	import {CouponRepository} from "$lib/core/repository/CouponRepository";
-	import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
 	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
-	import {RatingRepository} from "$lib/core/repository/RatingRepository";
-	import {CustomerOrderedFoodsRepository} from "$lib/menu/repository/CustomerOrderedFoodsRepository";
-	import {CustomerFoodRatingRepository} from "$lib/menu/repository/CustomerFoodRatingRepository";
+	import type {Category, Food, FoodPortion} from "$lib/core/domain/models";
 
-	const categoryIdQueryParam: string | null = page.url.searchParams.get('categoryId');
-	const categoryId: number | undefined = categoryIdQueryParam && !isNaN(Number(categoryIdQueryParam))
-			? parseInt(categoryIdQueryParam) : undefined;
+	export let categoryId: number | undefined;
+	export let categories: Category[];
+	export let foods: Food[];
+	export let portionsByFoodId: Map<number, FoodPortion[]>;
+	export let ratingValueByFoodId: Map<number, number>;
+	export let averageRatingByFoodId: Map<number, number>;
+	export let orderedFoodIds: Set<number>;
 	let modal: AddToOrderModal | null = null;
-	let ratingValueByFoodId: Map<number, number>;
-	let averageRatingByFoodId: Map<number, number>;
 
-	async function loadData(): Promise<void> {
-		await StoreOperations.setMenuFoodsByCategoryId(categoryId);
-		averageRatingByFoodId = await RatingRepository.getAverageRatingOfEachFood();
-		if (!$AuthenticatedCustomerStore)
-			return;
-		if ($CustomerCouponsStore.length == 0) {
-			CustomerCouponsStore.setValue(await CouponRepository.getCurrentUserCoupons());
-		}
-		if (!$OrderCouponInfoStore) {
-			OrderCouponInfoStore.setValue(await CouponRepository.getCurrentUserOrderCouponInfo());
-		}
-		OrderedFoodsStore.setValue(await CustomerOrderedFoodsRepository.getOrderedFoodIds());
-		ratingValueByFoodId = await CustomerFoodRatingRepository.getCurrentUserReviews();
+	function setUpInitialData(): void {
+		const indexByCategory = new Map<number, number>();
+		categories.forEach((category, index) => indexByCategory.set(category.id, index));
+		foods.sort((f1, f2) => {
+			if (f1.categoryId !== f2.categoryId) {
+				const f1CategoryIndex = indexByCategory.get(f1.categoryId)!;
+				const f2CategoryIndex = indexByCategory.get(f2.categoryId)!;
+				return f1CategoryIndex - f2CategoryIndex;
+			}
+			return f1.name.localeCompare(f2.name);
+		});
+		OrderedFoodsStore.setValue(orderedFoodIds);
+	}
+
+	function getFoodById(): Map<number, Food> {
+		const foodById: Map<number, Food> = new Map<number, Food>();
+		foods.forEach(food => foodById.set(food.id, food));
+		return foodById;
 	}
 
 	function getFoodRating(foodId: number): number {
@@ -43,6 +41,8 @@
 	function getAverageFoodRating(foodId: number): number | null {
 		return averageRatingByFoodId.get(foodId) ?? null;
 	}
+
+	setUpInitialData();
 </script>
 
 <svelte:head>
@@ -52,26 +52,21 @@
 <div id="showcase">
 	<h1>Menu</h1>
 </div>
-{#await loadData() then _}
-	{#if $AuthenticatedCustomerStore != null}
-		<AddToOrderModal bind:this={modal} />
-	{/if}
-	<div class="container">
-		<MenuTabs />
-		<div class="row">
-			{#if modal != null}
-				{#each $MenuFoodsStore as food}
-					<FoodCard {food} updateSelectedFoodId={modal.setCurrentFood} userRatingValue={getFoodRating(food.id)} averageRating={getAverageFoodRating(food.id)}></FoodCard>
-				{/each}
-			{:else}
-				{#each $MenuFoodsStore as food}
-					<FoodCard {food} averageRating={getAverageFoodRating(food.id)}></FoodCard>
-				{/each}
-			{/if}
-		</div>
-		<hr />
+<div class="container">
+	<MenuTabs {categories} {categoryId} />
+	<div class="row">
+		{#if foods.length > 0}
+			{#each foods as food}
+				<FoodCard {food} bind:modal={modal} userRatingValue={getFoodRating(food.id)}
+						  averageRating={getAverageFoodRating(food.id)}></FoodCard>
+			{/each}
+			<AddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
+		{:else}
+			<p>No foods available.</p>
+		{/if}
 	</div>
-{/await}
+	<hr />
+</div>
 
 <style>
 	#showcase {

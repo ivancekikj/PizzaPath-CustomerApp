@@ -3,12 +3,12 @@
     import {OrderItem} from "$lib/core/domain/models";
     import type {CouponReward, Food} from "$lib/core/domain/models";
     import type {FoodPortion} from "$lib/core/domain/models.js";
-    import {MenuFoodsStore} from "$lib/core/stores/MenuFoodsStore";
-    import {FoodPortionsStore} from "$lib/core/stores/FoodPortionsStore";
     import {OrderCouponInfoStore} from "$lib/core/stores/OrderCouponInfoStore";
     import {CustomerCouponsStore} from "$lib/core/stores/CustomerCouponsStore";
     import {OrderItemRepository} from "$lib/core/repository/OrderItemRepository.js";
 
+    export let foodById: Map<number, Food>;
+    export let portionsByFoodId: Map<number, FoodPortion[]>;
     const valuesByFoodId: Map<number, OrderItem> = new Map<number, OrderItem>();
     let isButtonClicked: boolean = false;
     let currentData: OrderItem;
@@ -36,8 +36,8 @@
             total = currentData.calculateTotalPrice();
             return;
         }
-        const food: Food = $MenuFoodsStore.find(food => food.id === foodId)!;
-        const foodPortions: FoodPortion[] = $FoodPortionsStore.filter(portion => portion.foodId === foodId)
+        const food: Food = foodById.get(foodId)!;
+        const foodPortions: FoodPortion[] = portionsByFoodId.get(foodId)!
             .sort((p1, p2) => p1.price - p2.price);
         const selectedFood: OrderItem = new OrderItem(1, food, foodPortions, foodPortions[0].id, 1, [], false);
         valuesByFoodId.set(foodId, selectedFood);
@@ -58,7 +58,7 @@
         }
     }
 
-    setCurrentFood($MenuFoodsStore[0].id);
+    setCurrentFood(Number(foodById.keys().next().value));
 </script>
 
 <Modal title="Add Food to Order" id="add-to-cart-modal">

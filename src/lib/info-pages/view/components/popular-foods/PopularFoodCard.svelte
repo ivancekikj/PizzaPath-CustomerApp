@@ -1,10 +1,12 @@
 <script lang="ts">
     import type {Food} from "$lib/core/domain/models";
     import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
+    import AddPopularFoodToOrderModal
+        from "$lib/info-pages/view/components/popular-foods/AddPopularFoodToOrderModal.svelte";
 
     export let food: Food;
     export let averageRating: number | null = null;
-    export let updateSelectedFoodId: ((foodId: number) => void) | null = null;
+    export let modal: AddPopularFoodToOrderModal | null = null;
 </script>
 
 <div class="card">
@@ -25,8 +27,8 @@
 			</span>
         </li>
     </ul>
-    {#if $AuthenticatedCustomerStore && updateSelectedFoodId}
-        <button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#home-page-add-to-cart-modal" on:click={() => updateSelectedFoodId(food.id)}>Add to Order</button>
+    {#if $AuthenticatedCustomerStore}
+        <button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#home-page-add-to-cart-modal" on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button>
     {/if}
 </div>
 
@@ -34,5 +36,9 @@
     div.card {
         width: 30%;
         padding: 0 !important;
+    }
+
+    .card-link {
+        border-radius: 0 0 5px 5px;
     }
 </style>
