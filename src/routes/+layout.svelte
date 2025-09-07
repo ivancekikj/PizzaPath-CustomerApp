@@ -19,7 +19,6 @@
 
 <svelte:head>
 	<link rel="stylesheet" href="/css/style.css" />
-	<link rel="icon" href="/img/logo.svg" />
 </svelte:head>
 
 <Header />
