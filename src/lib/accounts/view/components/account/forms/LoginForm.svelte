@@ -1,37 +1,40 @@
 <script lang="ts">
-	import TextInput from "$lib/accounts/view/components/account/inputs/TextInput.svelte";
-	import type {CustomerLoginDto} from "$lib/accounts/domain/dto";
-	import {CustomerRepository} from "$lib/accounts/repository/CustomerRepository";
+	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte'
+	import type { CustomerLoginDto } from '$lib/accounts/domain/dto'
+	import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository'
 
-	const loginData: CustomerLoginDto = {} as CustomerLoginDto;
+	const loginData: CustomerLoginDto = {} as CustomerLoginDto
 	const inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
 		username: null,
 		password: null
-	});
-	let errorMessage: string = "";
+	})
+	let errorMessage: string = ''
 
 	async function loginUser(): Promise<void> {
 		try {
-			await CustomerRepository.login(loginData);
-		} catch (error: any) {
-			errorMessage = error.detail;
-			setTimeout(() => errorMessage = "", 3000);
-			return;
+			await CustomerRepository.login(loginData)
+		} catch (err: unknown) {
+			const error = err as { detail: string }
+			if (error) {
+				errorMessage = error.detail
+				setTimeout(() => (errorMessage = ''), 3000)
+			}
+			return
 		}
-		window.location.href = "/";
+		window.location.href = '/'
 	}
 
 	async function handleSubmit(event: Event): Promise<void> {
-		event.preventDefault();
-		const refs: Record<string, TextInput | null> = await inputRefs;
+		event.preventDefault()
+		const refs: Record<string, TextInput | null> = await inputRefs
 
-		Object.values(refs).forEach((ref) => ref?.validate());
-		const allValid: boolean = Object.values(refs).every((ref) => ref?.getIsValid());
+		Object.values(refs).forEach((ref) => ref?.validate())
+		const allValid: boolean = Object.values(refs).every((ref) => ref?.getIsValid())
 		if (!allValid) {
-			return;
+			return
 		}
 
-		await loginUser();
+		await loginUser()
 	}
 </script>
 
@@ -43,21 +46,21 @@
 		{/if}
 		<div class="mb-20px">
 			<TextInput
-					name="username"
-					label="Username"
-					bind:value={loginData.username}
-					required={true}
-					bind:this={refs.username}
+				name="username"
+				label="Username"
+				bind:value={loginData.username}
+				required={true}
+				bind:this={refs.username}
 			></TextInput>
 		</div>
 		<div class="mb-50px">
 			<TextInput
-					isPassword={true}
-					name="password"
-					label="Password"
-					bind:value={loginData.password}
-					required={true}
-					bind:this={refs.password}
+				isPassword={true}
+				name="password"
+				label="Password"
+				bind:value={loginData.password}
+				required={true}
+				bind:this={refs.password}
 			></TextInput>
 		</div>
 	{/await}

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type {Category} from "$lib/core/domain/models";
+	import type { Category } from '$lib/core/domain/models'
 
-	export let categories: Category[];
-	export let categoryId: number | undefined;
+	export let categories: Category[]
+	export let categoryId: number | undefined
 </script>
 
 <ul class="nav nav-tabs">

@@ -1,7 +1,11 @@
 <script>
-	import HomePage from '$lib/info-pages/view/pages/HomePage.svelte';
+	import HomePage from '$lib/info-pages/view/pages/HomePage.svelte'
 
-    export let data;
+	export let data
 </script>
 
-<HomePage foods={data.foods} ratingByFoodId={data.ratingByFoodId} portionsByFoodId={data.portionsByFoodId} />
+<HomePage
+	foods={data.foods}
+	ratingByFoodId={data.ratingByFoodId}
+	portionsByFoodId={data.portionsByFoodId}
+/>

@@ -1,26 +1,26 @@
 <script lang="ts">
-	import type { Food } from '$lib/core/domain/models';
-	import {AuthenticatedCustomerStore} from "$lib/core/stores/AuthenticatedCustomerStore";
-	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
-	import {RatingRepository} from "$lib/core/repository/RatingRepository";
-	import {CustomerFoodRatingRepository} from "$lib/menu/repository/CustomerFoodRatingRepository.js";
-	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
+	import type { Food } from '$lib/core/domain/models'
+	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore'
+	import { OrderedFoodsStore } from '$lib/menu/stores/OrderedFoodsStore'
+	import { RatingRepository } from '$lib/core/repository/RatingRepository'
+	import { CustomerFoodRatingRepository } from '$lib/menu/repository/CustomerFoodRatingRepository.js'
+	import AddToOrderModal from '$lib/menu/view/components/order/AddToOrderModal.svelte'
 
-	export let food: Food;
-	export let modal: AddToOrderModal | null = null;
-	export let userRatingValue: number = -1;
-	export let averageRating: number | null = null;
+	export let food: Food
+	export let modal: AddToOrderModal | null = null
+	export let userRatingValue: number = -1
+	export let averageRating: number | null = null
 
 	async function updateRating(value: number): Promise<void> {
-		userRatingValue = value;
-		await CustomerFoodRatingRepository.setCurrentCustomerRating(food.id, userRatingValue);
-		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
+		userRatingValue = value
+		await CustomerFoodRatingRepository.setCurrentCustomerRating(food.id, userRatingValue)
+		averageRating = await RatingRepository.getAverageRatingOfFood(food.id)
 	}
-	
+
 	async function deleteRating(): Promise<void> {
-		userRatingValue = -1;
-		await CustomerFoodRatingRepository.deleteCurrentCustomerRating(food.id);
-		averageRating = await RatingRepository.getAverageRatingOfFood(food.id);
+		userRatingValue = -1
+		await CustomerFoodRatingRepository.deleteCurrentCustomerRating(food.id)
+		averageRating = await RatingRepository.getAverageRatingOfFood(food.id)
 	}
 </script>
 
@@ -47,7 +47,14 @@
 				{#if $OrderedFoodsStore.has(food.id)}
 					<div class="star-rating d-inline-flex">
 						{#each [5, 4, 3, 2, 1] as i}
-							<input type="radio" id="star-{food.id}-{i}" name="rating-{food.id}" value="{i}" checked={i === userRatingValue} on:change={async () => await updateRating(i)}>
+							<input
+								type="radio"
+								id="star-{food.id}-{i}"
+								name="rating-{food.id}"
+								value={i}
+								checked={i === userRatingValue}
+								on:change={async () => await updateRating(i)}
+							/>
 							<label class="pb-1" for="star-{food.id}-{i}">★</label>
 						{/each}
 					</div>
@@ -65,7 +72,12 @@
 		{/if}
 	</ul>
 	{#if $AuthenticatedCustomerStore}
-		<button class="card-link btn green-button" data-bs-toggle="modal" data-bs-target="#add-to-cart-modal" on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button>
+		<button
+			class="card-link btn green-button"
+			data-bs-toggle="modal"
+			data-bs-target="#add-to-cart-modal"
+			on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button
+		>
 	{/if}
 </div>
 

@@ -1,14 +1,17 @@
 <script lang="ts">
-	import type { Customer } from '$lib/core/domain/models';
-	import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository';
-	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte';
-	import { type Validator, Validators } from '$lib/accounts/view/components/account/validation/Validators';
-	import CheckboxInput from '$lib/accounts/view/components/account/inputs/CheckboxInput.svelte';
-	import { Converters } from '$lib/accounts/view/components/account/validation/Converters';
-	import {goto} from "$app/navigation";
+	import type { Customer } from '$lib/core/domain/models'
+	import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository'
+	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte'
+	import {
+		type Validator,
+		Validators
+	} from '$lib/accounts/view/components/account/validation/Validators'
+	import CheckboxInput from '$lib/accounts/view/components/account/inputs/CheckboxInput.svelte'
+	import { Converters } from '$lib/accounts/view/components/account/validation/Converters'
+	import { goto } from '$app/navigation'
 
-	let registration: Customer = {} as Customer;
-	let confirmPassword: string;
+	let registration: Customer = {} as Customer
+	let confirmPassword: string
 	let inputRefs: Promise<Record<string, TextInput | null>> = Promise.resolve({
 		username: null,
 		email: null,
@@ -18,29 +21,30 @@
 		phoneNumber: null,
 		password: null,
 		confirmPassword: null
-	});
+	})
 
 	const confirmPasswordValidator: Validator = {
 		validate: (value) => (registration.password !== value ? 'Both password fields must match!' : '')
-	} as Validator;
+	} as Validator
 
 	async function handleSubmit(event: Event): Promise<void> {
-		event.preventDefault();
-		const refs: Record<string, TextInput | null> = await inputRefs;
+		event.preventDefault()
+		const refs: Record<string, TextInput | null> = await inputRefs
 
-		Object.values(refs).forEach((ref) => ref?.validate());
-		const allValid: boolean = Object.values(refs).every((ref) => ref?.getIsValid());
+		Object.values(refs).forEach((ref) => ref?.validate())
+		const allValid: boolean = Object.values(refs).every((ref) => ref?.getIsValid())
 
 		if (allValid) {
 			try {
-				await CustomerRepository.create(registration);
-			} catch (errorEntries: any) {
+				await CustomerRepository.create(registration)
+			} catch (err: unknown) {
+				const errorEntries = err as { [s: string]: unknown } | ArrayLike<unknown>
 				Object.entries(errorEntries).forEach(([key, value]) => {
-					refs[Converters.underscoreToCamelcase(key)]?.setExternalErrorMessage(value as string);
-				});
-				return;
+					refs[Converters.underscoreToCamelcase(key)]?.setExternalErrorMessage(value as string)
+				})
+				return
 			}
-			await goto("/");
+			await goto('/')
 		}
 	}
 </script>

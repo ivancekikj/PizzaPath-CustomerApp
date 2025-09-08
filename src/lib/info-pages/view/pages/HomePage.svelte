@@ -1,10 +1,10 @@
 <script lang="ts">
-	import PopularFoodsSection from "$lib/info-pages/view/components/popular-foods/PopularFoodsSection.svelte";
-	import type {Food, FoodPortion} from "$lib/core/domain/models";
+	import PopularFoodsSection from '$lib/info-pages/view/components/popular-foods/PopularFoodsSection.svelte'
+	import type { Food, FoodPortion } from '$lib/core/domain/models'
 
-	export let foods: Food[];
-	export let ratingByFoodId: Map<number, number>;
-	export let portionsByFoodId: Map<number, FoodPortion[]>;
+	export let foods: Food[]
+	export let ratingByFoodId: Map<number, number>
+	export let portionsByFoodId: Map<number, FoodPortion[]>
 </script>
 
 <svelte:head>
@@ -16,8 +16,8 @@
 		<h1 class="text-center mb-50px fw-bold text-white">Welcome to Pizza Delicious!</h1>
 		<div class="mb-50px d-flex justify-content-center">
 			<h2 class="text-center fw-bold py-4 px-5 rounded rounded-2 text-white">
-				Are you hungry?<br>
-				Don't wait!<br>
+				Are you hungry?<br />
+				Don't wait!<br />
 				Order now!
 			</h2>
 		</div>
@@ -37,17 +37,25 @@
 		<div class="row g-4">
 			<div class="col-md-3">
 				<div class="service-card text-center overflow-hidden">
-					<img class="w-100 object-fit-cover" src="/img/home/wood-fire-pizza.jpg" alt="Wood-Fired Pizza">
+					<img
+						class="w-100 object-fit-cover"
+						src="/img/home/wood-fire-pizza.jpg"
+						alt="Wood-Fired Pizza"
+					/>
 					<h5 class="service-title fw-bold">Wood-Fired Pizza</h5>
 					<p>
-						Enjoy handcrafted pizzas baked in our traditional wood-fired oven,
-						made with fresh dough, authentic sauces, and premium toppings.
+						Enjoy handcrafted pizzas baked in our traditional wood-fired oven, made with fresh
+						dough, authentic sauces, and premium toppings.
 					</p>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="service-card text-center overflow-hidden">
-					<img class="w-100 object-fit-cover" src="/img/home/fast-delivery.jpg" alt="Delivery Service">
+					<img
+						class="w-100 object-fit-cover"
+						src="/img/home/fast-delivery.jpg"
+						alt="Delivery Service"
+					/>
 					<h5 class="service-title fw-bold">Fast Delivery</h5>
 					<p>
 						Craving pizza at home? Our speedy delivery brings piping hot pizzas, pastas, and sides
@@ -57,21 +65,29 @@
 			</div>
 			<div class="col-md-3">
 				<div class="service-card text-center overflow-hidden">
-					<img class="w-100 object-fit-cover" src="/img/home/event-catering.jpg" alt="Catering Service">
+					<img
+						class="w-100 object-fit-cover"
+						src="/img/home/event-catering.jpg"
+						alt="Catering Service"
+					/>
 					<h5 class="service-title fw-bold">Event Catering</h5>
 					<p>
-						Hosting a party or office lunch? Let us cater with custom pizza platters,
-						fresh salads, and delicious desserts that everyone will love.
+						Hosting a party or office lunch? Let us cater with custom pizza platters, fresh salads,
+						and delicious desserts that everyone will love.
 					</p>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="service-card text-center overflow-hidden">
-					<img class="w-100 object-fit-cover" src="/img/home/dine-in.jpg" alt="Dine-In Experience">
+					<img
+						class="w-100 object-fit-cover"
+						src="/img/home/dine-in.jpg"
+						alt="Dine-In Experience"
+					/>
 					<h5 class="service-title fw-bold">Cozy Dine-In</h5>
 					<p>
-						Relax in our warm and inviting restaurant atmosphere,
-						perfect for family dinners, date nights, or catching up with friends.
+						Relax in our warm and inviting restaurant atmosphere, perfect for family dinners, date
+						nights, or catching up with friends.
 					</p>
 				</div>
 			</div>

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import CouponsAccordion from "$lib/accounts/view/components/coupons/CouponsAccordion.svelte";
-	import type {CategoryCoupons, NewsletterPost} from "$lib/accounts/domain/models";
-	import NewsletterPosts from "$lib/accounts/view/components/newsletter/NewsletterPosts.svelte";
-	import UpdateCustomerForm from "$lib/accounts/view/components/account/forms/UpdateCustomerForm.svelte";
+	import CouponsAccordion from '$lib/accounts/view/components/coupons/CouponsAccordion.svelte'
+	import type { CategoryCoupons, NewsletterPost } from '$lib/accounts/domain/models'
+	import NewsletterPosts from '$lib/accounts/view/components/newsletter/NewsletterPosts.svelte'
+	import UpdateCustomerForm from '$lib/accounts/view/components/account/forms/UpdateCustomerForm.svelte'
 
-	export let categoryCoupons: CategoryCoupons[];
-	export let posts: NewsletterPost[];
-	export let totalPostsCount: number;
+	export let categoryCoupons: CategoryCoupons[]
+	export let posts: NewsletterPost[]
+	export let totalPostsCount: number
 </script>
 
 <svelte:head>

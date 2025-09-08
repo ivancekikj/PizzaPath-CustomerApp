@@ -1,7 +1,7 @@
 <script>
-	import OrderPage from '$lib/orders/view/pages/OrderPage.svelte';
+	import OrderPage from '$lib/orders/view/pages/OrderPage.svelte'
 
-    export let data;
+	export let data
 </script>
 
 <OrderPage order={data.order} />
