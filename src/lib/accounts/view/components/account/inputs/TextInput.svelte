@@ -1,44 +1,47 @@
 <script lang="ts">
-	import { type Validator, Validators } from '$lib/accounts/view/components/account/validation/Validators';
+	import {
+		type Validator,
+		Validators
+	} from '$lib/accounts/view/components/account/validation/Validators'
 
-	export let label: string;
-	export let name: string;
-	export let value: string = '';
-	export let required: boolean = false;
-	export let isPassword: boolean = false;
-	export let customValidator: Validator | null = null;
+	export let label: string
+	export let name: string
+	export let value: string = ''
+	export let required: boolean = false
+	export let isPassword: boolean = false
+	export let customValidator: Validator | null = null
 
-	let message: string = '';
-	let externalErrorMessage: string = '';
-	let isValid: boolean | null = null;
-	const validators: Validator[] = [];
+	let message: string = ''
+	let externalErrorMessage: string = ''
+	let isValid: boolean | null = null
+	const validators: Validator[] = []
 
-	((): void => {
-		if (required) validators.push(Validators.get('required') as Validator);
-		if (customValidator != null) validators.push(customValidator);
-	})();
+	;((): void => {
+		if (required) validators.push(Validators.get('required') as Validator)
+		if (customValidator != null) validators.push(customValidator)
+	})()
 
 	function validate(): void {
-		isValid = false;
-		externalErrorMessage = '';
+		isValid = false
+		externalErrorMessage = ''
 		for (let validator of validators) {
-			message = validator.validate(value);
+			message = validator.validate(value)
 			if (message !== '') {
-				return;
+				return
 			}
 		}
-		isValid = true;
+		isValid = true
 	}
 
 	function getIsValid(): boolean {
-		return isValid ?? false;
+		return isValid ?? false
 	}
 
 	function setExternalErrorMessage(value: string): void {
-		externalErrorMessage = value;
+		externalErrorMessage = value
 	}
 
-	export { validate, getIsValid, setExternalErrorMessage };
+	export { validate, getIsValid, setExternalErrorMessage }
 </script>
 
 <label for={name} class="form-label">{label}</label>

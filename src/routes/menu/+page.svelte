@@ -1,9 +1,15 @@
 <script>
-	import MenuPage from '$lib/menu/view/pages/MenuPage.svelte';
+	import MenuPage from '$lib/menu/view/pages/MenuPage.svelte'
 
-    export let data;
+	export let data
 </script>
 
-<MenuPage categoryId={data.categoryId} foods={data.foods} portionsByFoodId={data.portionsByFoodId}
-          categories={data.categories} ratingValueByFoodId={data.ratingValueByFoodId}
-          averageRatingByFoodId={data.averageRatingByFoodId} orderedFoodIds={data.orderedFoodsIds} />
+<MenuPage
+	categoryId={data.categoryId}
+	foods={data.foods}
+	portionsByFoodId={data.portionsByFoodId}
+	categories={data.categories}
+	ratingValueByFoodId={data.ratingValueByFoodId}
+	averageRatingByFoodId={data.averageRatingByFoodId}
+	orderedFoodIds={data.orderedFoodsIds}
+/>

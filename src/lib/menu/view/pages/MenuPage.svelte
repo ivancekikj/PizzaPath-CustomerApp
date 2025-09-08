@@ -1,48 +1,48 @@
 <script lang="ts">
-	import FoodCard from '$lib/menu/view/components/menu-items/FoodCard.svelte';
-	import MenuTabs from '$lib/menu/view/components/menu-items/MenuTabs.svelte';
-	import AddToOrderModal from "$lib/menu/view/components/order/AddToOrderModal.svelte";
-	import {OrderedFoodsStore} from "$lib/menu/stores/OrderedFoodsStore";
-	import type {Category, Food, FoodPortion} from "$lib/core/domain/models";
+	import FoodCard from '$lib/menu/view/components/menu-items/FoodCard.svelte'
+	import MenuTabs from '$lib/menu/view/components/menu-items/MenuTabs.svelte'
+	import AddToOrderModal from '$lib/menu/view/components/order/AddToOrderModal.svelte'
+	import { OrderedFoodsStore } from '$lib/menu/stores/OrderedFoodsStore'
+	import type { Category, Food, FoodPortion } from '$lib/core/domain/models'
 
-	export let categoryId: number | undefined;
-	export let categories: Category[];
-	export let foods: Food[];
-	export let portionsByFoodId: Map<number, FoodPortion[]>;
-	export let ratingValueByFoodId: Map<number, number>;
-	export let averageRatingByFoodId: Map<number, number>;
-	export let orderedFoodIds: Set<number>;
-	let modal: AddToOrderModal | null = null;
+	export let categoryId: number | undefined
+	export let categories: Category[]
+	export let foods: Food[]
+	export let portionsByFoodId: Map<number, FoodPortion[]>
+	export let ratingValueByFoodId: Map<number, number>
+	export let averageRatingByFoodId: Map<number, number>
+	export let orderedFoodIds: Set<number>
+	let modal: AddToOrderModal | null = null
 
 	function setUpInitialData(): void {
-		const indexByCategory = new Map<number, number>();
-		categories.forEach((category, index) => indexByCategory.set(category.id, index));
+		const indexByCategory = new Map<number, number>()
+		categories.forEach((category, index) => indexByCategory.set(category.id, index))
 		foods.sort((f1, f2) => {
 			if (f1.categoryId !== f2.categoryId) {
-				const f1CategoryIndex = indexByCategory.get(f1.categoryId)!;
-				const f2CategoryIndex = indexByCategory.get(f2.categoryId)!;
-				return f1CategoryIndex - f2CategoryIndex;
+				const f1CategoryIndex = indexByCategory.get(f1.categoryId)!
+				const f2CategoryIndex = indexByCategory.get(f2.categoryId)!
+				return f1CategoryIndex - f2CategoryIndex
 			}
-			return f1.name.localeCompare(f2.name);
-		});
-		OrderedFoodsStore.setValue(orderedFoodIds);
+			return f1.name.localeCompare(f2.name)
+		})
+		OrderedFoodsStore.setValue(orderedFoodIds)
 	}
 
 	function getFoodById(): Map<number, Food> {
-		const foodById: Map<number, Food> = new Map<number, Food>();
-		foods.forEach(food => foodById.set(food.id, food));
-		return foodById;
+		const foodById: Map<number, Food> = new Map<number, Food>()
+		foods.forEach((food) => foodById.set(food.id, food))
+		return foodById
 	}
 
 	function getFoodRating(foodId: number): number {
-		return ratingValueByFoodId.get(foodId) ?? -1;
+		return ratingValueByFoodId.get(foodId) ?? -1
 	}
 
 	function getAverageFoodRating(foodId: number): number | null {
-		return averageRatingByFoodId.get(foodId) ?? null;
+		return averageRatingByFoodId.get(foodId) ?? null
 	}
 
-	setUpInitialData();
+	setUpInitialData()
 </script>
 
 <svelte:head>
@@ -57,8 +57,12 @@
 	<div class="row">
 		{#if foods.length > 0}
 			{#each foods as food}
-				<FoodCard {food} bind:modal={modal} userRatingValue={getFoodRating(food.id)}
-						  averageRating={getAverageFoodRating(food.id)}></FoodCard>
+				<FoodCard
+					{food}
+					bind:modal
+					userRatingValue={getFoodRating(food.id)}
+					averageRating={getAverageFoodRating(food.id)}
+				></FoodCard>
 			{/each}
 			<AddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
 		{:else}

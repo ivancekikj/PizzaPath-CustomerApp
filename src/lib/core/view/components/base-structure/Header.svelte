@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore';
-	import {AuthenticatedCustomerRepository} from "$lib/core/repository/AuthenticatedCustomerRepository";
-	import {onMount} from "svelte";
-	import {CategoriesStore} from "$lib/core/stores/CategoriesStore";
+	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore'
+	import { AuthenticatedCustomerRepository } from '$lib/core/repository/AuthenticatedCustomerRepository'
+	import { onMount } from 'svelte'
+	import { CategoriesStore } from '$lib/core/stores/CategoriesStore'
 
 	async function logoutCustomer(event: MouseEvent, href: string): Promise<void> {
-		event.preventDefault();
-		await AuthenticatedCustomerRepository.logout();
-		window.location.href = href;
+		event.preventDefault()
+		await AuthenticatedCustomerRepository.logout()
+		window.location.href = href
 	}
 
-	onMount(() => window.$('[data-bs-toggle="tooltip"]').tooltip());
+	onMount(() => window.$('[data-bs-toggle="tooltip"]').tooltip())
 </script>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
@@ -49,19 +49,11 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a
-								class="dropdown-item"
-								href="/menu"
-								>Whole Menu</a
-							>
+							<a class="dropdown-item" href="/menu">Whole Menu</a>
 						</li>
 						{#each $CategoriesStore as category}
 							<li>
-								<a
-									class="dropdown-item"
-									href="/menu?categoryId={category.id}"
-									>{category.name}</a
-								>
+								<a class="dropdown-item" href="/menu?categoryId={category.id}">{category.name}</a>
 							</li>
 						{/each}
 					</ul>
@@ -74,7 +66,9 @@
 						<a class="nav-link" href="/account">Account ({$AuthenticatedCustomerStore.username})</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/" on:click={async (e) => await logoutCustomer(e, "/")}>Logout</a>
+						<a class="nav-link" href="/" on:click={async (e) => await logoutCustomer(e, '/')}
+							>Logout</a
+						>
 					</li>
 				{:else}
 					<li class="nav-item">
