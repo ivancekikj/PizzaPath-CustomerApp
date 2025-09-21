@@ -8,7 +8,7 @@
         <pre>npm install</pre>
     </li>
     <li>Create a file called '.env' in the root folder with the following information:
-        <pre>VITE_ADMIN_APP_URL=</pre>
+        <pre>PUBLIC_ADMIN_APP_URL=</pre>
     </li>
     <li>Run the following command to start the app:
         <pre>npm run dev</pre>
