@@ -15,4 +15,6 @@ COPY --from=builder /app/node_modules node_modules/
 COPY package.json .
 EXPOSE 3000
 ENV NODE_ENV=production
+ARG VITE_ADMIN_APP_URL
+ENV VITE_ADMIN_APP_URL=$VITE_ADMIN_APP_URL
 CMD [ "node", "build" ]
