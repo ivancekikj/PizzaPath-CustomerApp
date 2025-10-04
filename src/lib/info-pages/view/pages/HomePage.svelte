@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PopularFoodsSection from '$lib/info-pages/view/components/popular-foods/PopularFoodsSection.svelte'
 	import type { Food, FoodPortion } from '$lib/core/domain/models'
+	import MessageCard from '$lib/core/view/components/message/MessageCard.svelte'
 
 	export let foods: Food[]
 	export let ratingByFoodId: Map<number, number>
@@ -27,6 +28,7 @@
 	</div>
 </div>
 <div class="container mb-100px">
+	<MessageCard />
 	<PopularFoodsSection {foods} {ratingByFoodId} {portionsByFoodId} />
 	<div class="text-center mb-5">
 		<h2 class="fw-bold mb-20px">Our Services</h2>

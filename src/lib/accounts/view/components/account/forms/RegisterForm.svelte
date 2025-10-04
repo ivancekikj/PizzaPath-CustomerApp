@@ -8,7 +8,6 @@
 	} from '$lib/accounts/view/components/account/validation/Validators'
 	import CheckboxInput from '$lib/accounts/view/components/account/inputs/CheckboxInput.svelte'
 	import { Converters } from '$lib/accounts/view/components/account/validation/Converters'
-	import { goto } from '$app/navigation'
 
 	let registration: Customer = {} as Customer
 	let confirmPassword: string
@@ -44,7 +43,11 @@
 				})
 				return
 			}
-			await goto('/')
+			localStorage.setItem(
+				'message',
+				'Registration successful! Please check your email inbox for a confirmation link.'
+			)
+			window.location.href = '/'
 		}
 	}
 </script>
