@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository'
 
 export const load: PageLoad = async ({ url }) => {
-	const token: string | null = url.searchParams.get('categoryId')
+	const token: string | null = url.searchParams.get('token')
 	if (!token) {
 		localStorage.setItem('danger', 'No token provided.')
 		throw redirect(302, '/')
