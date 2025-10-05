@@ -1,21 +1,21 @@
 <script lang="ts">
-	let message: string | null
-	let messageType: string = 'success'
+	import { Message } from '$lib/core/domain/models'
 
-	message = localStorage.getItem('success')
-	if (!message) {
-		message = localStorage.getItem('error')
-		messageType = 'danger'
+	let message: Message | null = null
+
+	const storageValue = localStorage.getItem('message')
+	if (storageValue) {
+		message = Message.parse(storageValue)
 	}
 
 	setTimeout(() => {
 		message = null
-		localStorage.removeItem(messageType)
+		localStorage.removeItem('message')
 	}, 5000)
 </script>
 
 {#if message}
-	<div class="alert alert-{messageType} alert- mb-50px text-center" role="alert">
-		{message}
+	<div class="alert alert-{message.type} alert- mb-50px text-center" role="alert">
+		{message.value}
 	</div>
 {/if}

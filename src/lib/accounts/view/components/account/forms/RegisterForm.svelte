@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Customer } from '$lib/core/domain/models'
+	import { type Customer, Message } from '$lib/core/domain/models'
 	import { CustomerRepository } from '$lib/accounts/repository/CustomerRepository'
 	import TextInput from '$lib/accounts/view/components/account/inputs/TextInput.svelte'
 	import {
@@ -44,8 +44,11 @@
 				return
 			}
 			localStorage.setItem(
-				'success',
-				'Registration successful! Please check your email inbox for a confirmation link.'
+				'message',
+				new Message(
+					'success',
+					'Registration successful! Please check your email inbox for a confirmation link.'
+				).toString()
 			)
 			window.location.href = '/'
 		}

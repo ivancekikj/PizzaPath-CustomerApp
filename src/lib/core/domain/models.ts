@@ -99,3 +99,22 @@ export class OrderItem {
 		return this.portions.find((p) => p.id === this.selectedPortionId)!
 	}
 }
+
+export class Message {
+	type: string
+	value: string
+
+	constructor(type: string, value: string) {
+		this.type = type
+		this.value = value
+	}
+
+	toString(): string {
+		return JSON.stringify(this)
+	}
+
+	static parse(value: string): Message {
+		const obj: { type: string; value: string } = JSON.parse(value)
+		return new Message(obj.type, obj.value)
+	}
+}
