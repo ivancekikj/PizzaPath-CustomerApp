@@ -44,7 +44,7 @@
 				return
 			}
 			localStorage.setItem(
-				'message',
+				'success',
 				'Registration successful! Please check your email inbox for a confirmation link.'
 			)
 			window.location.href = '/'
