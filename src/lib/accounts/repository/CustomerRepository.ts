@@ -67,8 +67,26 @@ async function login(loginDto: CustomerLoginDto): Promise<void> {
 	}
 }
 
+async function validate(token: string): Promise<void> {
+	try {
+		await axios.post(
+			`${ApiData.ADMIN_APP_URL}/api/accounts/customers/email/validation/`,
+			{
+				token: token
+			},
+			{
+				headers: { 'Content-Type': 'application/json' }
+			}
+		)
+	} catch (error) {
+		const err: AxiosError = error as AxiosError
+		throw err.response?.data
+	}
+}
+
 export const CustomerRepository = {
 	create,
 	update,
-	login
+	login,
+	validate
 }
