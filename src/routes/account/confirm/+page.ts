@@ -16,7 +16,7 @@ export const load: PageLoad = async ({ url }) => {
 			new Message('success', 'Email successfully validated. You can now log in.').toString()
 		)
 	} catch (error: unknown) {
-		localStorage.setItem('danger', new Message('danger', error as string).toString())
+		localStorage.setItem('message', new Message('danger', error as string).toString())
 	}
 	throw redirect(302, '/')
 }
