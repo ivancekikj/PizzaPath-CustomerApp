@@ -11,7 +11,7 @@
 <div class="card">
 	<img src={food.imageUrl} class="card-img-top" alt="Image of {food.name}" />
 	<div class="card-body text-center">
-		<h5 class="card-title">{food.name}</h5>
+		<h5 class="card-title fw-bold">{food.name}</h5>
 		<p class="card-text">{food.description}</p>
 	</div>
 	<ul class="list-group list-group-flush">
