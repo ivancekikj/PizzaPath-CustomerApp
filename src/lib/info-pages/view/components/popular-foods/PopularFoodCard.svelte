@@ -18,7 +18,7 @@
 			<span>Average Rating:</span>
 			<span class="fw-bold">
 				{#if averageRating != null}
-					{averageRating} / 5
+					{averageRating.toFixed(2)} / 5
 				{:else}
 					/
 				{/if}
