@@ -4,8 +4,6 @@ import { RatingRepository } from '$lib/core/repository/RatingRepository'
 import type { Food, FoodPortion } from '$lib/core/domain/models'
 import { FoodPortionRepository } from '$lib/core/repository/FoodPortionRepository'
 
-export const ssr = false
-
 export const load: PageLoad = async () => {
 	const foods = await PopularFoodRepository.getMostPopularFoods()
 	const ratingByFoodId = await RatingRepository.getAverageRatingOfEachFood()

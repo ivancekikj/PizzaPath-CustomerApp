@@ -1,11 +1,10 @@
 <script lang="ts">
 	import type { Food } from '$lib/core/domain/models'
 	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore'
-	import AddPopularFoodToOrderModal from '$lib/info-pages/view/components/popular-foods/AddPopularFoodToOrderModal.svelte'
+	import { ModalStore } from '$lib/info-pages/stores/ModalStore'
 
 	export let food: Food
 	export let averageRating: number | null = null
-	export let modal: AddPopularFoodToOrderModal | null = null
 </script>
 
 <div class="card">
@@ -31,7 +30,7 @@
 			class="card-link btn green-button"
 			data-bs-toggle="modal"
 			data-bs-target="#home-page-add-to-cart-modal"
-			on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button
+			on:click={() => ModalStore.setCurrentFood(food.id)}>Add to Order</button
 		>
 	{/if}
 </div>

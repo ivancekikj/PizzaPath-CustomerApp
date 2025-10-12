@@ -3,7 +3,8 @@ import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustom
 import { AuthenticatedCustomerRepository } from '$lib/core/repository/AuthenticatedCustomerRepository'
 import { get } from 'svelte/store'
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ parent }) => {
+	await parent()
 	if (get(AuthenticatedCustomerStore)) {
 		await AuthenticatedCustomerRepository.logout()
 		AuthenticatedCustomerStore.set(null)

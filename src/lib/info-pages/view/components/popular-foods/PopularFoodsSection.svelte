@@ -6,7 +6,6 @@
 	export let foods: Food[]
 	export let ratingByFoodId: Map<number, number>
 	export let portionsByFoodId: Map<number, FoodPortion[]>
-	let modal: HomePageAddToOrderModal | null
 
 	function getFoodById(): Map<number, Food> {
 		const foodById: Map<number, Food> = new Map<number, Food>()
@@ -27,11 +26,10 @@
 	</div>
 	<div class="row justify-content-between">
 		{#if foods.length > 0}
+			<HomePageAddToOrderModal {portionsByFoodId} foodById={getFoodById()} />
 			{#each foods as food}
-				<PopularFoodCard {food} averageRating={getAverageFoodRating(food.id)} bind:modal
-				></PopularFoodCard>
+				<PopularFoodCard {food} averageRating={getAverageFoodRating(food.id)}></PopularFoodCard>
 			{/each}
-			<HomePageAddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
 		{:else}
 			<p class="text-center">No orders have been placed.</p>
 		{/if}

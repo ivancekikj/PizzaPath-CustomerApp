@@ -6,7 +6,8 @@ import { CouponRepository } from '$lib/accounts/repository/CouponRepository'
 import { NewsletterPostsRepository } from '$lib/accounts/repository/NewsletterPostsRepository'
 import type { NewsletterPost } from '$lib/accounts/domain/models'
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ parent }) => {
+	await parent()
 	if (!get(AuthenticatedCustomerStore)) {
 		throw redirect(302, '/login')
 	}

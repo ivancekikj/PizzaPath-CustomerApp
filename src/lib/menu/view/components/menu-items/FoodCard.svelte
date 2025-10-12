@@ -4,10 +4,9 @@
 	import { OrderedFoodsStore } from '$lib/menu/stores/OrderedFoodsStore'
 	import { RatingRepository } from '$lib/core/repository/RatingRepository'
 	import { CustomerFoodRatingRepository } from '$lib/menu/repository/CustomerFoodRatingRepository.js'
-	import AddToOrderModal from '$lib/menu/view/components/order/AddToOrderModal.svelte'
+	import { ModalStore } from '$lib/menu/stores/ModalStore'
 
 	export let food: Food
-	export let modal: AddToOrderModal | null = null
 	export let userRatingValue: number = -1
 	export let averageRating: number | null = null
 
@@ -76,7 +75,7 @@
 			class="card-link btn green-button"
 			data-bs-toggle="modal"
 			data-bs-target="#add-to-cart-modal"
-			on:click={() => modal?.updateSelectedFoodId(food.id)}>Add to Order</button
+			on:click={() => ModalStore.setCurrentFood(food.id)}>Add to Order</button
 		>
 	{/if}
 </div>
