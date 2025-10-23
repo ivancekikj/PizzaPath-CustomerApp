@@ -109,12 +109,12 @@
 
 	async function deleteOrder(): Promise<void> {
 		await OrderRepository.deleteCurrentUserOrder()
-		window.location.href = '/order'
+		location.reload()
 	}
 
 	async function submitOrder(): Promise<void> {
 		await OrderRepository.submitCurrentUserOrder()
-		window.location.href = '/order'
+		location.reload()
 	}
 
 	async function updateDescription(): Promise<void> {

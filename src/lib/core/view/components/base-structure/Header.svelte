@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore'
 	import { AuthenticatedCustomerRepository } from '$lib/core/repository/AuthenticatedCustomerRepository'
-	import { onMount } from 'svelte'
 	import { CategoriesStore } from '$lib/core/stores/CategoriesStore'
 
 	async function logoutCustomer(event: MouseEvent, href: string): Promise<void> {
@@ -9,8 +8,6 @@
 		await AuthenticatedCustomerRepository.logout()
 		window.location.href = href
 	}
-
-	onMount(() => window.$('[data-bs-toggle="tooltip"]').tooltip())
 </script>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">

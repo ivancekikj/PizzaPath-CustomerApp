@@ -12,7 +12,6 @@
 	export let ratingValueByFoodId: Map<number, number>
 	export let averageRatingByFoodId: Map<number, number>
 	export let orderedFoodIds: Set<number>
-	let modal: AddToOrderModal | null = null
 
 	function setUpInitialData(): void {
 		const indexByCategory = new Map<number, number>()
@@ -56,15 +55,14 @@
 	<MenuTabs {categories} {categoryId} />
 	<div class="row">
 		{#if foods.length > 0}
+			<AddToOrderModal {portionsByFoodId} foodById={getFoodById()} />
 			{#each foods as food}
 				<FoodCard
 					{food}
-					bind:modal
 					userRatingValue={getFoodRating(food.id)}
 					averageRating={getAverageFoodRating(food.id)}
 				></FoodCard>
 			{/each}
-			<AddToOrderModal bind:this={modal} {portionsByFoodId} foodById={getFoodById()} />
 		{:else}
 			<p>No foods available.</p>
 		{/if}

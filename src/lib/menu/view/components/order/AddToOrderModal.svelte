@@ -6,6 +6,7 @@
 	import { OrderCouponInfoStore } from '$lib/core/stores/OrderCouponInfoStore'
 	import { CustomerCouponsStore } from '$lib/core/stores/CustomerCouponsStore'
 	import { OrderItemRepository } from '$lib/core/repository/OrderItemRepository.js'
+	import { ModalStore } from '$lib/menu/stores/ModalStore'
 
 	export let foodById: Map<number, Food>
 	export let portionsByFoodId: Map<number, FoodPortion[]>
@@ -34,7 +35,7 @@
 		}
 	}
 
-	export function setCurrentFood(foodId: number): void {
+	function setCurrentFood(foodId: number): void {
 		isButtonClicked = true
 		if (valuesByFoodId.has(foodId)) {
 			currentData = valuesByFoodId.get(foodId)!
@@ -74,6 +75,7 @@
 	}
 
 	setCurrentFood(Number(foodById.keys().next().value))
+	ModalStore.setMethodForSettingFood(setCurrentFood)
 </script>
 
 <Modal title="Add Food to Order" id="add-to-cart-modal">

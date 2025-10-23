@@ -4,7 +4,8 @@ import { get } from 'svelte/store'
 import { AuthenticatedCustomerStore } from '$lib/core/stores/AuthenticatedCustomerStore'
 import { OrderRepository } from '$lib/orders/repository/OrderRepository'
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ parent }) => {
+	await parent()
 	if (!get(AuthenticatedCustomerStore)) {
 		throw redirect(302, '/login')
 	}
